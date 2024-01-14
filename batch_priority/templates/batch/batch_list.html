@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Home
+{% endblock %}
+
+{% block content %}
+<h1>Batch List</h1>
+{% for bay in bays %}
+    <h2>{{ bay.name }}</h2>
+    <table border="1" class="styled-table">
+        <thead>
+        <tr>
+            <th>Batch Number</th>
+            <th>Product Code</th>
+            <th>Complete Date Target</th>
+            <th>Comments</th>
+            <th>BOM Received</th>
+            <th>Target Start Date</th>
+            <th>Target End Date</th>
+        </tr>
+    </thead>
+        {% for targetdate in bay.targetdate_set.all|dictsort:"target_start_date" %}
+            {% if not targetdate.batch.batch_complete %}
+            <tbody>
+                <tr>
+                    <td><a href="{% url 'edit_batch' targetdate.batch.id %}">{{ targetdate.batch.batch_number }}</a></td>
+                    <td>{{ targetdate.batch.product_code }}</td>
+                    <td>{{ targetdate.batch.complete_date_target }}</td>
+                    <td>{{ targetdate.batch.comments }}</td>
+                    <td>{{ targetdate.batch.bom_received }}</td>
+                    <td>{{ targetdate.target_start_date }}</td>
+                    <td>{{ targetdate.target_end_date }}</td>
+                </tr>
+            </tbody>
+            {% endif %}
+        {% endfor %}
+    </table>
+{% endfor %}
+{% endblock %}

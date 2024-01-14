@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Import Products
+{% endblock %}
+
+{% block content %}
+  <h1>Import Products</h1>
+  <form method="post" enctype="multipart/form-data" action="{% url 'import_products' %}">
+    {% csrf_token %}
+    <label for="csv_file">Select CSV File:</label>
+    <input type="file" name="csv_file" accept=".csv" required>
+    <br>
+    <button type="submit">Import</button>
+  </form>
+  <br>
+  <a href="{% url 'product_list' %}">Back to Product List</a>
+{% endblock %}

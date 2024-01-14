@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Archive
+{% endblock %}
+
+{% block content %}
+    <h1>Batches completed</h1>
+    <table border="1" class="styled-table">
+        <thead>
+        <tr>
+            <th>Batch Number</th>
+            <th>Product Code</th>
+            <th>Complete Date Target</th>
+            <th>Comments</th>
+        </tr>
+    </thead>
+        {% for batch in batches %}
+        <tbody>
+        <tr>
+            <td><a href="{% url 'edit_batch' batch.id %}">{{ batch.batch_number }}</a></td>
+            <td>{{ batch.product_code }}  </td>
+            <td>{{ batch.complete_date_target }}  </td>
+            <td>{{ batch.comments }}  </td>
+        </tr>
+    </tbody>
+        {% endfor %}
+    </table>
+    {% endblock %}

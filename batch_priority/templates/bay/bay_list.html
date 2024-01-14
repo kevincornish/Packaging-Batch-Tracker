@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Bay List
+{% endblock %}
+
+{% block content %}
+    <h1>Bay List</h1>
+    <ul>
+        {% for bay in bays %}
+            <li><a href="{% url 'edit_bay' bay.id %}">{{ bay.name }}</a></li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'add_bay' %}">Add Bay</a>
+{% endblock %}

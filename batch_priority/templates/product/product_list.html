@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Product List
+{% endblock %}
+
+{% block content %}
+    <h1>Product List</h1>
+    <a href="{% url 'add_product' %}">Add Product</a>
+    <a href="{% url 'import_products' %}">Import Products</a>
+    {% regroup products by presentation as presentation_list %}
+
+    {% for presentation in presentation_list %}
+        <h2>{{ presentation.grouper }}</h2>
+        <ul>
+            {% for product in presentation.list %}
+                <li><a href="{% url 'edit_product' product.id %}">{{ product.product_code }} - {{ product.product }}</a></li>
+            {% endfor %}
+        </ul>
+    {% endfor %}
+{% endblock %}

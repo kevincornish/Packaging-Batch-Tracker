@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Home
+{% endblock %}
+
+{% block content %}
+    <h1>Add Batch</h1>
+    <form method="post" action="{% url 'add_batch' %}" id="batch-form">
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <h2>Select Bays</h2>
+        {% for bay in bays %}
+            <div class="bay-row">
+                <label for="id_bay_{{ bay.id }}">{{ bay.name }}</label>
+                <input type="checkbox" name="selected_bays" id="id_bay_{{ bay.id }}" value="{{ bay.id }}" class="bay-checkbox">
+                
+                <label for="id_start_date_{{ bay.id }}">Start Date:</label>
+                <input type="date" name="start_date_{{ bay.id }}" id="id_start_date_{{ bay.id }}" class="date-input">
+                
+                <label for="id_end_date_{{ bay.id }}">End Date:</label>
+                <input type="date" name="end_date_{{ bay.id }}" id="id_end_date_{{ bay.id }}" class="date-input">
+            </div>
+        {% endfor %}
+
+        <input type="submit" value="Add Batch">
+    </form>
+    <script>
+        document.getElementById('batch-form').addEventListener('submit', function(event) {
+            var checkboxes = document.querySelectorAll('.bay-checkbox');
+            for (var i = 0; i < checkboxes.length; i++) {
+                var checkbox = checkboxes[i];
+                var startDateInput = document.querySelector('[name="start_date_' + checkbox.value + '"]');
+                if (checkbox.checked && startDateInput.value === "") {
+                    alert("Please enter a date for the selected bay.");
+                    event.preventDefault();
+                    return false;
+                }
+            }
+        });
+    </script>
+{% endblock %}

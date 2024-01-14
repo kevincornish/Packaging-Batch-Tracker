@@ -1,0 +1,23 @@
+{% load static %}
+<!DOCTYPE html>
+<head>
+    <title>{% block title %}Packaging{% endblock %}</title>
+    <script src="https://unpkg.com/htmx.org@1.7.0/dist/htmx.js"></script>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+</head>
+
+<body>
+    <a href="{% url 'batch_list' %}">Packaging Priority</a>
+    <a href="{% url 'warehouse_list' %}">Warehouse Batches</a>
+    <a href="{% url 'archive_list' %}">Archive</a>
+    <br>
+    <a href="{% url 'add_batch' %}">Add Batch</a>
+    <a href="{% url 'bay_list' %}">Bays</a>
+    <a href="{% url 'product_list' %}">Products</a>
+    <div id="content" name="content">
+	{% block content %}
+	{% endblock %}
+    </div>
+
+</body>
+</html>
