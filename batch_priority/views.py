@@ -1,7 +1,7 @@
 import csv
 from django.shortcuts import get_object_or_404, render, redirect
 from django.db import models
-from django.db.models import Count, Case, When, Value, IntegerField
+from django.db.models import Count, Case, When, Value, IntegerField, Min
 from django.db.models.functions import Lower
 from django.core.exceptions import ValidationError
 from django.utils.dateparse import parse_date
@@ -20,8 +20,17 @@ def batch_list(request):
     return render(request, 'batch/batch_list.html', {'bays': bays})
 
 def warehouse_list(request):
-    batches = Batch.objects.filter(bom_received=False, batch_complete=False).order_by('complete_date_target')
-    return render(request, 'reports/warehouse_list.html', {'batches': batches})
+    batches = Batch.objects.filter(bom_received=False, batch_complete=False).annotate(
+        earliest_start_date=Min('targetdate__target_start_date')
+    ).order_by('earliest_start_date')
+    
+    earliest_date = batches.first().earliest_start_date if batches else None
+
+    return render(request, 'reports/warehouse_list.html', {'batches': batches, 'earliest_date': earliest_date})
+
+def samples_list(request):
+    batches = Batch.objects.filter(samples_received=False, batch_complete=False).order_by('complete_date_target')
+    return render(request, 'reports/samples_list.html', {'batches': batches})
 
 def archive_list(request):
     batches = Batch.objects.filter(batch_complete=True).order_by('complete_date_target')

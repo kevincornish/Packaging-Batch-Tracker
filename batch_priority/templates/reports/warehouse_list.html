@@ -8,24 +8,24 @@ Home
     <h1>Batches awaiting BOM</h1>
     <div class="table-responsive-sm">
         <table class="table table-sm table-bordered table-hover">
-    <thead>
-        <tr>
-            <th scope="col">Batch Number</th>
-            <th scope="col">Product Code</th>
-            <th scope="col">Complete Date Target</th>
-            <th scope="col">Comments</th>
-        </tr>
-    </thead>
-        {% for batch in batches %}
-    <tbody>
-        <tr>
-            <td scope="row"><a href="{% url 'edit_batch' batch.id %}">{{ batch.batch_number }}</a></td>
-            <td>{{ batch.product_code }}  </td>
-            <td>{{ batch.complete_date_target }}  </td>
-            <td>{{ batch.comments }}  </td>
-        </tr>
-    </tbody>
-        {% endfor %}
-    </table>
+            <thead>
+                <tr>
+                    <th scope="col">Batch Number</th>
+                    <th scope="col">Product Code</th>
+                    <th scope="col">Earliest Start Target Date</th>
+                    <th scope="col">Comments</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for batch in batches %}
+                    <tr>
+                        <td scope="row"><a href="{% url 'edit_batch' batch.id %}">{{ batch.batch_number }}</a></td>
+                        <td>{{ batch.product_code }}</td>
+                        <td>{{ batch.earliest_start_date }}</td>
+                        <td>{{ batch.comments }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
-    {% endblock %}
+{% endblock %}

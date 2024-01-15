@@ -14,6 +14,7 @@ class Batch(models.Model):
     complete_date_target = models.DateField()
     comments = models.TextField(blank=True)
     bom_received = models.BooleanField()
+    samples_received = models.BooleanField()
     batch_complete = models.BooleanField()
 
     def __str__(self):
@@ -26,7 +27,7 @@ class Bay(models.Model):
         return self.name
 
 class TargetDate(models.Model):
-    batch = models.ForeignKey(Batch, on_delete=models.CASCADE)
+    batch = models.ForeignKey(Batch, on_delete=models.CASCADE, related_name='targetdate')
     bay = models.ForeignKey(Bay, on_delete=models.CASCADE)
     target_start_date = models.DateField()
     target_end_date = models.DateField()
