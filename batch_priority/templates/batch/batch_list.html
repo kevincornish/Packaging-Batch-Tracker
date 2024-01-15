@@ -28,7 +28,7 @@ Home
                     <td>{{ targetdate.batch.product_code }}</td>
                     <td>{{ targetdate.batch.complete_date_target }}</td>
                     <td>{{ targetdate.batch.comments }}</td>
-                    <td>{{ targetdate.batch.bom_received }}</td>
+                    <td>{% if targetdate.batch.bom_received == True %} Yes {% else %} No {% endif %}</td>
                     <td>{{ targetdate.target_start_date }}</td>
                     <td>{{ targetdate.target_end_date }}</td>
                 </tr>
