@@ -6,7 +6,7 @@ class Product(models.Model):
     presentation = models.CharField(max_length=255)
 
     def __str__(self):
-        return f"{self.product_code.strip()} - {self.product.strip()} - {self.presentation.strip()}"
+        return f"{self.product_code.strip()}"
     
 class Batch(models.Model):
     batch_number = models.CharField(max_length=255, unique=True)

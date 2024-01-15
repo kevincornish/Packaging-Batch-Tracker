@@ -9,7 +9,7 @@ Add Product
     <form method="post" action="{% url 'add_product' %}">
         {% csrf_token %}
         {{ form.as_p }}
-        <input type="submit" value="Add Product">
+        <input class="btn btn-primary" type="submit" value="Add Product">
     </form>
     <br>
     <a href="{% url 'product_list' %}">Back to Product List</a>

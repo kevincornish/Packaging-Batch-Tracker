@@ -9,7 +9,7 @@ Edit Product
     <form method="post" action="{% url 'edit_product' product.id %}">
         {% csrf_token %}
         {{ form.as_p }}
-        <input type="submit" value="Save Changes">
+        <input class="btn btn-primary" type="submit" value="Edit Product">
     </form>
     <br>
     <a href="{% url 'product_list' %}">Back to Product List</a>

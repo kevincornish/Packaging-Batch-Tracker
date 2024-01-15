@@ -5,27 +5,31 @@ Home
 {% endblock %}
 
 {% block content %}
-<h1>Batch List</h1>
 {% for bay in bays %}
     <h2>{{ bay.name }}</h2>
-    <table border="1" class="styled-table">
+    <div class="table-responsive-sm">
+    <table class="table table-sm table-bordered table-hover">
         <thead>
         <tr>
-            <th>Batch Number</th>
-            <th>Product Code</th>
-            <th>Complete Date Target</th>
-            <th>Comments</th>
-            <th>BOM Received</th>
-            <th>Target Start Date</th>
-            <th>Target End Date</th>
+            <th scope="col">Batch Number</th>
+            <th scope="col">Product Code</th>
+            <th scope="col">Product</th>
+            <th scope="col">Presentation</th>
+            <th scope="col">Complete Date Target</th>
+            <th scope="col">Comments</th>
+            <th scope="col">BOM Received</th>
+            <th scope="col">Target Start Date</th>
+            <th scope="col">Target End Date</th>
         </tr>
     </thead>
         {% for targetdate in bay.targetdate_set.all|dictsort:"target_start_date" %}
             {% if not targetdate.batch.batch_complete %}
             <tbody>
                 <tr>
-                    <td><a href="{% url 'edit_batch' targetdate.batch.id %}">{{ targetdate.batch.batch_number }}</a></td>
+                    <td scope="row"><a href="{% url 'edit_batch' targetdate.batch.id %}">{{ targetdate.batch.batch_number }}</a></td>
                     <td>{{ targetdate.batch.product_code }}</td>
+                    <td>{{ targetdate.batch.product_code.product }}</td>
+                    <td>{{ targetdate.batch.product_code.presentation }}</td>
                     <td>{{ targetdate.batch.complete_date_target }}</td>
                     <td>{{ targetdate.batch.comments }}</td>
                     <td>{% if targetdate.batch.bom_received == True %} Yes {% else %} No {% endif %}</td>
@@ -36,5 +40,6 @@ Home
             {% endif %}
         {% endfor %}
     </table>
+</div>
 {% endfor %}
 {% endblock %}

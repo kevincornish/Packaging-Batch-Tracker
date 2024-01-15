@@ -9,7 +9,7 @@ Edit Bay
     <form method="post" action="{% url 'edit_bay' bay.id %}">
         {% csrf_token %}
         {{ form.as_p }}
-        <input type="submit" value="Save Changes">
+        <input class="btn btn-primary" type="submit" value="Edit Bay">
     </form>
     <br>
     <a href="{% url 'bay_list' %}">Back to Bay List</a>
