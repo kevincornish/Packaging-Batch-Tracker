@@ -6,6 +6,9 @@ from django.db.models.functions import Lower
 from django.core.exceptions import ValidationError
 from django.utils.dateparse import parse_date
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import login, logout
 from .forms import BatchForm, BayForm, ProductForm
 from .models import Bay, Batch, Product, TargetDate
 
@@ -40,6 +43,7 @@ def archive_list(request):
     batches = Batch.objects.filter(batch_complete=True, production_check=True).order_by('production_check_date')
     return render(request, 'reports/archive.html', {'batches': batches})
 
+@login_required
 def add_batch(request):
     bays = Bay.objects.all()
 
@@ -78,12 +82,14 @@ def add_batch(request):
         form = BatchForm()
         return render(request, 'batch/add_batch.html', {'form': form, 'bays': bays})
 
+@login_required
 def edit_batch(request, batch_id):
     batch = get_object_or_404(Batch, id=batch_id)
 
     if request.method == 'POST':
         form = BatchForm(request.POST, instance=batch)
         if form.is_valid():
+            batch.user = request.user
             form.save()
 
             selected_bays = request.POST.getlist('selected_bays')
@@ -130,7 +136,7 @@ def bay_list(request):
     bays = Bay.objects.all()
     return render(request, 'bay/bay_list.html', {'bays': bays})
 
-
+@login_required
 def add_bay(request):
     if request.method == 'POST':
         form = BayForm(request.POST)
@@ -144,6 +150,7 @@ def add_bay(request):
 
     return render(request, 'bay/add_bay.html', {'form': form})
 
+@login_required
 def edit_bay(request, bay_id):
     bay = get_object_or_404(Bay, id=bay_id)
 
@@ -159,6 +166,7 @@ def edit_bay(request, bay_id):
 
     return render(request, 'bay/edit_bay.html', {'form': form, 'bay': bay})
 
+@login_required
 def product_list(request):
     products = Product.objects.annotate(
         presentation_lower=Case(
@@ -170,6 +178,7 @@ def product_list(request):
 
     return render(request, 'product/product_list.html', {'products': products})
 
+@login_required
 @csrf_exempt
 def add_product(request):
     if request.method == 'POST':
@@ -184,6 +193,7 @@ def add_product(request):
 
     return render(request, 'product/add_product.html', {'form': form})
 
+@login_required
 def import_products(request):
     if request.method == 'POST' and request.FILES['csv_file']:
         csv_file = request.FILES['csv_file'].read().decode('utf-8').splitlines()
@@ -219,6 +229,7 @@ def import_products(request):
 
     return render(request, 'product/import_products.html')
 
+@login_required
 def edit_product(request, product_id):
     product = get_object_or_404(Product, id=product_id)
 
@@ -233,3 +244,29 @@ def edit_product(request, product_id):
         form = ProductForm(instance=product)
 
     return render(request, 'product/edit_product.html', {'form': form, 'product': product})
+
+def signup(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return redirect('batch_list')
+    else:
+        form = UserCreationForm()
+    return render(request, 'user/signup.html', {'form': form})
+
+def user_login(request):
+    if request.method == 'POST':
+        form = AuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            user = form.get_user()
+            login(request, user)
+            return redirect('batch_list')
+    else:
+        form = AuthenticationForm()
+    return render(request, 'user/login.html', {'form': form})
+
+def user_logout(request):
+    logout(request)
+    return redirect('batch_list')

@@ -16,4 +16,7 @@ urlpatterns = [
     path('edit_bay/<int:bay_id>/', views.edit_bay, name='edit_bay'),
     path('edit_product/<int:product_id>/', views.edit_product, name='edit_product'),
     path('import_products/', views.import_products, name='import_products'),
+    path('signup/', views.signup, name='signup'),
+    path('login/', views.user_login, name='login'),
+    path('logout/', views.user_logout, name='logout'),
 ]

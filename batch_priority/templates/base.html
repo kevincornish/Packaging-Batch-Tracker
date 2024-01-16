@@ -41,6 +41,7 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'archive_list' %}">Archive</a>
                 </li>
+                {% if user.is_authenticated %}
                 <li class="nav-item dropdown">
                   <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     Edit
@@ -51,6 +52,12 @@
                     <li><a class="dropdown-item" href="{% url 'product_list' %}">Products</a></li>
                   </ul>
                 </li>
+                {% else %}
+                <li class="nav-item">
+                  <a class="nav-link" href="{% url 'login' %}">Login</a>
+                  <a class="nav-link" href="{% url 'signup' %}">Sign up</a>
+                </li>
+                {% endif %}
               </ul>
             </div>
           </div>
