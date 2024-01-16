@@ -26,15 +26,19 @@ Packaging
             {% if not targetdate.batch.batch_complete %}
             <tbody>
                 <tr>
+                    {% if user.is_authenticated %}
                     <td scope="row"><a href="{% url 'edit_batch' targetdate.batch.id %}">{{ targetdate.batch.batch_number }}</a></td>
+                    {% else %}
+                    <td scope="row">{{ targetdate.batch.batch_number }}</td>
+                    {% endif %}
                     <td>{{ targetdate.batch.product_code }}</td>
                     <td>{{ targetdate.batch.product_code.product }}</td>
                     <td>{{ targetdate.batch.product_code.presentation }}</td>
-                    <td>{{ targetdate.batch.complete_date_target }}</td>
-                    <td>{{ targetdate.batch.comments }}</td>
                     <td>{% if targetdate.batch.bom_received == True %} Yes {% else %} No {% endif %}</td>
+                    <td>{{ targetdate.batch.comments }}</td>
                     <td>{{ targetdate.target_start_date }}</td>
                     <td>{{ targetdate.target_end_date }}</td>
+                    <td>{{ targetdate.batch.complete_date_target }}</td>
                 </tr>
             </tbody>
             {% endif %}

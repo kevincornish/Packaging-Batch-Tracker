@@ -19,7 +19,11 @@ Production Checks
         {% for batch in batches %}
         <tbody>
         <tr>
-            <td scope="row"><a href="{% url 'edit_batch' batch.id %}">{{ batch.batch_number }}</a></td>
+            {% if user.is_authenticated %}
+            <td scope="row"><a href="{% url 'edit_batch' batch.batch_number.id %}">{{ batch.batch_number }}</a></td>
+            {% else %}
+            <td scope="row">{{ batch.batch_number }}</td>
+            {% endif %}
             <td>{{ batch.product_code }}  </td>
             <td>{{ batch.complete_date_target }}  </td>
             <td>{{ batch.comments }}  </td>

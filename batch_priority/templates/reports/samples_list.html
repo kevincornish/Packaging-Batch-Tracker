@@ -20,7 +20,11 @@ Sterility
         {% for batch in batches %}
     <tbody>
         <tr>
+            {% if user.is_authenticated %}
+            <td scope="row"><a href="{% url 'edit_batch' batch.batch_number.id %}">{{ batch.batch_number }}</a></td>
+            {% else %}
             <td scope="row">{{ batch.batch_number }}</td>
+            {% endif %}
             <td>{{ batch.product_code }}</td>
             <td>{{ batch.product_code.product }}</td>
             <td>{{ batch.product_code.presentation }}</td>
