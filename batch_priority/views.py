@@ -32,8 +32,12 @@ def samples_list(request):
     batches = Batch.objects.filter(samples_received=False, batch_complete=False).order_by('complete_date_target')
     return render(request, 'reports/samples_list.html', {'batches': batches})
 
+def production_check_list(request):
+    batches = Batch.objects.filter(batch_complete=True, production_check=False).order_by('complete_date_target')
+    return render(request, 'reports/production_checks.html', {'batches': batches})
+
 def archive_list(request):
-    batches = Batch.objects.filter(batch_complete=True).order_by('complete_date_target')
+    batches = Batch.objects.filter(batch_complete=True, production_check=True).order_by('production_check_date')
     return render(request, 'reports/archive.html', {'batches': batches})
 
 def add_batch(request):

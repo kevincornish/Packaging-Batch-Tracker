@@ -1,3 +1,4 @@
+from django.utils import timezone
 from django.db import models
 
 class Product(models.Model):
@@ -16,6 +17,13 @@ class Batch(models.Model):
     bom_received = models.BooleanField()
     samples_received = models.BooleanField()
     batch_complete = models.BooleanField()
+    production_check = models.BooleanField()
+    production_check_date = models.DateTimeField(null=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        if self.production_check and not self.production_check_date:
+            self.production_check_date = timezone.now()
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.batch_number} - {self.product_code}"

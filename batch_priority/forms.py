@@ -17,7 +17,7 @@ BatchFormSet = inlineformset_factory(Batch, TargetDate, form=TargetDateForm, ext
 class BatchForm(forms.ModelForm):
     class Meta:
         model = Batch
-        fields = ['batch_number', 'product_code', 'complete_date_target', 'comments', 'bom_received', 'samples_received', 'batch_complete']
+        fields = ['batch_number', 'product_code', 'complete_date_target', 'comments', 'bom_received', 'samples_received', 'batch_complete', 'production_check']
         widgets = {
             'complete_date_target': DateInput(attrs={'type': 'date'}),
         }

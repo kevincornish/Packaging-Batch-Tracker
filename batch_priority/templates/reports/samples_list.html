@@ -12,17 +12,19 @@ Home
         <tr>
             <th scope="col">Batch Number</th>
             <th scope="col">Product Code</th>
+            <th scope="col">Product</th>
+            <th scope="col">Presentation</th>
             <th scope="col">Complete Date Target</th>
-            <th scope="col">Comments</th>
         </tr>
     </thead>
         {% for batch in batches %}
     <tbody>
         <tr>
-            <td scope="row"><a href="{% url 'edit_batch' batch.id %}">{{ batch.batch_number }}</a></td>
-            <td>{{ batch.product_code }}  </td>
+            <td scope="row">{{ batch.batch_number }}</td>
+            <td>{{ batch.product_code }}</td>
+            <td>{{ batch.product_code.product }}</td>
+            <td>{{ batch.product_code.presentation }}</td>
             <td>{{ batch.complete_date_target }}  </td>
-            <td>{{ batch.comments }}  </td>
         </tr>
     </tbody>
         {% endfor %}

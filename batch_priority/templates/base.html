@@ -10,7 +10,6 @@
 </head>
 
 <body>
-    <div class="container">
       <nav class="navbar bg-light">
         <div class="container-fluid">
           <a class="navbar-brand" href="{% url 'batch_list' %}">Packaging Priority</a>
@@ -30,6 +29,9 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'batch_list' %}">Packaging</a>
                 </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="{% url 'production_checks' %}">Production Checks</a>
+              </li>
                 <li class="nav-item">
                   <a class="nav-link" href="{% url 'samples_list' %}">Sterility</a>
               </li>
@@ -58,7 +60,6 @@
     <div class="container">
 	{% block content %}
 	{% endblock %}
-    </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
 </body>

@@ -1,18 +1,18 @@
 {% extends 'base.html' %}
 
 {% block title %}
-Archive
+Production Checks
 {% endblock %}
 
 {% block content %}
-    <h1>Batches completed</h1>
+    <h1>Batches to production check</h1>
     <div class="table-responsive-sm">
         <table class="table table-sm table-bordered table-hover">
         <thead>
         <tr>
             <th scope="col">Batch Number</th>
             <th scope="col">Product Code</th>
-            <th scope="col">Prod Check Complete</th>
+            <th scope="col">Complete Date Target</th>
             <th scope="col">Comments</th>
         </tr>
     </thead>
@@ -21,7 +21,7 @@ Archive
         <tr>
             <td scope="row"><a href="{% url 'edit_batch' batch.id %}">{{ batch.batch_number }}</a></td>
             <td>{{ batch.product_code }}  </td>
-            <td>{{ batch.production_check_date }}  </td>
+            <td>{{ batch.complete_date_target }}  </td>
             <td>{{ batch.comments }}  </td>
         </tr>
     </tbody>

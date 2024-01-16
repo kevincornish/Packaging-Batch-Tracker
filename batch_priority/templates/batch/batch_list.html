@@ -15,11 +15,11 @@ Home
             <th scope="col">Product Code</th>
             <th scope="col">Product</th>
             <th scope="col">Presentation</th>
-            <th scope="col">Complete Date Target</th>
-            <th scope="col">Comments</th>
             <th scope="col">BOM Received</th>
+            <th scope="col">Comments</th>
             <th scope="col">Target Start Date</th>
             <th scope="col">Target End Date</th>
+            <th scope="col">Complete Date Target</th>
         </tr>
     </thead>
         {% for targetdate in bay.targetdate_set.all|dictsort:"target_start_date" %}
