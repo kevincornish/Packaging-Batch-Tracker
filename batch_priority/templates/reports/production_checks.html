@@ -31,7 +31,7 @@ Production Checks
             <td>{{ batch.complete_date_target }}  </td>
             <td>{{ batch.batch_complete_date }}</td>
             <td>{{ batch.completed_by.username }}</td>
-            <td style="{% if batch.production_check_target.date > today_date %}color: red;{% endif %}">
+            <td style="{% if batch.production_check_target.date < today_date %}color: red;{% endif %}">
                 {{ batch.production_check_target }}
             </td>
             <td>{{ batch.comments }}  </td>

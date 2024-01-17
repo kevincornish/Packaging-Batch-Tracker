@@ -50,6 +50,10 @@ class Batch(models.Model):
             self.batch_complete_date = timezone.now()
             if hasattr(self, 'user') and self.user.is_authenticated:
                 self.completed_by = self.user
+        elif not self.batch_complete:
+            # If batch_complete is set to False, reset batch_complete_date and completed_by
+            self.batch_complete_date = None
+            self.completed_by = None
 
         super().save(*args, **kwargs)
 
