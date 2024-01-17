@@ -12,6 +12,16 @@ urlpatterns = [
     path("batch_history/<int:batch_id>/", views.batch_history, name="batch_history"),
     path("batch/<int:batch_id>/", views.batch_detail, name="batch_detail"),
     path("completed_on/", views.CompletedOnView.as_view(), name="completed_on"),
+    path(
+        "batches_per_week_data/",
+        views.batches_per_week_data,
+        name="batches_per_week_data",
+    ),
+    path(
+        "batches_per_week/",
+        views.batches_per_week_chart,
+        name="batches_per_week",
+    ),
     path("add_batch/", views.add_batch, name="add_batch"),
     path("add_bay/", views.add_bay, name="add_bay"),
     path("add_product/", views.add_product, name="add_product"),

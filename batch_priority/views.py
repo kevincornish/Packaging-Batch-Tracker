@@ -2,7 +2,7 @@ import csv
 from django.shortcuts import get_object_or_404, render, redirect
 from django.db import models
 from django.db.models import Count, Case, When, Value, IntegerField, Min
-from django.db.models.functions import Lower
+from django.db.models.functions import Lower, TruncWeek
 from django.core.exceptions import ValidationError
 from django.utils.dateparse import parse_date
 from django.views.decorators.csrf import csrf_exempt
@@ -10,6 +10,7 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, logout
 from django.views import View
+from django.http import JsonResponse
 from .forms import BatchForm, BayForm, ProductForm, CommentForm
 from .models import Bay, Batch, Product, TargetDate
 from django.utils import timezone
@@ -399,3 +400,22 @@ class CompletedOnView(View):
             batches = Batch.objects.all()
 
         return render(request, self.template_name, {"batches": batches})
+
+
+def batches_per_week_data(request):
+    data = (
+        Batch.objects.filter(batch_complete=True, batch_complete_date__isnull=False)
+        .annotate(week=TruncWeek("batch_complete_date"))
+        .values("week")
+        .annotate(batch_count=Count("id"))
+        .order_by("week")
+    )
+
+    labels = [entry["week"].strftime("%d-%m-%Y") for entry in data]
+    batch_counts = [entry["batch_count"] for entry in data]
+
+    return JsonResponse({"labels": labels, "data": batch_counts})
+
+
+def batches_per_week_chart(request):
+    return render(request, "reports/completed_per_week.html")
