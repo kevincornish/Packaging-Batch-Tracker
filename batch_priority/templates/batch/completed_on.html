@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Batches completed on
+{% endblock %}
+
+{% block content %}
+    <h1>Batches completed on</h1>
+    
+    <form method="get" action="{% url 'completed_on' %}">
+        <label for="start_date">Start Date:</label>
+        <input type="date" id="start_date" name="start_date" value="{{ request.GET.start_date }}">
+
+        <label for="end_date">End Date:</label>
+        <input type="date" id="end_date" name="end_date" value="{{ request.GET.end_date }}">
+
+        <button class="btn btn-primary" type="submit">Filter</button>
+    </form>
+<br>
+    <div class="table-responsive-sm">
+        <table class="table table-sm table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">Batch Number</th>
+                    <th scope="col">Product Code</th>
+                    <th scope="col">Product</th>
+                    <th scope="col">Presentation</th>
+                    <th scope="col">Completed by</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for batch in batches %}
+                    <tr>
+                        <td scope="row">{% if user.is_authenticated %}<a href="{% url 'batch_detail' batch.id %}">{{ batch.batch_number }}</a>{% else %}{{ batch.batch_number }}{% endif %}</td>
+                        <td scope="row">{{ batch.product_code }}</td>
+                        <td scope="row">{{ batch.product_code.product }}</td>
+                        <td scope="row">{{ batch.product_code.presentation }}</td>
+                        <td scope="row">{{ batch.completed_by }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

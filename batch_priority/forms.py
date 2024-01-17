@@ -3,32 +3,46 @@ from django.forms import inlineformset_factory
 from .models import Batch, TargetDate, Bay, Product, Comment
 from django.forms.widgets import DateInput
 
+
 class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
-        fields = ['text']
+        fields = ["text"]
+
 
 class TargetDateForm(forms.ModelForm):
     class Meta:
         model = TargetDate
-        fields = ['bay', 'target_start_date', 'target_end_date']
+        fields = ["bay", "target_start_date", "target_end_date"]
         widgets = {
-            'target_start_date': DateInput(attrs={'type': 'date'}),
-            'target_end_date': DateInput(attrs={'type': 'date'}),
+            "target_start_date": DateInput(attrs={"type": "date"}),
+            "target_end_date": DateInput(attrs={"type": "date"}),
         }
 
+
 BatchFormSet = inlineformset_factory(Batch, TargetDate, form=TargetDateForm, extra=1)
+
 
 class BatchForm(forms.ModelForm):
     class Meta:
         model = Batch
-        fields = ['batch_number', 'product_code', 'complete_date_target', 'on_hold', 'notes', 'bom_received', 'samples_received', 'batch_complete', 'production_check']
+        fields = [
+            "batch_number",
+            "product_code",
+            "complete_date_target",
+            "on_hold",
+            "notes",
+            "bom_received",
+            "samples_received",
+            "batch_complete",
+            "production_check",
+        ]
         widgets = {
-            'complete_date_target': DateInput(attrs={'type': 'date'}),
+            "complete_date_target": DateInput(attrs={"type": "date"}),
         }
 
     target_dates = BatchFormSet()
-    
+
     def save(self, commit=True, created_by=None, *args, **kwargs):
         instance = super().save(commit=False, *args, **kwargs)
 
@@ -40,12 +54,15 @@ class BatchForm(forms.ModelForm):
                 instance.save()
 
         return instance
+
+
 class BayForm(forms.ModelForm):
     class Meta:
         model = Bay
-        fields = ['name']
+        fields = ["name"]
+
 
 class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
-        fields = ['product_code', 'product', 'presentation']
+        fields = ["product_code", "product", "presentation"]
