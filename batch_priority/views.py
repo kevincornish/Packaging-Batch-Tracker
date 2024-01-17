@@ -12,6 +12,7 @@ from django.contrib.auth import login, logout
 from .forms import BatchForm, BayForm, ProductForm
 from .models import Bay, Batch, Product, TargetDate
 from django.utils import timezone
+from auditlog.models import LogEntry
 
 def batch_list(request):
     bays = Bay.objects.annotate(
@@ -135,7 +136,14 @@ def edit_batch(request, batch_id):
             bay_data.append(bay_row)
 
         return render(request, 'batch/edit_batch.html', {'form': form, 'batch': batch, 'bays': bay_data})
-    
+
+@login_required
+def batch_history(request, batch_id):
+    batch = Batch.objects.get(pk=batch_id)
+    log_entries = LogEntry.objects.filter(object_id=batch.id, content_type__model='batch').order_by('-timestamp')
+
+    return render(request, 'batch/batch_history.html', {'batch': batch, 'log_entries': log_entries})
+
 def bay_list(request):
     bays = Bay.objects.all()
     return render(request, 'bay/bay_list.html', {'bays': bays})
