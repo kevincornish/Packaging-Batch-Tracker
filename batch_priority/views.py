@@ -11,6 +11,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, logout
 from .forms import BatchForm, BayForm, ProductForm
 from .models import Bay, Batch, Product, TargetDate
+from django.utils import timezone
 
 def batch_list(request):
     bays = Bay.objects.annotate(
@@ -37,6 +38,8 @@ def samples_list(request):
 
 def production_check_list(request):
     batches = Batch.objects.filter(batch_complete=True, production_check=False).order_by('complete_date_target')
+    for batch in batches:
+        batch.production_check_target = batch.complete_date_target + timezone.timedelta(days=1)
     return render(request, 'reports/production_checks.html', {'batches': batches})
 
 def archive_list(request):

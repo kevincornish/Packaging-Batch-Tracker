@@ -13,6 +13,7 @@ Production Checks
             <th scope="col">Batch Number</th>
             <th scope="col">Product Code</th>
             <th scope="col">Complete Date Target</th>
+            <th scope="col">Production Check Target</th>
             <th scope="col">Comments</th>
         </tr>
     </thead>
@@ -26,6 +27,7 @@ Production Checks
             {% endif %}
             <td>{{ batch.product_code }}  </td>
             <td>{{ batch.complete_date_target }}  </td>
+            <td>{{ batch.production_check_target }}
             <td>{{ batch.comments }}  </td>
         </tr>
     </tbody>
