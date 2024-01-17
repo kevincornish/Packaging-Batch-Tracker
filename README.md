@@ -1,8 +1,8 @@
-# Batch Management Tracker
+# Packaging Batch Tracker
 
 ## Overview
 
-The Batch Management Tracker is a Django-based web application designed to streamline and manage the production batches of a manufacturing process. The system allows users to create, edit, and track batches through various production stages.
+The Packaging Batch Tracker is a Django-based web application designed to streamline and manage the production batches of a manufacturing process. The system allows users to create, edit, and track batches through various production stages.
 
 * Batch Creation: Users can create new batches, specifying details such as batch number, product code, complete date target, etc.
 
