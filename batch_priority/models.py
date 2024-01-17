@@ -20,6 +20,8 @@ class Batch(models.Model):
     bom_received = models.BooleanField()
     samples_received = models.BooleanField()
     batch_complete = models.BooleanField()
+    batch_complete_date = models.DateTimeField(null=True, blank=True)
+    completed_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='completed_batches')
     production_check = models.BooleanField()
     production_check_date = models.DateTimeField(null=True, blank=True)
     production_checked_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='production_checked_batches')
@@ -42,6 +44,12 @@ class Batch(models.Model):
             self.production_check_date = timezone.now()
             if hasattr(self, 'user') and self.user.is_authenticated:
                 self.production_checked_by = self.user
+
+        # Check if batch_complete is set to True
+        if self.batch_complete and not self.batch_complete_date:
+            self.batch_complete_date = timezone.now()
+            if hasattr(self, 'user') and self.user.is_authenticated:
+                self.completed_by = self.user
 
         super().save(*args, **kwargs)
 

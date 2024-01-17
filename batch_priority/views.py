@@ -39,9 +39,10 @@ def samples_list(request):
 
 def production_check_list(request):
     batches = Batch.objects.filter(batch_complete=True, production_check=False).order_by('complete_date_target')
+    today_date = timezone.now().date()
     for batch in batches:
-        batch.production_check_target = batch.complete_date_target + timezone.timedelta(days=1)
-    return render(request, 'reports/production_checks.html', {'batches': batches})
+        batch.production_check_target = batch.batch_complete_date + timezone.timedelta(days=1)
+    return render(request, 'reports/production_checks.html', {'batches': batches, 'today_date': today_date})
 
 def archive_list(request):
     batches = Batch.objects.filter(batch_complete=True, production_check=True).order_by('production_check_date')

@@ -14,7 +14,6 @@ Archive
             <th scope="col">Product Code</th>
             <th scope="col">Prod Check Complete</th>
             <th scope="col">Prod Check Completed By</th>
-            <th scope="col">Comments</th>
         </tr>
     </thead>
         {% for batch in batches %}
@@ -24,7 +23,6 @@ Archive
             <td>{{ batch.product_code }}  </td>
             <td>{{ batch.production_check_date }}  </td>
             <td>{{ batch.production_checked_by.username }}  </td>
-            <td>{{ batch.comments }}  </td>
         </tr>
     </tbody>
         {% endfor %}

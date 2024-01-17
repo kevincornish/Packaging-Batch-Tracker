@@ -13,6 +13,8 @@ Production Checks
             <th scope="col">Batch Number</th>
             <th scope="col">Product Code</th>
             <th scope="col">Complete Date Target</th>
+            <th scope="col">Actual Complete Date</th>
+            <th scope="col">Completed By</th>
             <th scope="col">Production Check Target</th>
             <th scope="col">Comments</th>
         </tr>
@@ -27,7 +29,11 @@ Production Checks
             {% endif %}
             <td>{{ batch.product_code }}  </td>
             <td>{{ batch.complete_date_target }}  </td>
-            <td>{{ batch.production_check_target }}
+            <td>{{ batch.batch_complete_date }}</td>
+            <td>{{ batch.completed_by.username }}</td>
+            <td style="{% if batch.production_check_target.date > today_date %}color: red;{% endif %}">
+                {{ batch.production_check_target }}
+            </td>
             <td>{{ batch.comments }}  </td>
         </tr>
     </tbody>
