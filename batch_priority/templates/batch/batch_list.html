@@ -16,7 +16,7 @@ Packaging
             <th scope="col">Product</th>
             <th scope="col">Presentation</th>
             <th scope="col">BOM Received</th>
-            <th scope="col">Comments</th>
+            <th scope="col">Notes</th>
             <th scope="col">Target Start Date</th>
             <th scope="col">Target End Date</th>
             <th scope="col">Complete Date Target</th>
@@ -27,7 +27,7 @@ Packaging
             <tbody {% if targetdate.batch.on_hold %}class="table-danger"{% endif %}>
                 <tr>
                     {% if user.is_authenticated %}
-                    <td scope="row"><a href="{% url 'edit_batch' targetdate.batch.id %}">{{ targetdate.batch.batch_number }}</a></td>
+                    <td scope="row"><a href="{% url 'batch_detail' targetdate.batch.id %}">{{ targetdate.batch.batch_number }}</a></td>
                     {% else %}
                     <td scope="row">{{ targetdate.batch.batch_number }}</td>
                     {% endif %}
@@ -35,7 +35,7 @@ Packaging
                     <td>{{ targetdate.batch.product_code.product }}</td>
                     <td>{{ targetdate.batch.product_code.presentation }}</td>
                     <td>{% if targetdate.batch.bom_received == True %} Yes {% else %} No {% endif %}</td>
-                    <td>{{ targetdate.batch.comments }}</td>
+                    <td>{{ targetdate.batch.notes }}</td>
                     <td>{{ targetdate.target_start_date }}</td>
                     <td>{{ targetdate.target_end_date }}</td>
                     <td>{{ targetdate.batch.complete_date_target }}</td>

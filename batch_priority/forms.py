@@ -1,7 +1,12 @@
 from django import forms
 from django.forms import inlineformset_factory
-from .models import Batch, TargetDate, Bay, Product
+from .models import Batch, TargetDate, Bay, Product, Comment
 from django.forms.widgets import DateInput
+
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ['text']
 
 class TargetDateForm(forms.ModelForm):
     class Meta:
@@ -17,7 +22,7 @@ BatchFormSet = inlineformset_factory(Batch, TargetDate, form=TargetDateForm, ext
 class BatchForm(forms.ModelForm):
     class Meta:
         model = Batch
-        fields = ['batch_number', 'product_code', 'complete_date_target', 'on_hold', 'comments', 'bom_received', 'samples_received', 'batch_complete', 'production_check']
+        fields = ['batch_number', 'product_code', 'complete_date_target', 'on_hold', 'notes', 'bom_received', 'samples_received', 'batch_complete', 'production_check']
         widgets = {
             'complete_date_target': DateInput(attrs={'type': 'date'}),
         }

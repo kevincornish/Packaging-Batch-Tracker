@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Batch - {{ batch.batch_number }}
+{% endblock %}
+
+{% block content %}
+    <h2>Batch {{ batch.batch_number }} - <a href="{% url 'edit_batch' batch.id %}">Edit Batch</a> <a href="{% url 'batch_history' batch.id %}">Batch History</a></h2>
+    <p>Product Code: {{ batch.product_code }}<br>
+   Product: {{ batch.product_code.product }}<br>
+   Presentation: {{ batch.product_code.presentation }}<br>
+   {% if batch.on_hold == True %}On Hold: Yes <br>{% endif %}
+   BOM recieved: {% if batch.bom_received == True %} Yes {% else %} No {% endif %}<br>
+   Samples received: {% if batch.samples_received == True %} Yes {% else %} No {% endif %}<br>
+   Notes: {{ batch.notes }}<br>
+   Complete Target Date: {{ batch.complete_date_target }}<br>
+   Batch Complete: {% if batch.batch_complete == True %} Yes {% else %} No {% endif %}<br>
+   {% if batch.batch_complete == True %}
+   {% if batch.batch_complete_date.date < batch.complete_date_target %}
+      <p style="color: green;">Batch Complete Date: {{ batch.batch_complete_date }}</p>
+   {% else %}
+      <p style="color: red;">Batch Complete Date: {{ batch.batch_complete_date }}</p>
+   {% endif %}
+   <p>Batch Completed by: {{ batch.completed_by }}<br> </p>
+{% endif %}
+   Production Check: {% if batch.production_check == True %} Yes {% else %} No {% endif %}<br>
+   {% if batch.production_check == True %}
+   Production Check Date: {{ batch.production_check_date }}<br>
+   Production Check by: {{ batch.production_checked_by }}<br> 
+   Batch added by: {{ batch.created_by }}<br> 
+   Batch created at: {{ batch.created_at }}<br> 
+   Batch last edited by: {{ batch.last_modified_by }}<br> 
+   Batch last edited at: {{ batch.last_modified_at }}
+   {% endif %}
+</p>
+{% if comments %}
+    <!-- Display Comments -->
+    <h2>Comments</h2>
+    <ul>
+        {% for comment in comments %}
+            <li>{{ comment.user.username }} - {{ comment.timestamp }}<br>{{ comment.text }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    <!-- Add Comment Form -->
+    <h2>Add Comment</h2>
+    <form method="post" action="{% url 'batch_detail' batch.id %}">
+        {% csrf_token %}
+        {{ comment_form.as_p }}
+        <button class="btn btn-primary" type="submit">Add comment</button>
+    </form>
+{% endblock %}

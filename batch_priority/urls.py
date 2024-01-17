@@ -10,6 +10,7 @@ urlpatterns = [
     path('bays/', views.bay_list, name='bay_list'),
     path('products/', views.product_list, name='product_list'),
     path('batch_history/<int:batch_id>/', views.batch_history, name='batch_history'),
+    path('batch/<int:batch_id>/', views.batch_detail, name='batch_detail'),
     path('add_batch/', views.add_batch, name='add_batch'),
     path('add_bay/', views.add_bay, name='add_bay'),
     path('add_product/', views.add_product, name='add_product'),

@@ -16,7 +16,7 @@ class Batch(models.Model):
     product_code = models.ForeignKey(Product, on_delete=models.CASCADE)    
     complete_date_target = models.DateField()
     on_hold = models.BooleanField(default=False)
-    comments = models.TextField(blank=True)
+    notes = models.TextField(blank=True)
     bom_received = models.BooleanField()
     samples_received = models.BooleanField()
     batch_complete = models.BooleanField()
@@ -59,6 +59,15 @@ class Batch(models.Model):
 
     def __str__(self):
         return f"{self.batch_number} - {self.product_code}"
+
+class Comment(models.Model):
+    batch = models.ForeignKey(Batch, on_delete=models.CASCADE, related_name='comments')
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    timestamp = models.DateTimeField(default=timezone.now)
+    text = models.TextField()
+
+    def __str__(self):
+        return f"{self.user.username} - {self.timestamp}"
 
 class Bay(models.Model):
     name = models.CharField(max_length=50, unique=True)

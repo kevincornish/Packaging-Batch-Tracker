@@ -9,8 +9,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, logout
-from .forms import BatchForm, BayForm, ProductForm
-from .models import Bay, Batch, Product, TargetDate
+from .forms import BatchForm, BayForm, ProductForm, CommentForm
+from .models import Bay, Batch, Product, TargetDate, Comment
 from django.utils import timezone
 from auditlog.models import LogEntry
 
@@ -137,6 +137,25 @@ def edit_batch(request, batch_id):
             bay_data.append(bay_row)
 
         return render(request, 'batch/edit_batch.html', {'form': form, 'batch': batch, 'bays': bay_data})
+
+@login_required
+def batch_detail(request, batch_id):
+    batch = get_object_or_404(Batch, id=batch_id)
+    comments = batch.comments.all()
+
+    if request.method == 'POST':
+        comment_form = CommentForm(request.POST)
+        if comment_form.is_valid():
+            new_comment = comment_form.save(commit=False)
+            new_comment.batch = batch
+            new_comment.user = request.user if request.user.is_authenticated else None
+            new_comment.save()
+            comment_form = CommentForm()  # Reset the form after saving
+
+    else:
+        comment_form = CommentForm()
+
+    return render(request, 'batch/batch_detail.html', {'batch': batch, 'comments': comments, 'comment_form': comment_form})
 
 @login_required
 def batch_history(request, batch_id):

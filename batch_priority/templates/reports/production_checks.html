@@ -16,14 +16,14 @@ Production Checks
             <th scope="col">Actual Complete Date</th>
             <th scope="col">Completed By</th>
             <th scope="col">Production Check Target</th>
-            <th scope="col">Comments</th>
+            <th scope="col">Notes</th>
         </tr>
     </thead>
         {% for batch in batches %}
         <tbody>
         <tr>
             {% if user.is_authenticated %}
-            <td scope="row"><a href="{% url 'edit_batch' batch.id %}">{{ batch.batch_number }}</a></td>
+            <td scope="row"><a href="{% url 'batch_detail' batch.id %}">{{ batch.batch_number }}</a></td>
             {% else %}
             <td scope="row">{{ batch.batch_number }}</td>
             {% endif %}
@@ -34,7 +34,7 @@ Production Checks
             <td style="{% if batch.production_check_target.date < today_date %}color: red;{% endif %}">
                 {{ batch.production_check_target }}
             </td>
-            <td>{{ batch.comments }}  </td>
+            <td>{{ batch.notes }}  </td>
         </tr>
     </tbody>
         {% endfor %}

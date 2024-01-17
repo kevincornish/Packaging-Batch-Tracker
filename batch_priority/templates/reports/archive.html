@@ -19,7 +19,7 @@ Archive
         {% for batch in batches %}
         <tbody>
         <tr>
-            <td scope="row"><a href="{% url 'batch_history' batch.id %}">{{ batch.batch_number }}</a></td>
+            <td scope="row"><a href="{% url 'batch_detail' batch.id %}">{{ batch.batch_number }}</a></td>
             <td>{{ batch.product_code }}  </td>
             <td>{{ batch.production_check_date }}  </td>
             <td>{{ batch.production_checked_by.username }}  </td>
