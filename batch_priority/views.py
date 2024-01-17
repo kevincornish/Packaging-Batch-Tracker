@@ -25,7 +25,7 @@ def batch_list(request):
     return render(request, 'batch/batch_list.html', {'bays': bays})
 
 def warehouse_list(request):
-    batches = Batch.objects.filter(bom_received=False, batch_complete=False).annotate(
+    batches = Batch.objects.filter(bom_received=False, batch_complete=False, on_hold=False).annotate(
         earliest_start_date=Min('targetdate__target_start_date')
     ).order_by('earliest_start_date')
     
