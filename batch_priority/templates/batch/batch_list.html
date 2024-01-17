@@ -24,7 +24,7 @@ Packaging
     </thead>
         {% for targetdate in bay.targetdate_set.all|dictsort:"target_start_date" %}
             {% if not targetdate.batch.batch_complete %}
-            <tbody>
+            <tbody {% if targetdate.batch.on_hold %}class="table-danger"{% endif %}>
                 <tr>
                     {% if user.is_authenticated %}
                     <td scope="row"><a href="{% url 'edit_batch' targetdate.batch.id %}">{{ targetdate.batch.batch_number }}</a></td>
