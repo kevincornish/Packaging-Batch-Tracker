@@ -56,7 +56,7 @@ def add_batch(request):
                 form.add_error(None, ValidationError("Please select at least one bay."))
                 return render(request, 'batch/add_batch.html', {'form': form, 'bays': bays})
 
-            batch_instance = form.save()
+            batch_instance = form.save(commit=True, created_by=request.user)
 
             for bay_id in selected_bays:
                 bay = get_object_or_404(Bay, id=bay_id)
@@ -85,10 +85,11 @@ def add_batch(request):
 @login_required
 def edit_batch(request, batch_id):
     batch = get_object_or_404(Batch, id=batch_id)
-
+    
     if request.method == 'POST':
         form = BatchForm(request.POST, instance=batch)
         if form.is_valid():
+            form.save(commit=False)
             batch.user = request.user
             form.save()
 

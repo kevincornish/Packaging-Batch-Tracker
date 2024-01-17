@@ -21,13 +21,27 @@ class Batch(models.Model):
     batch_complete = models.BooleanField()
     production_check = models.BooleanField()
     production_check_date = models.DateTimeField(null=True, blank=True)
-    production_checked_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    production_checked_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='production_checked_batches')
+    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='created_batches')
+    last_modified_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='modified_batches')
+    created_at = models.DateTimeField(auto_now_add=True)
+    last_modified_at = models.DateTimeField(auto_now=True)
 
     def save(self, *args, **kwargs):
+        if not self.id:
+            # This is a new instance, set the created_by field
+            if hasattr(self, 'user') and self.user.is_authenticated:
+                self.created_by = self.user
+
+        # Always set the last_modified_by field
+        if hasattr(self, 'user') and self.user.is_authenticated:
+            self.last_modified_by = self.user
+
         if self.production_check and not self.production_check_date:
             self.production_check_date = timezone.now()
             if hasattr(self, 'user') and self.user.is_authenticated:
                 self.production_checked_by = self.user
+
         super().save(*args, **kwargs)
 
     def __str__(self):

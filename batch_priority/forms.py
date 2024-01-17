@@ -23,7 +23,18 @@ class BatchForm(forms.ModelForm):
         }
 
     target_dates = BatchFormSet()
+    
+    def save(self, commit=True, created_by=None, *args, **kwargs):
+        instance = super().save(commit=False, *args, **kwargs)
 
+        if commit:
+            instance.save()
+
+            if created_by and not instance.created_by:
+                instance.created_by = created_by
+                instance.save()
+
+        return instance
 class BayForm(forms.ModelForm):
     class Meta:
         model = Bay
