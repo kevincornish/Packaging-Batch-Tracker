@@ -397,7 +397,7 @@ class CompletedOnView(View):
                 batch_complete_date__range=[start_date, end_date]
             )
         else:
-            batches = Batch.objects.all()
+            batches = Batch.objects.filter(batch_complete=True)
 
         return render(request, self.template_name, {"batches": batches})
 
