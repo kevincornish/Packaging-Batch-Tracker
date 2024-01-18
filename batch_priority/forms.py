@@ -29,6 +29,7 @@ class BatchForm(forms.ModelForm):
         fields = [
             "batch_number",
             "product_code",
+            "manufacture_date",
             "complete_date_target",
             "on_hold",
             "notes",
@@ -39,6 +40,7 @@ class BatchForm(forms.ModelForm):
         ]
         widgets = {
             "complete_date_target": DateInput(attrs={"type": "date"}),
+            "manufacture_date": DateInput(attrs={"type": "date"}),
         }
 
     target_dates = BatchFormSet()

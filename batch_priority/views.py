@@ -32,8 +32,8 @@ def batch_list(request):
         .prefetch_related("targetdate_set__batch")
         .order_by("name")
     )
-
-    return render(request, "batch/batch_list.html", {"bays": bays})
+    today_date = timezone.now().date()
+    return render(request, "batch/batch_list.html", {"bays": bays, "today_date": today_date})
 
 
 def warehouse_list(request):

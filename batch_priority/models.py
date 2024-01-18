@@ -16,6 +16,7 @@ class Product(models.Model):
 class Batch(models.Model):
     batch_number = models.CharField(max_length=255, unique=True)
     product_code = models.ForeignKey(Product, on_delete=models.CASCADE)
+    manufacture_date = models.DateField()
     complete_date_target = models.DateField()
     on_hold = models.BooleanField(default=False)
     notes = models.TextField(blank=True)
