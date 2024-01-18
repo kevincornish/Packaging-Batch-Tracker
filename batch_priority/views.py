@@ -33,7 +33,9 @@ def batch_list(request):
         .order_by("name")
     )
     today_date = timezone.now().date()
-    return render(request, "batch/batch_list.html", {"bays": bays, "today_date": today_date})
+    return render(
+        request, "batch/batch_list.html", {"bays": bays, "today_date": today_date}
+    )
 
 
 def warehouse_list(request):
@@ -228,6 +230,19 @@ def batch_history(request, batch_id):
         request,
         "batch/batch_history.html",
         {"batch": batch, "log_entries": log_entries},
+    )
+
+
+@login_required
+def locations(request):
+    log_entries = LogEntry.objects.filter(
+    content_type__model="targetdate",
+).order_by("-timestamp")
+
+    return render(
+        request,
+        "batch/locations.html",
+        {"log_entries": log_entries},
     )
 
 

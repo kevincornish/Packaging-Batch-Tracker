@@ -8,6 +8,7 @@ urlpatterns = [
     path("warehouse/", views.warehouse_list, name="warehouse_list"),
     path("archive/", views.archive_list, name="archive_list"),
     path("bays/", views.bay_list, name="bay_list"),
+    path("locations/", views.locations, name="locations"),
     path("products/", views.product_list, name="product_list"),
     path("batch_history/<int:batch_id>/", views.batch_history, name="batch_history"),
     path("batch/<int:batch_id>/", views.batch_detail, name="batch_detail"),

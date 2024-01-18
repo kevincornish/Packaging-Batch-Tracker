@@ -120,3 +120,4 @@ class TargetDate(models.Model):
 auditlog.register(Batch)
 auditlog.register(Bay)
 auditlog.register(Product)
+auditlog.register(TargetDate)
