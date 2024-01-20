@@ -9,7 +9,7 @@ Packaging
     <h2>{{ bay.name }}</h2>
     <div class="table-responsive-sm">
     <table class="table table-sm table-bordered table-hover">
-        <thead>
+        <!-- <thead>
         <tr>
             <th scope="col">Batch Number</th>
             <th scope="col">Product Code</th>
@@ -21,7 +21,7 @@ Packaging
             <th scope="col">Target End Date</th>
             <th scope="col">Complete Date Target</th>
         </tr>
-    </thead>
+        </thead> -->
         {% for targetdate in bay.targetdate_set.all|dictsort:"target_start_date" %}
             {% if not targetdate.batch.batch_complete %}
             <tbody {% if targetdate.batch.on_hold %}class="table-danger"{% endif %}>
