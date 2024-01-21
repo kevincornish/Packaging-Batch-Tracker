@@ -14,8 +14,6 @@ from django.http import JsonResponse
 from .forms import BatchForm, BayForm, ProductForm, CommentForm
 from .models import Bay, Batch, Product, TargetDate
 from django.utils import timezone
-from simple_history.models import HistoricalRecords
-
 
 def batch_list(request):
     bays = (
