@@ -27,6 +27,7 @@ def batch_list(request):
             ),
         )
         .exclude(completed_batches=Count("targetdate__batch"))
+        .exclude(targetdate__is_active=False)  # Exclude batches with inactive target dates
         .prefetch_related("targetdate_set__batch")
         .order_by("name")
     )
@@ -128,7 +129,6 @@ def add_batch(request):
         form = BatchForm()
         return render(request, "batch/add_batch.html", {"form": form, "bays": bays})
 
-
 @login_required
 def edit_batch(request, batch_id):
     batch = get_object_or_404(Batch, id=batch_id)
@@ -158,16 +158,20 @@ def edit_batch(request, batch_id):
 
                 if not created:
                     # If the TargetDate already existed, update the dates if they are different
-                    if str(target_date.target_start_date) != str(start_date) or str(
-                        target_date.target_end_date
-                    ) != str(end_date):
+                    if (
+                        str(target_date.target_start_date) != str(start_date)
+                        or str(target_date.target_end_date) != str(end_date)
+                    ):
                         target_date.target_start_date = start_date
                         target_date.target_end_date = end_date
+                        target_date.is_active=True
                         target_date.save()
 
-            # Delete TargetDate instances for unchecked bays
+            # Mark current dates as inactive for unchecked bays
             unchecked_bays = Bay.objects.exclude(id__in=selected_bays)
-            TargetDate.objects.filter(batch=batch, bay__in=unchecked_bays).delete()
+            TargetDate.objects.filter(batch=batch, bay__in=unchecked_bays).update(
+                is_active=False
+            )
 
             return redirect("batch_list")
     else:
@@ -175,7 +179,7 @@ def edit_batch(request, batch_id):
 
         bays = Bay.objects.all()
 
-        existing_target_dates = TargetDate.objects.filter(batch=batch)
+        existing_target_dates = TargetDate.objects.filter(batch=batch, is_active=True)
         existing_target_dates_dict = {
             target_date.bay_id: target_date for target_date in existing_target_dates
         }

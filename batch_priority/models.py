@@ -113,6 +113,7 @@ class TargetDate(models.Model):
     bay = models.ForeignKey(Bay, on_delete=models.CASCADE)
     target_start_date = models.DateField()
     target_end_date = models.DateField()
+    is_active = models.BooleanField(default=True)
     history = HistoricalRecords()
 
     def __str__(self):
