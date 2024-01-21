@@ -14,7 +14,7 @@ from django.http import JsonResponse
 from .forms import BatchForm, BayForm, ProductForm, CommentForm
 from .models import Bay, Batch, Product, TargetDate
 from django.utils import timezone
-from auditlog.models import LogEntry
+from simple_history.models import HistoricalRecords
 
 
 def batch_list(request):
@@ -148,7 +148,8 @@ def edit_batch(request, batch_id):
                 start_date = request.POST.get(f"start_date_{bay_id}")
                 end_date = request.POST.get(f"end_date_{bay_id}")
 
-                target_date, created = TargetDate.objects.update_or_create(
+                # Check if the dates have changed before updating or creating
+                target_date, created = TargetDate.objects.get_or_create(
                     batch=batch,
                     bay=bay,
                     defaults={
@@ -157,12 +158,19 @@ def edit_batch(request, batch_id):
                     },
                 )
 
+                if not created:
+                    # If the TargetDate already existed, update the dates if they are different
+                    if str(target_date.target_start_date) != str(start_date) or str(
+                        target_date.target_end_date
+                    ) != str(end_date):
+                        target_date.target_start_date = start_date
+                        target_date.target_end_date = end_date
+                        target_date.save()
+
             # Delete TargetDate instances for unchecked bays
             unchecked_bays = Bay.objects.exclude(id__in=selected_bays)
             TargetDate.objects.filter(batch=batch, bay__in=unchecked_bays).delete()
 
-            return redirect("batch_list")
-        else:
             return redirect("batch_list")
     else:
         form = BatchForm(instance=batch)
@@ -219,31 +227,81 @@ def batch_detail(request, batch_id):
     )
 
 
-@login_required
 def batch_history(request, batch_id):
-    batch = Batch.objects.get(pk=batch_id)
-    log_entries = LogEntry.objects.filter(
-        object_id=batch.id, content_type__model="batch"
-    ).order_by("-timestamp")
+    batch = get_object_or_404(Batch, id=batch_id)
+    history_records = batch.history.all()
 
-    return render(
-        request,
-        "batch/batch_history.html",
-        {"batch": batch, "log_entries": log_entries},
-    )
+    changes = []
+
+    for i in range(len(history_records) - 1, 0, -1):
+        new_record, old_record = history_records[i], history_records[i - 1]
+        delta = new_record.diff_against(old_record)
+
+        for change in delta.changes:
+            if change.field == "product_code":
+                # Customize display for the product_code field
+                old_product_code = Product.objects.get(id=change.old).product_code
+                new_product_code = Product.objects.get(id=change.new).product_code
+            else:
+                # For other fields, use the default display values
+                old_product_code = change.old
+                new_product_code = change.new
+            # Check if history_user is not None before accessing username
+            history_user = new_record.last_modified_by
+            username = history_user.username if history_user else "Unknown"
+            changes.append(
+                {
+                    "field": change.field,
+                    "old": old_product_code,
+                    "new": new_product_code,
+                    "user": username,
+                    "timestamp": new_record.last_modified_at,
+                }
+            )
+
+    # Reverse the order to display the latest changes first
+    changes.reverse()
+
+    context = {"batch": batch, "changes": changes}
+    return render(request, "batch/batch_history.html", context)
 
 
 @login_required
-def locations(request):
-    log_entries = LogEntry.objects.filter(
-    content_type__model="targetdate",
-).order_by("-timestamp")
+def locations(request, batch_id):
+    batch = get_object_or_404(Batch, id=batch_id)
+    bays_assigned = TargetDate.objects.filter(batch=batch)
 
-    return render(
-        request,
-        "batch/locations.html",
-        {"log_entries": log_entries},
-    )
+    changes = []
+
+    for bay in bays_assigned:
+        target_date_records = bay.history.all()
+
+        # Check if there are records before iterating
+        if target_date_records:
+            # Include the initial created row if it has the necessary fields
+            for i in range(len(target_date_records)):
+                initial_record = target_date_records[i]
+                changes.append(
+                    {
+                        "batch": batch.batch_number,
+                        "field": "targetdate",
+                        "bay": initial_record.bay,
+                        "start_date": initial_record.target_start_date,
+                        "end_date": initial_record.target_end_date,
+                        "user": initial_record.history_user.username,
+                        "timestamp": initial_record.history_date,
+                    }
+                )
+        # Sort changes by timestamp
+    changes.sort(key=lambda x: x["timestamp"], reverse=True)
+
+    context = {"batch": batch, "changes": changes}
+    return render(request, "batch/batch_locations.html", context)
+
+
+def location(request):
+    batches = Batch.objects.all()
+    return render(request, "batch/batches.html", {"batches": batches})
 
 
 def bay_list(request):

@@ -1,6 +1,6 @@
 from django.utils import timezone
 from django.db import models
-from auditlog.registry import auditlog
+from simple_history.models import HistoricalRecords
 from django.contrib.auth.models import User
 
 
@@ -56,6 +56,7 @@ class Batch(models.Model):
     )
     created_at = models.DateTimeField(auto_now_add=True)
     last_modified_at = models.DateTimeField(auto_now=True)
+    history = HistoricalRecords()
 
     def save(self, *args, **kwargs):
         if not self.id:
@@ -112,12 +113,7 @@ class TargetDate(models.Model):
     bay = models.ForeignKey(Bay, on_delete=models.CASCADE)
     target_start_date = models.DateField()
     target_end_date = models.DateField()
+    history = HistoricalRecords()
 
     def __str__(self):
         return f"{self.batch} - {self.bay} - {self.target_start_date} to {self.target_end_date}"
-
-
-auditlog.register(Batch)
-auditlog.register(Bay)
-auditlog.register(Product)
-auditlog.register(TargetDate)

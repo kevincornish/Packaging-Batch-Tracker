@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Batch Locations
+{% endblock %}
+
+{% block content %}
+    <h1>Batch Locations</h1>
+    <ul>
+        {% for batch in batches %}
+            <li><a href="{% url 'location' batch.id %}">{{ batch.batch_number }}</a></li>
+        {% endfor %}
+    </ul>
+{% endblock %}
