@@ -44,6 +44,8 @@ Install Requirements
 pip install -r requirements.txt
 ```
 
+Rename ```sample.env``` to ```.env```
+
 Make migrations and then run migrations
 ```
 python manage.py makemigrations
