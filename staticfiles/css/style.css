@@ -7,3 +7,19 @@
 .grid-item {
   padding: 8px;
 }
+
+.grid-item.border.border-secondary-subtle.rounded-4.shdw.bg-danger {
+    color: white;
+}
+
+.bg-cherry {
+    background-color: #ffc5c5;
+}
+
+.bg-blu {
+    background-color: #80C2FF;
+}
+
+.shdw {
+    box-shadow: 0 0 24px 0 hsla(0, 0%, 0%, 0.075);
+}
