@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% load custom_filters %}
+
+{% block title %}
+    Batch Locations
+{% endblock %}
+
+{% block content %}
+    <h1>Batch Locations: <a href="{% url 'batch_detail' batch.id %}">{{ batch.batch_number }}</a></h1>   
+    {% if changes %}
+        <div class="table-responsive-sm">
+            <table class="table table-sm table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>Bay</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>User</th>
+                        <th>Timestamp</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for change in changes %}
+                        <tr>
+                            <td>{{ change.bay }}</td>
+                            <td>{{ change.start_date|date:"M. d, Y" }}</td>
+                            <td>{{ change.end_date|date:"M. d, Y" }}</td>
+                            <td>{{ change.user }}</td>
+                            <td>{{ change.timestamp|date:"F j, Y, g:i a" }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <p>No changes available.</p>
+    {% endif %}
+{% endblock %}
