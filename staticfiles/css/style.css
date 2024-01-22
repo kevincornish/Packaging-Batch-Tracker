@@ -1,3 +1,4 @@
+/* Grid */
 .grid-container {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(410px, 1fr)); /* Adjust the column width as needed */
@@ -12,6 +13,8 @@
     color: white;
 }
 
+/* Custom background colors */
+/* UI update will use Sass */
 .bg-cherry {
     background-color: #ffc5c5;
 }
@@ -32,14 +35,17 @@
     color: #0D6EFD;
 }
 
+/* Shadow */
 .shdw {
     box-shadow: 0 0 24px 0 hsla(0, 0%, 0%, 0.075);
 }
 
+/* Tags */
 .tag p {
     font-size: 14px !important;
 }
 
+/* Display tags */
 .on {
     display: inline-flex !important;
 }
