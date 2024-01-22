@@ -46,7 +46,7 @@ Packaging
                             <p class="m-0">{% if targetdate.batch.bom_received == True %} Yes {% else %} No {% endif %}</p>
                         </div>
                         <div>
-                            <p class="m-0"><span class="fw-semibold m-0">Notes: </span>{{targetdate.batch.notes }}</p>
+                            <p class="m-0"><span class="fw-semibold m-0">Notes: </span>{{ targetdate.batch.notes|default:"Requires Check" }}</p>
                         </div>
                         <div class="d-flex flex-row align-items-center gap-2 py-1">
                             <p class="fw-semibold m-0">Target Start Date:</p>
