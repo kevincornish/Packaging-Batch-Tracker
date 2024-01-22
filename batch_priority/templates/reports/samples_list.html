@@ -6,32 +6,26 @@ Sterility
 
 {% block content %}
     <h1>Batches awaiting sterility samples</h1>
-    <div class="table-responsive-sm">
-        <table class="table table-sm table-bordered table-hover">
-    <thead>
-        <tr>
-            <th scope="col">Batch Number</th>
-            <th scope="col">Product Code</th>
-            <th scope="col">Product</th>
-            <th scope="col">Presentation</th>
-            <th scope="col">Complete Date Target</th>
-        </tr>
-    </thead>
+    <div>
+        <div>
+            <div>Batch Number</div>
+            <div>Product Code</div>
+            <div>Product</div>
+            <div>Presentation</div>
+            <div>Complete Date Target</div>
+        </div>
         {% for batch in batches %}
-    <tbody>
-        <tr>
+        <div>
             {% if user.is_authenticated %}
-            <td scope="row"><a href="{% url 'edit_batch' batch.id %}">{{ batch.batch_number }}</a></td>
+            <div><a href="{% url 'edit_batch' batch.id %}">{{ batch.batch_number }}</a></div>
             {% else %}
-            <td scope="row">{{ batch.batch_number }}</td>
+            <div>{{ batch.batch_number }}</div>
             {% endif %}
-            <td>{{ batch.product_code }}</td>
-            <td>{{ batch.product_code.product }}</td>
-            <td>{{ batch.product_code.presentation }}</td>
-            <td>{{ batch.complete_date_target }}  </td>
-        </tr>
-    </tbody>
+            <div>{{ batch.product_code }}</div>
+            <div>{{ batch.product_code.product }}</div>
+            <div>{{ batch.product_code.presentation }}</div>
+            <div>{{ batch.complete_date_target }}</div>
+        </div>
         {% endfor %}
-    </table>
     </div>
-    {% endblock %}
+{% endblock %}
