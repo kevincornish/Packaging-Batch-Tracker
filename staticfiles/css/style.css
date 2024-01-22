@@ -39,6 +39,10 @@
     color: #0D6EFD;
 }
 
+.fs-7 {
+    font-size: 14px !important;
+}
+
 /* Shadow */
 .shdw {
     box-shadow: 0 0 24px 0 hsla(0, 0%, 0%, 0.075);
