@@ -12,7 +12,7 @@ Packaging
         <div class="grid-container">
             {% for targetdate in bay.targetdate_set.all|dictsort:"target_start_date" %}
                 {% if not targetdate.batch.batch_complete %}
-                <div class="grid-item rounded-3 shdw">
+                <div class="grid-item rounded-3 shdw border border-light-subtle">
                     <div class="d-flex flex-column align-items-start gap-2">
                         <div class="d-flex flex-column gap-2 w-100">
                             <div class="tag d-none d-inline-flex align-items-center px-2 py-1 bg-cherry rounded-2 w-100 {% if targetdate.batch.on_hold %} on text-danger {% endif %}">
