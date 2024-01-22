@@ -24,7 +24,11 @@
 }
 
 .bg-darky-light {
-    background-color: #e1e8eedc;
+    background-color: hsla(208, 28%, 91%, 0.863);
+}
+
+.bg-darky-lighter {
+    background-color: hsla(208, 28%, 91%, 0.35);
 }
 
 .bg-blu {
