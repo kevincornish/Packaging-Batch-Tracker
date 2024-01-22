@@ -11,56 +11,59 @@ Packaging
         <h2 class="d-flex flex-column"><span class="fs-6">Bay</span> {{ bay.name }}</h2>
         <div class="grid-container">
             {% for targetdate in bay.targetdate_set.all|dictsort:"target_start_date" %}
-            {% if not targetdate.batch.batch_complete %}
-                <div class="grid-item rounded-4 shdw {% if targetdate.batch.on_hold %} bg-cherry border border-danger {% endif %}">
-                    {% if user.is_authenticated %}
-                    <div class="bg-blu px-3 py-2 rounded-3 mb-2 {% if targetdate.batch.manufacture_date > today_date %} bg-blu border border-primary {% endif %}">
-                        <div class="d-flex flex-row align-items-center gap-2">
-                            <p class="fw-semibold m-0 {% if targetdate.batch.on_hold %} text-light-emphasis {% endif %}">Batch Number:</p>
-                            <a class="fw-semibold" href="{% url 'batch_detail' targetdate.batch.id %}">{{ targetdate.batch.batch_number }}</a>
+                {% if not targetdate.batch.batch_complete %}
+                <div class="grid-item rounded-3 shdw">
+                    <div class="d-flex flex-column align-items-start gap-2">
+                        <div class="d-flex flex-column gap-2 w-100">
+                            <div class="tag d-none d-inline-flex align-items-center px-2 py-1 bg-cherry rounded-2 w-100 {% if targetdate.batch.on_hold %} on text-danger {% endif %}">
+                                <p class="m-0 fs-6 fw-bold m-auto">ON HOLD</p>
+                            </div>
+                            <div class="d-flex flex-row align-items-center gap-2">
+                                {% if user.is_authenticated %}
+                                <div class="d-flex flex-row gap-1 px-2 py-1 rounded-3 mb-2 flex-fill bg-darky-light {% if targetdate.batch.manufacture_date > today_date %} bg-blu {% endif %}">
+                                    <p class="fw-semibold m-0">Batch Number:</p>
+                                    <a href="{% url 'batch_detail' targetdate.batch.id %}">{{ targetdate.batch.batch_number }}</a>
+                                </div>
+                                {% endif %}
+                                <div class="d-flex flex-row gap-1 px-2 py-1 rounded-3 mb-2 flex-fill bg-darky-light {% if targetdate.batch.manufacture_date > today_date %} bg-blu {% endif %}">
+                                    <p class="m-0 m-auto text-black {% if targetdate.batch.manufacture_date > today_date %} text-azul {% endif %}"><span class="fw-semibold">D.O.M:</span> {{ targetdate.batch.manufacture_date }}</p>
+                                </div>
+                            </div>
                         </div>
-                        <p class="m-0"><span class="fw-semibold">D.O.M:</span> ({{ targetdate.batch.manufacture_date }})</p>
-                    </div>
-                    {% else %}
-                    <div class="bg-blu px-3 rounded-3 mb-2 {% if targetdate.batch.manufacture_date > today_date %} bg-blu bg-blu border border-primary {% endif %}">
-                        <p class="fw-semibold m-0">Batch Number:</p>
-                        <a class="fw-semibold" href="{% url 'batch_detail' targetdate.batch.id %}">{{ targetdate.batch.batch_number }}</a>
-                    </div>
-                    <p class="m-0">D.O.M: ({{ targetdate.batch.manufacture_date }})</p>
-                    {% endif %}
-                    <div class="d-flex flex-row align-items-center gap-2 px-3">
-                        <p class="fw-semibold m-0">Product Code:</p>
-                        <p class="m-0">{{ targetdate.batch.product_code }}</p>
-                    </div>
-                    <div class="d-flex flex-row align-items-center gap-2 px-3">
-                        <p class="fw-semibold m-0">Product:</p>
-                        <p class="m-0">{{ targetdate.batch.product_code.product }}</p>
-                    </div>
-                    <div class="d-flex flex-row align-items-center gap-2 px-3">
-                        <p class="fw-semibold m-0">Presentation:</p>
-                        <p class="m-0">{{ targetdate.batch.product_code.presentation }}</p>
-                    </div>
-                    <div class="d-flex flex-row align-items-center gap-2 px-3">
-                        <p class="fw-semibold m-0">BOM Received:</p>
-                        <p class="m-0">{% if targetdate.batch.bom_received == True %} Yes {% else %} No {% endif %}</p>
-                    </div>
-                    <div>
-                        <p class="m-0 px-3"><span class="fw-semibold m-0">Notes: </span>{{targetdate.batch.notes }}</p>
-                    </div>
-                    <div class="d-flex flex-row align-items-center gap-2 px-3 py-1 border border-secondary-subtle rounded-3">
-                        <p class="fw-semibold m-0">Target Start Date:</p>
-                        <p class="m-0">{{ targetdate.target_start_date }}</p>
-                    </div>
-                    <div class="d-flex flex-row align-items-center gap-2 px-3">
-                        <p class="fw-semibold m-0">Target End Date:</p>
-                        <p class="m-0">{{ targetdate.target_end_date }}</p>
-                    </div>
-                    <div class="d-flex flex-row align-items-center gap-2 px-3">
-                        <p class="fw-semibold m-0">Complete Date Target:</p>
-                        <p class="m-0">{{ targetdate.batch.complete_date_target }}</p>
+                        <div class="d-flex flex-row align-items-center gap-2">
+                            <p class="fw-semibold m-0">Product Code:</p>
+                            <p class="m-0">{{ targetdate.batch.product_code }}</p>
+                        </div>
+                        <div class="d-flex flex-row align-items-center gap-2">
+                            <p class="fw-semibold m-0">Product:</p>
+                            <p class="m-0">{{ targetdate.batch.product_code.product }}</p>
+                        </div>
+                        <div class="d-flex flex-row align-items-center gap-2">
+                            <p class="fw-semibold m-0">Presentation:</p>
+                            <p class="m-0">{{ targetdate.batch.product_code.presentation }}</p>
+                        </div>
+                        <div class="d-flex flex-row align-items-center gap-2">
+                            <p class="fw-semibold m-0">BOM Received:</p>
+                            <p class="m-0">{% if targetdate.batch.bom_received == True %} Yes {% else %} No {% endif %}</p>
+                        </div>
+                        <div>
+                            <p class="m-0"><span class="fw-semibold m-0">Notes: </span>{{targetdate.batch.notes }}</p>
+                        </div>
+                        <div class="d-flex flex-row align-items-center gap-2 py-1">
+                            <p class="fw-semibold m-0">Target Start Date:</p>
+                            <p class="m-0 px-2 bg-darky-light text-secondary rounded-pill">{{ targetdate.target_start_date }}</p>
+                        </div>
+                        <div class="d-flex flex-row align-items-center gap-2">
+                            <p class="fw-semibold m-0">Target End Date:</p>
+                            <p class="m-0">{{ targetdate.target_end_date }}</p>
+                        </div>
+                        <div class="d-flex flex-row align-items-center gap-2">
+                            <p class="fw-semibold m-0">Complete Date Target:</p>
+                            <p class="m-0">{{ targetdate.batch.complete_date_target }}</p>
+                        </div>
                     </div>
                 </div>
-            {% endif %}
+                {% endif %}
             {% endfor %}
         </div>
     </div>

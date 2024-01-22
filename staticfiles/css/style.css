@@ -16,10 +16,31 @@
     background-color: #ffc5c5;
 }
 
+.bg-darky {
+    background-color: #e1e8ee;
+}
+
+.bg-darky-light {
+    background-color: #e1e8eedc;
+}
+
 .bg-blu {
-    background-color: #80C2FF;
+    background-color: #C7DBFF;
+}
+
+.text-azul {
+    color: #0D6EFD;
 }
 
 .shdw {
     box-shadow: 0 0 24px 0 hsla(0, 0%, 0%, 0.075);
 }
+
+.tag p {
+    font-size: 14px !important;
+}
+
+.on {
+    display: inline-flex !important;
+}
+ 
