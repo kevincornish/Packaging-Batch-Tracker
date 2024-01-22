@@ -49,4 +49,26 @@
 .on {
     display: inline-flex !important;
 }
+
+/* Buttons */
+.bttn {
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.075, 0.82, 0.165, 1);
+}
+
+.bttn:hover {
+    background-color: #0D6EFD;
+}
+
+.bttn:hover p {
+    color: white !important;
+}
+
+.bttn:active {
+    background-color: #0d5ace;
+}
+
+.bttn p {
+    font-size: 14px;
+}
  
