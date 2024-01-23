@@ -7,18 +7,61 @@ Warehouse
 {% block content %}
     <h1>Batches awaiting BOM</h1>
     <div>
-        {% for batch in batches %}
-            <div>
+        <div class="grid-container">
+            {% for batch in batches %}
+            <div class="grid-item rounded-3 shdw border border-light-subtle">
+                <div class="d-flex flex-column align-items-start gap-3">
+                    <div class="d-flex flex-row align-items-center justify-content-start gap-1 w-100">
+                        <div class="d-flex flex-row align-items-center justify-content-start gap-2 fw-medium">
+                            {% if user.is_authenticated %}
+                            <div class="d-flex flex-row align-items-center gap-1 bg-darky-light px-2 rounded-2">
+                                <p class="m-0 fw-medium">Batch:</p>
+                                <a class="m-0 text-decoration-none fw-semibold" href="{% url 'edit_batch' batch.id %}">{{ batch.batch_number }}</a>
+                            </div>
+                            {% else %}
+                            <div class="d-flex flex-row align-items-center gap-2 bg-darky-light px-2 rounded-2">
+                                <p class="m-0 text-secondary">Batch Number</p>
+                                <p class="m-0 fw-semibold">{{ batch.batch_number }}</p>
+                            </div>
+                            {% endif %}
+                        </div>
+                        <div class="d-flex flex-row align-items-center gap-1 bg-darky-light px-2 rounded-2">
+                            <p class="m-0">Product code:</p>
+                            <p class="m-0 fw-semibold">{{ batch.product_code }}</p>
+                        </div>
+                    </div>
+                    <div class="d-flex flex-column align-items-start gap-2">
+                        <div class="d-flex flex-column align-items-start">
+                            <div class="d-flex flex-column align-items-start gap-1">
+                                <p class="m-0 fw-semibold">Product</p>
+                            </div>
+                            <div class="d-flex flex-column align-items-start gap-1 bg-darky-lighter p-2 rounded-3">
+                                <p class="m-0 fw-medium">{{ batch.product_code.product }}</p>
+                            </div>
+                        </div>
+                        <div class="d-flex flex-column align-items-start w-100">
+                            <div class="d-flex flex-column align-items-start gap-1">
+                                <p class="m-0 fw-semibold">Presentation</p>
+                            </div>
+                            <div class="d-flex flex-column align-items-start gap-1 bg-darky-lighter p-2 rounded-3 w-100">
+                                <p class="m-0 fw-medium">{{ batch.product_code.presentation }}</p>
+                            </div>
+                        </div>
+                        <div class="d-flex flex-row align-items-center justify-content-start gap-1 w-100 py-2">
+                            <p class="m-0 fw-semibold">Complete By Date:</p>
+                            <p class="m-0">{{ batch.earliest_start_date }}</p>
+                        </div>
+                    </div>
+                </div>
                 {% if user.is_authenticated %}
-                <a href="{% url 'edit_batch' batch.id %}">{{ batch.batch_number }}</a>
-                {% else %}
-                <span>{{ batch.batch_number }}</span>
+                    <a class="text-decoration-none" href="{% url 'edit_batch' batch.id %}">
+                        <div class="bttn d-flex align-items-center justify-content-center p-2 rounded-2 bg-darky text-white mt-2">
+                            <p class="m-0 fw-semibold text-secondary">Add Confirmation</p>
+                        </div>
+                    </a>
                 {% endif %}
-                <div>{{ batch.product_code }}</div>
-                <div>{{ batch.product_code.product }}</div>
-                <div>{{ batch.product_code.presentation }}</div>
-                <div>{{ batch.earliest_start_date }}</div>
             </div>
-        {% endfor %}
+            {% endfor %}
+        </div>
     </div>
 {% endblock %}
