@@ -45,6 +45,10 @@ Production Checks
                         <p class="m-0 fw-semibold">Completed by:</p>
                         <p class="m-0 text-capitalize">{{ batch.completed_by.username }}</p>
                       </div>
+                      <div class="d-flex flex-row align-items-center justify-content-start gap-1 {% if batch.production_check_target.date < today_date %}text-danger{% endif %}">
+                        <p class="m-0 fw-semibold">Production Check Target:</p>
+                        <p class="m-0 text-capitalize">{{ batch.production_check_target }}</p>
+                      </div>
                       <div class="d-flex flex-column align-items-start w-100">
                         <div class="d-flex flex-column align-items-start gap-1">
                             <p class="m-0 fw-semibold">Notes:</p>
