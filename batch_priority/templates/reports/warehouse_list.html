@@ -6,32 +6,19 @@ Warehouse
 
 {% block content %}
     <h1>Batches awaiting BOM</h1>
-    <div class="table-responsive-sm">
-        <table class="table table-sm table-bordered table-hover">
-            <thead>
-                <tr>
-                    <th scope="col">Batch Number</th>
-                    <th scope="col">Product Code</th>
-                    <th scope="col">Product</th>
-                    <th scope="col">Presentation</th>
-                    <th scope="col">Target Start Date</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for batch in batches %}
-                    <tr>
-                        {% if user.is_authenticated %}
-                        <td scope="row"><a href="{% url 'edit_batch' batch.id %}">{{ batch.batch_number }}</a></td>
-                        {% else %}
-                        <td scope="row">{{ batch.batch_number }}</td>
-                        {% endif %}
-                        <td>{{ batch.product_code }}</td>
-                        <td>{{ batch.product_code.product }}</td>
-                        <td>{{ batch.product_code.presentation }}</td>
-                        <td>{{ batch.earliest_start_date }}</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+    <div>
+        {% for batch in batches %}
+            <div>
+                {% if user.is_authenticated %}
+                <a href="{% url 'edit_batch' batch.id %}">{{ batch.batch_number }}</a>
+                {% else %}
+                <span>{{ batch.batch_number }}</span>
+                {% endif %}
+                <div>{{ batch.product_code }}</div>
+                <div>{{ batch.product_code.product }}</div>
+                <div>{{ batch.product_code.presentation }}</div>
+                <div>{{ batch.earliest_start_date }}</div>
+            </div>
+        {% endfor %}
     </div>
 {% endblock %}
