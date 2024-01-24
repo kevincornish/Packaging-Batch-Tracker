@@ -79,4 +79,13 @@
 .bttn p {
     font-size: 14px;
 }
- 
+
+/* Temp */
+.py-2.px-3.bg-darky.rounded-3.text-decoration-none.shdw {
+    transition: all 0.15s ease;
+}
+
+.py-2.px-3.bg-darky.rounded-3.text-decoration-none.shdw:hover {
+    background-color: #0D6EFD;
+    color: white;
+}
