@@ -39,8 +39,10 @@ class BatchForm(forms.ModelForm):
             "production_check",
         ]
         widgets = {
-            "complete_date_target": DateInput(attrs={"type": "date"}),
-            "manufacture_date": DateInput(attrs={"type": "date"}),
+            "complete_date_target": DateInput(attrs={"type": "date", "class": "py-1 px-2 rounded-2 border text-uppercase"}),
+            "manufacture_date": DateInput(attrs={"type": "date", "class": "py-1 px-2 rounded-2 border text-uppercase"}),
+            "product_code": forms.Select(attrs={'class': 'form-select'}),
+            "batch_number": forms.TextInput(attrs={'class': 'form-control border'}),
         }
 
     target_dates = BatchFormSet()
