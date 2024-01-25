@@ -20,7 +20,8 @@ class TargetDateForm(forms.ModelForm):
         }
 
 
-BatchFormSet = inlineformset_factory(Batch, TargetDate, form=TargetDateForm, extra=1)
+BatchFormSet = inlineformset_factory(
+    Batch, TargetDate, form=TargetDateForm, extra=1)
 
 
 class BatchForm(forms.ModelForm):
