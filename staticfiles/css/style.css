@@ -89,3 +89,13 @@
     background-color: #0D6EFD;
     color: white;
 }
+
+input[type="text"] {
+    border: none;
+}
+
+/* Batch Form */
+
+#batch-form > * {
+    transition: all 0.3s ease;
+}
