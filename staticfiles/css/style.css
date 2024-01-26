@@ -31,6 +31,10 @@
     background-color: hsla(208, 28%, 91%, 0.35);
 }
 
+.bg-darky-dark {
+    background-color: hsl(207, 11%, 80%);
+}
+
 .bg-blu {
     background-color: #C7DBFF;
 }
@@ -96,6 +100,8 @@ input[type="text"] {
 
 /* Batch Form */
 
-#batch-form > * {
-    transition: all 0.3s ease;
+form,
+input,
+textarea {
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }

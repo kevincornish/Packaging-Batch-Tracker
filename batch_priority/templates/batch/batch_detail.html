@@ -1,127 +1,141 @@
 {% extends 'base.html' %}
 
 {% block title %}
-    Batch - {{ batch.batch_number }}
+Batch - {{ batch.batch_number }}
 {% endblock %}
 
 {% block content %}
-    <div class="container-md">
-     <div class="d-flex flex-column gap-2 py-4">
-      <h2 class="m-0">Batch {{ batch.batch_number }}</h2>
-
+<div class="container-md">
+  <div class="d-flex flex-column gap-2 py-4">
+    <div class="d-flex flex-column align-items-center justify-content-between gap-3 flex-wrap pb-4 mb-3 border-bottom">
+      <h2 class="m-0 d-flex flex-row align-items-center gap-2">
+        <p class="m-0 body-text-secondary">Batch</p>
+        <p class="m-0 fw-semibold">{{ batch.batch_number }}</p>
+      </h2>
       {% if user.is_authenticated %}
-         <div class="d-flex flex-row align-items-center justify-content-between gap-2">
-            <a class="m-0 py-2 px-3 bg-blu text-decoration-none rounded-2 flex-fill text-center" href="{% url 'edit_batch' batch.id %}">Edit Batch</a> 
-            <a class="m-0 py-2 px-3 bg-blu text-decoration-none rounded-2 flex-fill text-center" href="{% url 'batch_history' batch.id %}">Batch History</a> 
-            <a class="m-0 py-2 px-3 bg-blu text-decoration-none rounded-2 flex-fill text-center" href="{% url 'location' batch.id %}">Bay History</a>
-         </div>
+      <div class="d-flex flex-column gap-2 w-100">
+        <a class="m-0 btn btn-primary w-100" href="{% url 'edit_batch' batch.id %}">Edit Batch</a>
+        <a class="m-0 btn border w-100" href="{% url 'batch_history' batch.id %}">View Batch History</a>
+        <a class="m-0 btn border w-100" href="{% url 'location' batch.id %}">View Bay History</a>
+      </div>
       {% endif %}
-       <div class="d-flex flex-column">
-         <p class="m-0 fw-semibold">Product Code:</p>
-         <p class="m-0 p-2 bg-darky-light rounded-2">{{ batch.product_code }}</p>
-       </div>
-       <div class="d-flex flex-column">
-         <p class="m-0 fw-semibold">Product:</p>
-         <p class="m-0 p-2 bg-darky-light rounded-2">{{ batch.product_code.product }}</p>
-       </div>
-       <div class="d-flex flex-column">
-         <p class="m-0 fw-semibold">Presentation:</p>
-         <p class="m-0 p-2 bg-darky-light rounded-2">{{ batch.product_code.presentation }}</p>
-       </div>
-       {% if batch.on_hold %}
-           <p>On Hold: Yes </p>
-       {% endif %}
-       <div class="d-flex flex-column">
-         <p class="m-0 fw-semibold">BOM received:</p>
-         <p class="m-0 p-2 bg-darky-light rounded-2">{% if batch.bom_received %} Yes {% else %} No {% endif %}</p>
-       </div>
-       <div class="d-flex flex-column">
-         <p class="m-0 fw-semibold">Samples received:</p>
-         <p class="m-0 p-2 bg-darky-light rounded-2">{% if batch.samples_received %} Yes {% else %} No {% endif %}</p>
-       </div>
-       <div class="d-flex flex-column">
-         <p class="m-0 fw-semibold">Notes:</p>
-         <p class="m-0 p-2 bg-darky-light rounded-2">{{ batch.notes|default:"-" }}</p>
-       </div>
-       <div class="d-flex flex-column">
-         <p class="m-0 fw-semibold">Complete Target Date:</p>
-         <p class="m-0 p-2 bg-darky-light rounded-2">{{ batch.complete_date_target }}</p>
-       </div>
-       <div class="d-flex flex-column">
-         <p class="m-0 fw-semibold">Batch Complete:</p>
-         <p class="m-0 p-2 bg-darky-light rounded-2">{% if batch.batch_complete %} Yes {% else %} No {% endif %}</p>
-       </div>
-       <div class="d-flex flex-column">
-         <p class="m-0 fw-semibold">Complete Target Date:</p>
-         <p class="m-0 p-2 bg-darky-light rounded-2">{{ batch.complete_date_target }}</p>
-       </div>
-       {% if batch.batch_complete %}
-           {% if batch.batch_complete_date.date < batch.complete_date_target %}
-         <div class="d-flex flex-column">
-            <p class="m-0 fw-semibold">Batch Complete Date:</p>
-            <p class="m-0 p-2 bg-darky-light rounded-2 text-success">{{ batch.batch_complete_date }}</p>
-          </div>
-           {% else %}
-           <div class="d-flex flex-column">
-            <p class="m-0 fw-semibold">Batch Complete Date:</p>
-            <p class="m-0 p-2 bg-darky-light rounded-2 text-danger">{{ batch.batch_complete_date }}</p>
-          </div>
-           {% endif %}
-           <div class="d-flex flex-column">
-            <p class="m-0 fw-semibold">Batch Completed By:</p>
-            <p class="m-0 p-2 bg-darky-light rounded-2 text-danger text-capitalize">{{ batch.completed_by }}</p>
-          </div>
-       {% endif %}
-       <div class="d-flex flex-column">
-         <p class="m-0 fw-semibold">Production Check:</p>
-         <p class="m-0 p-2 bg-darky-light rounded-2">{% if batch.production_check %} Yes {% else %} No {% endif %}</p>
-       </div>
-   
-       {% if batch.production_check %}
-         <div class="d-flex flex-column">
-            <p class="m-0 fw-semibold">Production Check Date:</p>
-            <p class="m-0 p-2 bg-darky-light rounded-2">{{ batch.production_check_date }}</p>
-         </div>
-
-         <div class="d-flex flex-column">
-            <p class="m-0 fw-semibold">Production Check by:</p>
-            <p class="m-0 p-2 bg-darky-light rounded-2">{{ batch.production_checked_by }}</p>
-         </div>
-
-         <div class="d-flex flex-column">
-            <p class="m-0 fw-semibold">Batch added by:</p>
-            <p class="m-0 p-2 bg-darky-light rounded-2">{{ batch.created_by }}</p>
-         </div>
-
-         <div class="d-flex flex-column">
-            <p class="m-0 fw-semibold">Batch created at:</p>
-            <p class="m-0 p-2 bg-darky-light rounded-2">{{ batch.created_at }}</p>
-         </div>
-
-         <div class="d-flex flex-column">
-            <p class="m-0 fw-semibold">Batch last edited at:</p>
-            <p class="m-0 p-2 bg-darky-light rounded-2">{{ batch.last_modified_at }}</p>
-         </div>
-      {% endif %}
-
-       {% if user.is_authenticated %}
-           {% if comments %}
-            <!-- Display Comments -->
-            <h2 class="mt-3">Comments</h2>
-            <ul class="d-flex flex-column">
-               {% for comment in comments %}
-                  <li class="inline-flex">{{ comment.user.username }} - {{ comment.timestamp }}<br>{{ comment.text }}</li>
-               {% endfor %}
-            </ul>
-           {% endif %}
-           <!-- Add Comment Form -->
-           <h2 class="mt-4">Add Comment</h2>
-           <form method="post" action="{% url 'batch_detail' batch.id %}">
-               {% csrf_token %}
-               {{ comment_form.as_p }}
-               <button class="btn btn-primary w-100" type="submit">Add comment</button>
-           </form>
-       {% endif %}
-     </div>
     </div>
+    <div class="d-flex flex-column">
+      <p class="m-0 fw-semibold">Product Code:</p>
+      <p class="m-0 p-2 bg-darky-light rounded-2">{{ batch.product_code }}</p>
+    </div>
+    <div class="d-flex flex-column">
+      <p class="m-0 fw-semibold">Product:</p>
+      <p class="m-0 p-2 bg-darky-light rounded-2">{{ batch.product_code.product }}</p>
+    </div>
+    <div class="d-flex flex-column">
+      <p class="m-0 fw-semibold">Presentation:</p>
+      <p class="m-0 p-2 bg-darky-light rounded-2">{{ batch.product_code.presentation }}</p>
+    </div>
+    {% if batch.on_hold %}
+    <p>On Hold: Yes </p>
+    {% endif %}
+    <div class="d-flex flex-column">
+      <p class="m-0 fw-semibold">BOM received:</p>
+      <p class="m-0 p-2 bg-darky-light rounded-2">{% if batch.bom_received %} Yes {% else %} No {% endif %}</p>
+    </div>
+    <div class="d-flex flex-column">
+      <p class="m-0 fw-semibold">Samples received:</p>
+      <p class="m-0 p-2 bg-darky-light rounded-2">{% if batch.samples_received %} Yes {% else %} No {% endif %}</p>
+    </div>
+    <div class="d-flex flex-column">
+      <p class="m-0 fw-semibold">Notes:</p>
+      <p class="m-0 p-2 bg-darky-light rounded-2">{{ batch.notes|default:"-" }}</p>
+    </div>
+    <div class="d-flex flex-column">
+      <p class="m-0 fw-semibold">Complete Target Date:</p>
+      <p class="m-0 p-2 bg-darky-light rounded-2">{{ batch.complete_date_target }}</p>
+    </div>
+    <div class="d-flex flex-column">
+      <p class="m-0 fw-semibold">Batch Complete:</p>
+      <p class="m-0 p-2 bg-darky-light rounded-2">{% if batch.batch_complete %} Yes {% else %} No {% endif %}</p>
+    </div>
+    <div class="d-flex flex-column">
+      <p class="m-0 fw-semibold">Complete Target Date:</p>
+      <p class="m-0 p-2 bg-darky-light rounded-2">{{ batch.complete_date_target }}</p>
+    </div>
+    {% if batch.batch_complete %}
+    {% if batch.batch_complete_date.date < batch.complete_date_target %} <div class="d-flex flex-column">
+      <p class="m-0 fw-semibold">Batch Complete Date:</p>
+      <p class="m-0 p-2 bg-darky-light rounded-2 text-success">{{ batch.batch_complete_date }}</p>
+  </div>
+  {% else %}
+  <div class="d-flex flex-column">
+    <p class="m-0 fw-semibold">Batch Complete Date:</p>
+    <p class="m-0 p-2 bg-darky-light rounded-2 text-danger">{{ batch.batch_complete_date }}</p>
+  </div>
+  {% endif %}
+  <div class="d-flex flex-column">
+    <p class="m-0 fw-semibold">Batch Completed By:</p>
+    <p class="m-0 p-2 bg-darky-light rounded-2 text-danger text-capitalize">{{ batch.completed_by }}</p>
+  </div>
+  {% endif %}
+  <div class="d-flex flex-column">
+    <p class="m-0 fw-semibold">Production Check:</p>
+    <p class="m-0 p-2 bg-darky-light rounded-2">{% if batch.production_check %} Yes {% else %} No {% endif %}</p>
+  </div>
+
+  {% if batch.production_check %}
+  <div class="d-flex flex-column">
+    <p class="m-0 fw-semibold">Production Check Date:</p>
+    <p class="m-0 p-2 bg-darky-light rounded-2">{{ batch.production_check_date }}</p>
+  </div>
+
+  <div class="d-flex flex-column">
+    <p class="m-0 fw-semibold">Production Check by:</p>
+    <p class="m-0 p-2 bg-darky-light rounded-2">{{ batch.production_checked_by }}</p>
+  </div>
+
+  <div class="d-flex flex-column">
+    <p class="m-0 fw-semibold">Batch added by:</p>
+    <p class="m-0 p-2 bg-darky-light rounded-2">{{ batch.created_by }}</p>
+  </div>
+
+  <div class="d-flex flex-column">
+    <p class="m-0 fw-semibold">Batch created at:</p>
+    <p class="m-0 p-2 bg-darky-light rounded-2">{{ batch.created_at }}</p>
+  </div>
+
+  <div class="d-flex flex-column">
+    <p class="m-0 fw-semibold">Batch last edited at:</p>
+    <p class="m-0 p-2 bg-darky-light rounded-2">{{ batch.last_modified_at }}</p>
+  </div>
+  {% endif %}
+  <div class="pt-3 mt-4 border-top">
+    {% if user.is_authenticated %}
+    {% if comments %}
+        <!-- Display Comments -->
+        <h2 class="mt-3">Comments</h2>
+        <ul class="list-unstyled">
+          {% for comment in comments %}
+              <li class="mb-2 d-flex flex-column border rounded-3 shdw">
+                  <div class="d-flex flex-row align-items-center justify-content-between p-2 border-bottom">
+                      <strong class="me-2 text-capitalize">{{ comment.user.username }}</strong>
+                      <small class="text-muted">{{ comment.timestamp }}</small>
+                  </div>
+                  <div class="p-2">
+                    <p class="mb-0">{{ comment.text }}</p>
+                  </div>
+              </li>
+          {% endfor %}
+      </ul>      
+    {% endif %}
+    <!-- Add Comment Form -->
+    <h2 class="mt-4 fs-5">Add Comment</h2>
+    <form class="d-flex flex-column gap-3" method="post" action="{% url 'batch_detail' batch.id %}">
+        {% csrf_token %}
+        <div class="form-group">
+            <textarea class="form-control" id="comment_text" name="comment_text" rows="4"></textarea>
+        </div>
+        <button class="btn btn-primary w-100" type="submit">Add comment</button>
+    </form>
+{% endif %}
+  </div>
+</div>
+</div>
 {% endblock %}
