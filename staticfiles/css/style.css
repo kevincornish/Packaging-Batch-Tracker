@@ -120,4 +120,14 @@ a.btn {
     input[type="submit"] {
         max-width: 100% !important;
     }
+
+    .bay-list {
+        flex-direction: column ;
+        gap: 0 !important;
+    }
+    .bay-list,
+    .bay-list li,
+    .bay-list li a {
+        width: 100%;
+    }
 }
