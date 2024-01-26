@@ -111,33 +111,38 @@ Batch - {{ batch.batch_number }}
   {% endif %}
   <div class="pt-3 mt-4 border-top">
     {% if user.is_authenticated %}
-    {% if comments %}
-        <!-- Display Comments -->
-        <h2 class="mt-3">Comments</h2>
-        <ul class="list-unstyled">
-          {% for comment in comments %}
-              <li class="mb-2 d-flex flex-column border rounded-3 shdw">
-                  <div class="d-flex flex-row align-items-center justify-content-between p-2 border-bottom">
-                      <strong class="me-2 text-capitalize">{{ comment.user.username }}</strong>
-                      <small class="text-muted">{{ comment.timestamp }}</small>
-                  </div>
-                  <div class="p-2">
-                    <p class="mb-0">{{ comment.text }}</p>
-                  </div>
-              </li>
-          {% endfor %}
-      </ul>      
+    {% if comments.exists %}
+    <h2 class="mt-3">Comments</h2>
+    <ul class="list-unstyled">
+      {% for comment in comments %}
+      <li class="mb-2 d-flex flex-column border rounded-3 shdw">
+        <div class="d-flex flex-row align-items-center justify-content-between p-2 border-bottom bg-darky-lighter">
+          <strong class="me-2 text-capitalize">
+            {{ comment.user.username }}
+          </strong>
+          <small class="text-muted">{{ comment.timestamp }}</small>
+        </div>
+        <div class="p-2">
+          <p class="mb-0">{{ comment.text }}</p>
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p>No comments available.</p>
     {% endif %}
-    <!-- Add Comment Form -->
+
     <h2 class="mt-4 fs-5">Add Comment</h2>
     <form class="d-flex flex-column gap-3" method="post" action="{% url 'batch_detail' batch.id %}">
-        {% csrf_token %}
-        <div class="form-group">
-            <textarea class="form-control" id="comment_text" name="comment_text" rows="4"></textarea>
-        </div>
-        <input class="btn btn-primary" type="submit" value="Add Comment">
+      {% csrf_token %}
+      <div class="form-group">
+        <textarea class="form-control" id="comment_text" name="text" rows="4"></textarea>
+      </div>
+      <input class="btn btn-primary" type="submit" value="Add Comment">
     </form>
-{% endif %}
+    {% else %}
+    <p>You must be logged in to view and add comments.</p>
+    {% endif %}
   </div>
 </div>
 </div>
