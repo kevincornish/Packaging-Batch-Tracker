@@ -13,10 +13,10 @@ Batch - {{ batch.batch_number }}
         <p class="m-0 fw-semibold">{{ batch.batch_number }}</p>
       </h2>
       {% if user.is_authenticated %}
-      <div class="admin-edit d-flex flex-row gap-2 w-100">
-        <a class="m-0 btn btn-primary w-100" href="{% url 'edit_batch' batch.id %}">Edit Batch</a>
-        <a class="m-0 btn border w-100" href="{% url 'batch_history' batch.id %}">View Batch History</a>
-        <a class="m-0 btn border w-100" href="{% url 'location' batch.id %}">View Bay History</a>
+      <div class="admin-edit d-flex flex-row align-items-center justify-content-center gap-2 w-100">
+        <a class="m-0 btn btn-primary" href="{% url 'edit_batch' batch.id %}">Edit Batch</a>
+        <a class="m-0 btn border" href="{% url 'batch_history' batch.id %}">View Batch History</a>
+        <a class="m-0 btn border" href="{% url 'location' batch.id %}">View Bay History</a>
       </div>
       {% endif %}
     </div>
