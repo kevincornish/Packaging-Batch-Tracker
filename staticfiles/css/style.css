@@ -116,6 +116,7 @@ a.btn {
     .admin-edit {
         flex-direction: column !important;
     }
+    a.btn,
     input[type="submit"] {
         max-width: 100% !important;
     }
