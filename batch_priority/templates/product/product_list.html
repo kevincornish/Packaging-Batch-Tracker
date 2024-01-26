@@ -16,7 +16,7 @@ Product List
         {% for presentation in presentation_list %}
     <div class="d-flex flex-column border-bottom pb-2">
         <h2>{{ presentation.grouper }}</h2>
-        <ul class="list-unstyled d-flex flex-column align-items-start">
+        <ul class="list-unstyled d-flex flex-column align-items-start gap-2">
             {% for product in presentation.list %}
             <li class="p-2 bg-darky rounded-3 ">
                 <a class="text-decoration-none"
