@@ -99,9 +99,23 @@ input[type="text"] {
 }
 
 /* Batch Form */
-
 form,
 input,
 textarea {
     transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+input[type="submit"] {
+    width: 100%;
+    max-width: 200px;
+}
+
+/* Media Queries */
+@media screen and (max-width: 768px) {
+    .admin-edit {
+        flex-direction: column !important;
+    }
+    input[type="submit"] {
+        max-width: 100% !important;
+    }
 }

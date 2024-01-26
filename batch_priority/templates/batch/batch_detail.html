@@ -13,7 +13,7 @@ Batch - {{ batch.batch_number }}
         <p class="m-0 fw-semibold">{{ batch.batch_number }}</p>
       </h2>
       {% if user.is_authenticated %}
-      <div class="d-flex flex-column gap-2 w-100">
+      <div class="admin-edit d-flex flex-row gap-2 w-100">
         <a class="m-0 btn btn-primary w-100" href="{% url 'edit_batch' batch.id %}">Edit Batch</a>
         <a class="m-0 btn border w-100" href="{% url 'batch_history' batch.id %}">View Batch History</a>
         <a class="m-0 btn border w-100" href="{% url 'location' batch.id %}">View Bay History</a>
@@ -132,7 +132,7 @@ Batch - {{ batch.batch_number }}
         <div class="form-group">
             <textarea class="form-control" id="comment_text" name="comment_text" rows="4"></textarea>
         </div>
-        <button class="btn btn-primary w-100" type="submit">Add comment</button>
+        <input class="btn btn-primary" type="submit" value="Add Comment">
     </form>
 {% endif %}
   </div>
