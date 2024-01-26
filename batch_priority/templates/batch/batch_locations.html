@@ -3,12 +3,12 @@
 {% load custom_filters %}
 
 {% block title %}
-    Batch Locations
+    Bay History
 {% endblock %}
 
 {% block content %}
 <div class="d-flex flex-column align-items-center justify-content-between my-4">
-    <h1>Batch Locations</h1>
+    <h1>Bay History</h1>
     <a class="fw-semibold fs-5 py-1 px-3 rounded-pill bg-primary text-white text-decoration-none" href="{% url 'batch_detail' batch.id %}">{{ batch.batch_number }}</a>
 </div>
 {% if changes %}
