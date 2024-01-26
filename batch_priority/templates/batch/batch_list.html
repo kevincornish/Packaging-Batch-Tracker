@@ -10,8 +10,7 @@ Packaging
     <div class="d-flex flex-column gap-2 py-4">
         <h2 class="d-flex flex-column"><span class="fs-6">Bay</span> {{ bay.name }}</h2>
         <div class="grid-container">
-            {% for targetdate in bay.targetdate_set.all|dictsort:"target_start_date" %}
-                {% if not targetdate.batch.batch_complete %}
+            {% for targetdate in bay.active_batches %}
                 <div class="grid-item rounded-3 shdw border border-light-subtle">
                     <div class="d-flex flex-column align-items-start gap-2">
                         <div class="d-flex flex-column gap-2 w-100">
@@ -62,7 +61,6 @@ Packaging
                         </div>
                     </div>
                 </div>
-                {% endif %}
             {% endfor %}
         </div>
     </div>

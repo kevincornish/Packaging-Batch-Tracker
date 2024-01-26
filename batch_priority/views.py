@@ -27,15 +27,18 @@ def batch_list(request):
             ),
         )
         .exclude(completed_batches=Count("targetdate__batch"))
-        .exclude(targetdate__is_active=False)  # Exclude batches with inactive target dates
         .prefetch_related("targetdate_set__batch")
         .order_by("name")
     )
     today_date = timezone.now().date()
+
+    for bay in bays:
+        # Exclude batches with inactive target dates
+        bay.active_batches = bay.targetdate_set.filter(is_active=True).exclude(batch__batch_complete=True)
+
     return render(
         request, "batch/batch_list.html", {"bays": bays, "today_date": today_date}
     )
-
 
 def warehouse_list(request):
     batches = (
