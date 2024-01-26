@@ -5,11 +5,13 @@ Bay List
 {% endblock %}
 
 {% block content %}
-    <h1>Bay List</h1>
-    <ul>
+    <h1 class="py-4">Bay List</h1>
+    <a class="btn btn-primary mb-4" href="{% url 'add_bay' %}">Add Bay</a>
+    <ul class="list-unstyled pt-4 border-top">
         {% for bay in bays %}
-            <li><a href="{% url 'edit_bay' bay.id %}">{{ bay.name }}</a></li>
+            <li>
+                <a class="text-decoration-none fs-4 py-2 px-3 bg-darky rounded-3" href="{% url 'edit_bay' bay.id %}">{{ bay.name }}</a>
+            </li>
         {% endfor %}
     </ul>
-    <a href="{% url 'add_bay' %}">Add Bay</a>
 {% endblock %}
