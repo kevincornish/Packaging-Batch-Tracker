@@ -22,8 +22,7 @@ Packaging
             <th scope="col">Complete Date Target</th>
         </tr>
     </thead>
-        {% for targetdate in bay.targetdate_set.all|dictsort:"target_start_date" %}
-            {% if not targetdate.batch.batch_complete %}
+    {% for targetdate in bay.active_batches %}
             <tbody {% if targetdate.batch.on_hold %}class="table-danger"{% endif %}>
                 <tr>
                     {% if user.is_authenticated %}
@@ -46,8 +45,7 @@ Packaging
                     <td>{{ targetdate.batch.complete_date_target }}</td>
                 </tr>
             </tbody>
-            {% endif %}
-        {% endfor %}
+            {% endfor %}
     </table>
 </div>
 {% endfor %}
