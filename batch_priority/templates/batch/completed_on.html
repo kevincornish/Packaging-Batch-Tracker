@@ -35,7 +35,7 @@ Batches Completed
                         {% if user.is_authenticated %}
                         <div class="d-flex flex-row align-items-center gap-1 bg-darky-light px-2 rounded-2">
                             <p class="m-0 fw-medium">Batch:</p>
-                            <a class="m-0 text-decoration-none fw-semibold" href="{% url 'edit_batch' batch.id %}">{{ batch.batch_number }}</a>
+                            <a class="m-0 text-decoration-none fw-semibold" href="{% url 'batch_detail' batch.id %}">{{ batch.batch_number }}</a>
                         </div>
                         {% else %}
                         <div class="d-flex flex-row align-items-center gap-2 bg-darky-light px-2 rounded-2">
