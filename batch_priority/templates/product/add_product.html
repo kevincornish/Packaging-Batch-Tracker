@@ -11,19 +11,19 @@ Add Product
         {% csrf_token %}
         <div class="mb-3">
             <label for="{{ form.product_code.id_for_label }}" class="your-custom-label-class">{{ form.product_code.label }}</label>
-            <input type="text" name="{{ form.product_code.name }}" id="{{ form.product_code.id_for_label }}" class="form-control border" value="{{ form.product_code.value }}">
+            <input type="text" name="{{ form.product_code.name }}" id="{{ form.product_code.id_for_label }}" class="form-control border" value="{{ form.product_code.value|default_if_none:'' }}">
         </div>
         <div class="mb-3">
             <label for="{{ form.product.id_for_label }}" class="your-custom-label-class">{{ form.product.label }}</label>
-            <input type="text" name="{{ form.product.name }}" id="{{ form.product.id_for_label }}" class="form-control border" value="{{ form.product.value }}">
+            <input type="text" name="{{ form.product.name }}" id="{{ form.product.id_for_label }}" class="form-control border" value="{{ form.product.value|default_if_none:'' }}">
         </div>
         <div class="mb-3">
             <label for="{{ form.presentation.id_for_label }}" class="your-custom-label-class">{{ form.presentation.label }}</label>
-            <input type="text" name="{{ form.presentation.name }}" id="{{ form.presentation.id_for_label }}" class="form-control border" value="{{ form.presentation.value }}">
+            <input type="text" name="{{ form.presentation.name }}" id="{{ form.presentation.id_for_label }}" class="form-control border" value="{{ form.presentation.value|default_if_none:'' }}">
         </div>
         <div class="d-flex flex-row align-items-center gap-2">
             <input class="btn btn-primary" type="submit" value="Add Product">
-            <a class="btn bg-darky border" href="{% url 'product_list' %}">Back to Bay List</a>
+            <a class="btn bg-darky border" href="{% url 'product_list' %}">Back to Product List</a>
         </div>
     </form>
 </div>
