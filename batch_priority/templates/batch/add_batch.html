@@ -50,7 +50,7 @@ Add Batch
         </div>
         <div class="d-flex flex-column gap-1">
             <label class="fw-semibold" for="{{ form.notes.id_for_label }}">Notes</label>
-            <textarea class="form-control" name="{{ form.notes.name }}" id="{{ form.notes.id_for_label }}" rows="4">{{ form.notes.value }}</textarea>
+            <textarea class="form-control" name="{{ form.notes.name }}" id="{{ form.notes.id_for_label }}" rows="4">{{ form.notes.value|default_if_none:'' }}</textarea>
         </div>              
         <div class="d-flex flex-column">
             <h2>Select Bays</h2>
