@@ -15,6 +15,7 @@ from .forms import BatchForm, BayForm, ProductForm, CommentForm
 from .models import Bay, Batch, Product, TargetDate
 from django.utils import timezone
 
+
 def batch_list(request):
     bays = (
         Bay.objects.annotate(
@@ -34,11 +35,22 @@ def batch_list(request):
 
     for bay in bays:
         # Exclude batches with inactive target dates
-        bay.active_batches = bay.targetdate_set.filter(is_active=True).exclude(batch__batch_complete=True)
+        active_batches = bay.targetdate_set.filter(is_active=True).exclude(
+            batch__batch_complete=True
+        )
+        on_hold_batches = active_batches.filter(batch__on_hold=True)
+        normal_batches = active_batches.exclude(batch__on_hold=True)
+
+        # Order normal batches by earliest target date and stick the batches on hold at the end of the list
+        ordered_normal_batches = normal_batches.annotate(
+            earliest_target_date=Min("target_start_date")
+        ).order_by("earliest_target_date")
+        bay.active_batches = list(ordered_normal_batches) + list(on_hold_batches)
 
     return render(
         request, "batch/batch_list.html", {"bays": bays, "today_date": today_date}
     )
+
 
 def warehouse_list(request):
     batches = (
@@ -132,6 +144,7 @@ def add_batch(request):
         form = BatchForm()
         return render(request, "batch/add_batch.html", {"form": form, "bays": bays})
 
+
 @login_required
 def edit_batch(request, batch_id):
     batch = get_object_or_404(Batch, id=batch_id)
@@ -161,13 +174,12 @@ def edit_batch(request, batch_id):
 
                 if not created:
                     # If the TargetDate already existed, update the dates if they are different
-                    if (
-                        str(target_date.target_start_date) != str(start_date)
-                        or str(target_date.target_end_date) != str(end_date)
-                    ):
+                    if str(target_date.target_start_date) != str(start_date) or str(
+                        target_date.target_end_date
+                    ) != str(end_date):
                         target_date.target_start_date = start_date
                         target_date.target_end_date = end_date
-                        target_date.is_active=True
+                        target_date.is_active = True
                         target_date.save()
 
             # Mark current dates as inactive for unchecked bays
@@ -257,7 +269,7 @@ def batch_history(request, batch_id):
             changes.append(
                 {
                     "field": change.field,
-                    "old": new_product_code, #flip old and new - appears to be in reverse?
+                    "old": new_product_code,  # flip old and new - appears to be in reverse?
                     "new": old_product_code,
                     "user": username,
                     "timestamp": new_record.last_modified_at,
