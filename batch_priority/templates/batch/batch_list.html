@@ -8,7 +8,7 @@ Packaging
 <div class="container">
     {% for bay in bays %}
     <div class="d-flex flex-column gap-2 py-4">
-        <h2 class="d-flex flex-column"><span class="fs-6">Bay</span> {{ bay.name }}</h2>
+        <h2 class="d-flex flex-column">{{ bay.name }}</h2>
         <div class="grid-container">
             {% for targetdate in bay.active_batches %}
                 <div class="grid-item rounded-3 shdw border border-light-subtle">
