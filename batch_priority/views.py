@@ -257,8 +257,8 @@ def batch_history(request, batch_id):
             changes.append(
                 {
                     "field": change.field,
-                    "old": old_product_code,
-                    "new": new_product_code,
+                    "old": new_product_code, #flip old and new - appears to be in reverse?
+                    "new": old_product_code,
                     "user": username,
                     "timestamp": new_record.last_modified_at,
                 }
