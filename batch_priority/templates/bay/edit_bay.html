@@ -5,12 +5,28 @@ Edit Bay
 {% endblock %}
 
 {% block content %}
-    <h1>Edit Bay</h1>
-    <form method="post" action="{% url 'edit_bay' bay.id %}">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <input class="btn btn-primary" type="submit" value="Edit Bay">
-    </form>
-    <br>
-    <a href="{% url 'bay_list' %}">Back to Bay List</a>
+<h1>Edit Bay</h1>
+<form method="post" action="{% url 'edit_bay' bay.id %}">
+    {% csrf_token %}
+
+    <div class="mb-3">
+        <label for="{{ form.name.id_for_label }}" class="form-label fw-semibold">Bay Name</label>
+        <input type="text" name="{{ form.name.name }}" value="{{ form.name.value }}" id="{{ form.name.id_for_label }}"
+            class="form-control border {% if form.name.errors %}is-invalid{% endif %}" {% if form.name.required %}
+            required{% endif %}>
+
+        {% if form.name.errors %}
+        <div class="text-danger">
+            {% for error in form.name.errors %}
+            {{ error }}
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="d-flex flex-row align-items-center gap-2">
+        <input class="btn btn-primary" type="submit" value="Update Bay">
+        <a class="btn bg-darky border" href="{% url 'bay_list' %}">Back to Bay List</a>
+    </div>
+</form>
 {% endblock %}

@@ -1,0 +1,133 @@
+/* Grid */
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(410px, 1fr)); /* Adjust the column width as needed */
+    grid-gap: 10px; /* Adjust the gap between items as needed */
+}
+
+.grid-item {
+  padding: 8px;
+}
+
+.grid-item.border.border-secondary-subtle.rounded-4.shdw.bg-danger {
+    color: white;
+}
+
+/* Custom background colors */
+/* UI update will use Sass */
+.bg-cherry {
+    background-color: #ffc5c5;
+}
+
+.bg-darky {
+    background-color: #e1e8ee;
+}
+
+.bg-darky-light {
+    background-color: hsla(208, 28%, 91%, 0.863);
+}
+
+.bg-darky-lighter {
+    background-color: hsla(208, 28%, 91%, 0.35);
+}
+
+.bg-darky-dark {
+    background-color: hsl(207, 11%, 80%);
+}
+
+.bg-blu {
+    background-color: #C7DBFF;
+}
+
+.text-azul {
+    color: #0D6EFD;
+}
+
+.fs-7 {
+    font-size: 14px !important;
+}
+
+/* Shadow */
+.shdw {
+    box-shadow: 0 0 24px 0 hsla(0, 0%, 0%, 0.075);
+}
+
+/* Tags */
+.tag p {
+    font-size: 14px !important;
+}
+
+/* Display tags */
+.on {
+    display: inline-flex !important;
+}
+
+/* Buttons */
+.bttn {
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.075, 0.82, 0.165, 1);
+}
+
+.bttn:hover {
+    background-color: #0D6EFD;
+}
+
+.bttn:hover p {
+    color: white !important;
+}
+
+.bttn:active {
+    background-color: #0d5ace;
+}
+
+.bttn p {
+    font-size: 14px;
+}
+
+/* Temp */
+.py-2.px-3.bg-darky.rounded-3.text-decoration-none.shdw {
+    transition: all 0.15s ease;
+}
+
+.py-2.px-3.bg-darky.rounded-3.text-decoration-none.shdw:hover {
+    background-color: #0D6EFD;
+    color: white;
+}
+
+input[type="text"] {
+    border: none;
+}
+
+/* Batch Form */
+form,
+input,
+textarea {
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+input[type="submit"],
+a.btn {
+    width: 100%;
+    max-width: 200px;
+}
+
+/* Media Queries */
+@media screen and (max-width: 768px) {
+    .admin-edit {
+        flex-direction: column !important;
+    }
+    a.btn,
+    input[type="submit"] {
+        max-width: 100% !important;
+    }
+
+    .bay-list {
+        flex-direction: column ;
+        gap: 0 !important;
+    }
+    .bay-list,
+    .bay-list li,
+    .bay-list li a {
+        width: 100%;
+    }
+}

@@ -5,17 +5,29 @@ Product List
 {% endblock %}
 
 {% block content %}
-    <h1>Product List</h1>
-    <a href="{% url 'add_product' %}">Add Product</a>
-    <a href="{% url 'import_products' %}">Import Products</a>
+<div class="container">
+    <h1 class="pt-4">Product List</h1>
+    <div class="d-flex flex-row align-items-center gap-2 border-bottom pb-4 mb-4">
+        <a class="btn btn-primary" href="{% url 'add_product' %}">Add Product</a>
+        <a class="btn bg-darky border" href="{% url 'import_products' %}">Import Product</a>
+    </div>
     {% regroup products by presentation as presentation_list %}
-
-    {% for presentation in presentation_list %}
+    <div class="d-flex flex-column gap-4">
+        {% for presentation in presentation_list %}
+    <div class="d-flex flex-column border-bottom pb-2">
         <h2>{{ presentation.grouper }}</h2>
-        <ul>
+        <ul class="list-unstyled d-flex flex-column align-items-start gap-2">
             {% for product in presentation.list %}
-                <li><a href="{% url 'edit_product' product.id %}">{{ product.product_code }} - {{ product.product }}</a></li>
+            <li class="p-2 bg-darky rounded-3 ">
+                <a class="text-decoration-none"
+                    href="{% url 'edit_product' product.id %}">
+                    <p class="m-0">{{ product.product_code }} - {{ product.product }}</p>
+                </a>
+            </li>
             {% endfor %}
         </ul>
+    </div>
     {% endfor %}
+    </div>
+</div>
 {% endblock %}

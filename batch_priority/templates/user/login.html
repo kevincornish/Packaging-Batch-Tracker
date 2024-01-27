@@ -5,10 +5,59 @@ Login
 {% endblock %}
 
 {% block content %}
-<h2>Login</h2>
-<form method="post" action="{% url 'login' %}">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button class="btn btn-primary" type="submit">Login</button>
-</form>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="text-center">Login</h2>
+                </div>
+                <div class="card-body">
+                    <form method="post" action="{% url 'login' %}">
+                        {% csrf_token %}
+
+                        {# Display error messages if any #}
+                        {% if form.non_field_errors %}
+                            <div class="alert alert-danger">
+                                {% for error in form.non_field_errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+
+                        {# Display form fields manually with labels and errors #}
+                        <div class="mb-3">
+                            <label for="{{ form.username.id_for_label }}" class="form-label fw-semibold">Username</label>
+                            <input type="text" name="{{ form.username.name }}" value="{{ form.username.value }}" id="{{ form.username.id_for_label }}" class="form-control border {% if form.username.errors %}is-invalid{% endif %}" {% if form.username.required %}required{% endif %}>
+                            {% if form.username.errors %}
+                                <div class="text-danger">
+                                    {% for error in form.username.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="mb-3">
+                            <label for="{{ form.password.id_for_label }}" class="form-label fw-semibold">Password</label>
+                            <input type="password" name="{{ form.password.name }}" id="{{ form.password.id_for_label }}" class="form-control {% if form.password.errors %}is-invalid{% endif %}" {% if form.password.required %}required{% endif %}>
+                            {% if form.password.errors %}
+                                <div class="text-danger">
+                                    {% for error in form.password.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="text-center">
+                            <input class="btn btn-primary" type="submit" value="Login"></input>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-center mt-2">
+                            <p class="d-flex flex-row align-items-center gap-2">Already have an account? <a class="nav-link text-primary" href="{% url 'signup' %}">Sign Up</a></p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

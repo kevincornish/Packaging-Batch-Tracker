@@ -5,40 +5,100 @@ Add Batch
 {% endblock %}
 
 {% block content %}
+<div class="container py-4">
     <h1>Add Batch</h1>
-    <form method="post" action="{% url 'add_batch' %}" id="batch-form">
+    <form class="d-flex flex-column gap-3" method="post" action="{% url 'add_batch' %}" id="batch-form">
         {% csrf_token %}
-        {{ form.as_p }}
-
-        <h2>Select Bays</h2>
-        {% for bay in bays %}
-            <div class="bay-row">
-                <label for="id_bay_{{ bay.id }}">{{ bay.name }}</label>
-                <input type="checkbox" name="selected_bays" id="id_bay_{{ bay.id }}" value="{{ bay.id }}" class="bay-checkbox">
-                
-                <label for="id_start_date_{{ bay.id }}">Start Date:</label>
-                <input type="date" name="start_date_{{ bay.id }}" id="id_start_date_{{ bay.id }}" class="date-input">
-                
-                <label for="id_end_date_{{ bay.id }}">End Date:</label>
-                <input type="date" name="end_date_{{ bay.id }}" id="id_end_date_{{ bay.id }}" class="date-input">
+        {{ form.non_field_errors }}
+        <div class="d-flex flex-column gap-1">
+            <label class="fw-semibold" for="{{ form.batch_number.id_for_label }}">Batch Number</label>
+            {{ form.batch_number }}
+        </div>
+        <div class="d-flex flex-column gap-1">
+            <label class="fw-semibold" for="{{ form.product_code.id_for_label }}">Product Code</label>
+            {{ form.product_code }}
+        </div>
+        <div class="d-flex flex-column gap-1">
+            <label class="fw-semibold" for="{{ form.manufacture_date.id_for_label }}">Manufacture Date</label>
+            {{ form.manufacture_date }}
+        </div>
+        <div class="d-flex flex-column gap-1">
+            <label class="fw-semibold" for="{{ form.complete_date_target.id_for_label }}">Complete Date Target</label>
+            {{ form.complete_date_target }}
+        </div>
+        <div class="d-flex flex-row align-items-center justify-content-start flex-wrap gap-3">
+            <div class="d-flex flex-row-reverse align-items-center gap-2">
+                <label class="fw-semibold" for="{{ form.on_hold.id_for_label }}">On Hold</label>
+                <input class="form-check-input mt-0" type="checkbox" name="{{ form.on_hold.name }}" id="{{ form.on_hold.id_for_label }}">
             </div>
-        {% endfor %}
-
+            <div class="d-flex flex-row-reverse align-items-center gap-2">
+                <label class="fw-semibold" for="{{ form.bom_received.id_for_label }}">BOM Received</label>
+                <input class="form-check-input mt-0" type="checkbox" name="{{ form.bom_received.name }}" id="{{ form.bom_received.id_for_label }}">
+            </div>
+            <div class="d-flex flex-row-reverse align-items-center gap-2">
+                <label class="fw-semibold" for="{{ form.samples_received.id_for_label }}">Samples Received</label>
+                <input class="form-check-input mt-0" type="checkbox" name="{{ form.samples_received.name }}" id="{{ form.samples_received.id_for_label }}">
+            </div>
+            <div class="d-flex flex-row-reverse align-items-center gap-2">
+                <label class="fw-semibold" for="{{ form.batch_complete.id_for_label }}">Batch Complete</label>
+                <input class="form-check-input mt-0" type="checkbox" name="{{ form.batch_complete.name }}" id="{{ form.batch_complete.id_for_label }}">
+            </div>
+            <div class="d-flex flex-row-reverse align-items-center gap-2">
+                <label class="fw-semibold" for="{{ form.production_check.id_for_label }}">Production Check</label>
+                <input class="form-check-input mt-0" type="checkbox" name="{{ form.production_check.name }}" id="{{ form.production_check.id_for_label }}">
+            </div>
+        </div>
+        <div class="d-flex flex-column gap-1">
+            <label class="fw-semibold" for="{{ form.notes.id_for_label }}">Notes</label>
+            <textarea class="form-control" name="{{ form.notes.name }}" id="{{ form.notes.id_for_label }}" rows="4">{{ form.notes.value }}</textarea>
+        </div>              
+        <div class="d-flex flex-column">
+            <h2>Select Bays</h2>
+            <div class="d-flex flex-column gap-4">
+                {% for bay in bays %}
+                <div class="bay-row">
+                    <div class="d-flex flex-row align-items-center">
+                        <div class="form-check">
+                            <input type="checkbox" name="selected_bays" id="id_bay_{{ bay.id }}" value="{{ bay.id }}"
+                                class="bay-checkbox form-check-input d-flex align-items-center justify-content-center">
+                        </div>
+                        <label class="fs-5 fw-semibold m-0" for="id_bay_{{ bay.id }}">{{ bay.name }}</label>
+                    </div>
+                    <div class="d-flex flex-row align-items-center row">
+                        <div class="d-flex flex-column align-items-start justify-content-start gap-1 col-6">
+                            <label class="fw-semibold" for="id_start_date_{{ bay.id }}">Start Date:</label>
+                            <div class="form-check p-0 w-100">
+                                <input type="date" name="start_date_{{ bay.id }}" id="id_start_date_{{ bay.id }}"
+                                    class="date-input p-1 rounded-2 border text-uppercase w-100">
+                            </div>
+                        </div>
+                        <div class="d-flex flex-column align-items-start justify-content-start gap-1 col-6">
+                            <label class="fw-semibold" for="id_end_date_{{ bay.id }}">End Date:</label>
+                            <div class="form-check p-0 w-100">
+                                <input type="date" name="end_date_{{ bay.id }}" id="id_end_date_{{ bay.id }}"
+                                    class="date-input py-1 px-2 rounded-2 border text-uppercase w-100">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
         <input class="btn btn-primary" type="submit" value="Add Batch">
-
     </form>
-    <script>
-        document.getElementById('batch-form').addEventListener('submit', function(event) {
-            var checkboxes = document.querySelectorAll('.bay-checkbox');
-            for (var i = 0; i < checkboxes.length; i++) {
-                var checkbox = checkboxes[i];
-                var startDateInput = document.querySelector('[name="start_date_' + checkbox.value + '"]');
-                if (checkbox.checked && startDateInput.value === "") {
-                    alert("Please enter a date for the selected bay.");
-                    event.preventDefault();
-                    return false;
-                }
+</div>
+<script>
+    document.getElementById('batch-form').addEventListener('submit', function (event) {
+        var checkboxes = document.querySelectorAll('.bay-checkbox');
+        for (var i = 0; i < checkboxes.length; i++) {
+            var checkbox = checkboxes[i];
+            var startDateInput = document.querySelector('[name="start_date_' + checkbox.value + '"]');
+            if (checkbox.checked && startDateInput.value === "") {
+                alert("Please enter a date for the selected bay.");
+                event.preventDefault();
+                return false;
             }
-        });
-    </script>
+        }
+    });
+</script>
 {% endblock %}
