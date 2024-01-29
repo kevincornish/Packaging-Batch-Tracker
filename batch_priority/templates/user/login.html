@@ -13,7 +13,7 @@ Login
                     <h2 class="text-center">Login</h2>
                 </div>
                 <div class="card-body">
-                    <form method="post" action="{% url 'login' %}">
+                    <form method="post" action="{% url 'login' %}?next={{ request.GET.next }}">
                         {% csrf_token %}
 
                         {# Display error messages if any #}

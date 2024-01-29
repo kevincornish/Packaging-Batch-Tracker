@@ -16,6 +16,8 @@ if os.environ.get("ALLOWED_HOSTS") is not None:
     except Exception as e:
         print("Cant set ALLOWED_HOSTS, using default instead")
 
+LOGIN_URL = '/login/'
+
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",

@@ -463,7 +463,8 @@ def user_login(request):
         if form.is_valid():
             user = form.get_user()
             login(request, user)
-            return redirect("batch_list")
+            next_url = request.GET.get('next', 'batch_list') or 'batch_list'
+            return redirect(next_url)
     else:
         form = AuthenticationForm()
     return render(request, "user/login.html", {"form": form})
