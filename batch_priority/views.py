@@ -6,14 +6,14 @@ from django.db.models.functions import Lower, TruncWeek
 from django.core.exceptions import ValidationError
 from django.utils.dateparse import parse_date
 from django.views.decorators.csrf import csrf_exempt
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, logout
 from django.views import View
 from django.http import JsonResponse
-from .forms import BatchForm, BayForm, ProductForm, CommentForm
-from .models import Bay, Batch, Product, TargetDate
 from django.utils import timezone
+from .forms import BatchForm, BayForm, CustomUserCreationForm, ProductForm, CommentForm
+from .models import Bay, Batch, Product, TargetDate
 
 
 def batch_list(request):
@@ -447,13 +447,13 @@ def edit_product(request, product_id):
 
 def signup(request):
     if request.method == "POST":
-        form = UserCreationForm(request.POST)
+        form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
             login(request, user)
             return redirect("batch_list")
     else:
-        form = UserCreationForm()
+        form = CustomUserCreationForm()
     return render(request, "user/signup.html", {"form": form})
 
 
