@@ -1,7 +1,7 @@
 from django.utils import timezone
 from django.db import models
-from simple_history.models import HistoricalRecords
 from django.contrib.auth.models import User
+from simple_history.models import HistoricalRecords
 
 
 class Product(models.Model):
@@ -46,7 +46,7 @@ class Batch(models.Model):
         null=True,
         blank=True,
         related_name="assigned_to",
-        verbose_name="Assigned To"
+        verbose_name="Assigned To",
     )
     created_by = models.ForeignKey(
         User,
@@ -89,6 +89,7 @@ class Batch(models.Model):
             self.completed_by = None
 
         super().save(*args, **kwargs)
+
     def __str__(self):
         return f"{self.batch_number} - {self.product_code}"
 
