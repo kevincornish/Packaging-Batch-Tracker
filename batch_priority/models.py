@@ -40,6 +40,14 @@ class Batch(models.Model):
         blank=True,
         related_name="production_checked_batches",
     )
+    assigned_to = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="assigned_to",
+        verbose_name="Assigned To"
+    )
     created_by = models.ForeignKey(
         User,
         on_delete=models.SET_NULL,
@@ -60,20 +68,20 @@ class Batch(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.id:
-            # This is a new instance, set the created_by field
             if hasattr(self, "user") and self.user.is_authenticated:
                 self.created_by = self.user
 
-        # Always set the last_modified_by field
         if hasattr(self, "user") and self.user.is_authenticated:
             self.last_modified_by = self.user
 
-        if self.production_check:
+        if self.production_check and not self.production_check_date:
             self.production_check_date = timezone.now()
             self.production_checked_by = self.user
+        elif not self.production_check:
+            self.production_check_date = None
+            self.production_checked_by = None
 
-        # Check if batch_complete is set to True
-        if self.batch_complete:
+        if self.batch_complete and not self.batch_complete_date:
             self.batch_complete_date = timezone.now()
             self.completed_by = self.user
         elif not self.batch_complete:
@@ -81,7 +89,6 @@ class Batch(models.Model):
             self.completed_by = None
 
         super().save(*args, **kwargs)
-
     def __str__(self):
         return f"{self.batch_number} - {self.product_code}"
 
