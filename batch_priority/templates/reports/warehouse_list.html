@@ -16,7 +16,7 @@ Warehouse
                             {% if user.is_authenticated %}
                             <div class="d-flex flex-row align-items-center gap-1 bg-darky-light px-2 rounded-2">
                                 <p class="m-0 fw-medium">Batch:</p>
-                                <a class="m-0 text-decoration-none fw-semibold" href="{% url 'edit_batch' batch.id %}">{{ batch.batch_number }}</a>
+                                <a class="m-0 text-decoration-none fw-semibold" href="{% url 'batch_detail' batch.id %}">{{ batch.batch_number }}</a>
                             </div>
                             {% else %}
                             <div class="d-flex flex-row align-items-center gap-2 bg-darky-light px-2 rounded-2">
@@ -56,7 +56,7 @@ Warehouse
                 {% if user.is_authenticated %}
                     <a class="text-decoration-none" href="{% url 'edit_batch' batch.id %}">
                         <div class="bttn d-flex align-items-center justify-content-center p-2 rounded-2 bg-darky text-white mt-2">
-                            <p class="m-0 fw-semibold text-secondary">Add Confirmation</p>
+                            <p class="m-0 fw-semibold text-secondary">Edit Batch</p>
                         </div>
                     </a>
                 {% endif %}
