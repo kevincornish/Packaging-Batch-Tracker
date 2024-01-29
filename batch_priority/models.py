@@ -68,18 +68,15 @@ class Batch(models.Model):
         if hasattr(self, "user") and self.user.is_authenticated:
             self.last_modified_by = self.user
 
-        if self.production_check and not self.production_check_date:
+        if self.production_check:
             self.production_check_date = timezone.now()
-            if hasattr(self, "user") and self.user.is_authenticated:
-                self.production_checked_by = self.user
+            self.production_checked_by = self.user
 
         # Check if batch_complete is set to True
-        if self.batch_complete and not self.batch_complete_date:
+        if self.batch_complete:
             self.batch_complete_date = timezone.now()
-            if hasattr(self, "user") and self.user.is_authenticated:
-                self.completed_by = self.user
+            self.completed_by = self.user
         elif not self.batch_complete:
-            # If batch_complete is set to False, reset batch_complete_date and completed_by
             self.batch_complete_date = None
             self.completed_by = None
 
