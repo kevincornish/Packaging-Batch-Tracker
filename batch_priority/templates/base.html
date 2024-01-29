@@ -23,6 +23,29 @@
               <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
             </div>
             <div class="offcanvas-body">
+              {% if user.is_authenticated %}
+              <hr>
+              <div class="dropdown">
+                  <a href="#" class="d-flex align-items-center text-black text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                    <span class="d-sm-inline mx-1">{{ user }} - {% for group in user.groups.all %} ({{ group.name }}){% endfor %}</span>
+                  </a>
+                  <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
+                      {% if user|has_group:'Manager' %}
+                        <li><a class="dropdown-item" href="{% url 'add_batch' %}">Add Batch</a></li>
+                        <li><a class="dropdown-item" href="{% url 'bay_list' %}">Bays</a></li>
+                        <li><a class="dropdown-item" href="{% url 'product_list' %}">Products</a></li>
+                      {% endif %}
+                      {% if user|has_group:'Manager' or user|has_group:'Supervisor' %}
+                      <li><a class="dropdown-item" href="{% url 'archive_list' %}">Archive</a></li>
+                      {% endif %}
+                      <li>
+                          <hr class="dropdown-divider">
+                      </li>
+                      <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+                  </ul>
+              </div>
+              <hr>
+              {% endif %}
               <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
                 <li class="nav-item">
                   <a class="nav-link active" aria-current="page" href="{% url 'batch_list' %}">Home</a>
@@ -41,9 +64,6 @@
                 </li>
                 {% if user.is_authenticated %}
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'archive_list' %}">Archive</a>
-                </li>
-                <li class="nav-item">
                   <a class="nav-link" href="{% url 'locations' %}">Batch Locations</a>
               </li>
               {% endif %}
@@ -56,23 +76,7 @@
                     <li><a class="dropdown-item" href="{% url 'batches_per_week' %}">Completed per week</a></li>
                   </ul>
                 </li>
-                {% if user.is_authenticated %}
-                <li class="nav-item dropdown">
-                  {% if user|has_group:'Manager' %}
-                  <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    Edit
-                  </a>
-                  <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="{% url 'add_batch' %}">Add Batch</a></li>
-                    <li><a class="dropdown-item" href="{% url 'bay_list' %}">Bays</a></li>
-                    <li><a class="dropdown-item" href="{% url 'product_list' %}">Products</a></li>
-                  </ul>
-                </li>
-                {% endif %}
-                <li class="nav-item">
-                  <a class="nav-link" href="{% url 'logout' %}">Logout</a>
-              </li>
-                {% else %}
+                {% if not user.is_authenticated %}
                 <li class="nav-item">
                   <a class="nav-link" href="{% url 'login' %}">Login</a>
                   <a class="nav-link" href="{% url 'signup' %}">Sign up</a>
