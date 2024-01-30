@@ -1,8 +1,8 @@
 import csv
 from django.shortcuts import get_object_or_404, render, redirect
 from django.db import models
-from django.db.models import Count, Case, When, Value, IntegerField, Min
-from django.db.models.functions import Lower, TruncWeek
+from django.db.models import Count, Case, When, Value, IntegerField, Min, F
+from django.db.models.functions import Lower, TruncWeek, TruncDay
 from django.core.exceptions import ValidationError
 from django.utils.dateparse import parse_date
 from django.views.decorators.csrf import csrf_exempt
@@ -463,7 +463,7 @@ def user_login(request):
         if form.is_valid():
             user = form.get_user()
             login(request, user)
-            next_url = request.GET.get('next', 'batch_list') or 'batch_list'
+            next_url = request.GET.get("next", "batch_list") or "batch_list"
             return redirect(next_url)
     else:
         form = AuthenticationForm()
@@ -479,7 +479,6 @@ class CompletedOnView(View):
     template_name = "batch/completed_on.html"
 
     def get(self, request, *args, **kwargs):
-        # Get your batches based on the date criteria
         start_date = request.GET.get("start_date")
         end_date = request.GET.get("end_date")
 
@@ -508,5 +507,60 @@ def batches_per_week_data(request):
     return JsonResponse({"labels": labels, "data": batch_counts})
 
 
-def batches_per_week_chart(request):
-    return render(request, "reports/completed_per_week.html")
+def batches_per_day_data(request):
+    data = (
+        Batch.objects.filter(batch_complete=True, batch_complete_date__isnull=False)
+        .annotate(day=TruncDay("batch_complete_date"))
+        .values("day")
+        .annotate(batch_count=Count("id"))
+        .order_by("day")
+    )
+
+    labels = [entry["day"].strftime("%d-%m-%Y") for entry in data]
+    batch_counts = [entry["batch_count"] for entry in data]
+
+    return JsonResponse({"labels": labels, "data": batch_counts})
+
+
+def batches_completed_before_target_data(request):
+    data = (
+        Batch.objects.filter(batch_complete=True, batch_complete_date__isnull=False)
+        .annotate(
+            week=TruncWeek("batch_complete_date"),
+            completed_before_target=Count(
+                Case(
+                    When(batch_complete_date__lt=F("complete_date_target"), then=1),
+                    output_field=IntegerField(),
+                )
+            ),
+        )
+        .values("week")
+        .annotate(
+            batch_count=Count("id"),
+            completed_before_target_count=Count(
+                Case(
+                    When(batch_complete_date__lt=F("complete_date_target"), then=1),
+                    output_field=IntegerField(),
+                )
+            ),
+        )
+        .order_by("week")
+    )
+
+    labels = [entry["week"].strftime("%d-%m-%Y") for entry in data]
+    batch_counts = [entry["batch_count"] for entry in data]
+    completed_before_target_counts = [
+        entry["completed_before_target_count"] for entry in data
+    ]
+
+    return JsonResponse(
+        {
+            "labels": labels,
+            "data": batch_counts,
+            "completed_before_target_counts": completed_before_target_counts,
+        }
+    )
+
+
+def batches_completed(request):
+    return render(request, "reports/completed.html")

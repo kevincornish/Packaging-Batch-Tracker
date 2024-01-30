@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Batches Completed Reports
+{% endblock %}
+
+{% block content %}
+<div>
+    <div style="width: 50%; float: left;">
+        <h1>Batches completed per week</h1>
+        <canvas id="batchesPerWeekChart"></canvas>
+        <div id="batchNumbersPerWeek"></div>
+    </div>
+    <div style="width: 50%; float: left;">
+        <h1>Batches completed per day</h1>
+        <canvas id="batchesPerDayChart"></canvas>
+        <div id="batchNumbersPerDay"></div>
+    </div>
+</div>
+<div>
+    <h1>Batches completed before target</h1>
+    <canvas id="batchesBeforeTargetChart"></canvas>
+    <div id="batchNumbersBeforeTarget"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        fetch('{% url "batches_per_day_data" %}')
+            .then(response => response.json())
+            .then(data => {
+                var ctx = document.getElementById('batchesPerDayChart').getContext('2d');
+                var dailyChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: data.labels,
+                        datasets: [{
+                            label: 'Batches Completed Per Day',
+                            data: data.data,
+                            backgroundColor: 'rgba(192, 75, 192, 0.2)',
+                            borderColor: 'rgba(192, 75, 192, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+
+                // Access batch numbers and display them
+                var batchNumbersDiv = document.getElementById('batchNumbersPerDay');
+                batchNumbersDiv.innerHTML = 'Batch Numbers: ' + data.batch_numbers.join(', ');
+            });
+    });
+    document.addEventListener('DOMContentLoaded', function () {
+        fetch('{% url "batches_per_week_data" %}')
+            .then(response => response.json())
+            .then(data => {
+                var ctx = document.getElementById('batchesPerWeekChart').getContext('2d');
+                var weeklyChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: data.labels,
+                        datasets: [{
+                            label: 'Batches Completed Per Week',
+                            data: data.data,
+                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+
+                // Access batch numbers and display them
+                var batchNumbersDiv = document.getElementById('batchNumbersPerWeek');
+                batchNumbersDiv.innerHTML = 'Batch Numbers: ' + data.batch_numbers.join(', ');
+            });
+    });
+    document.addEventListener('DOMContentLoaded', function () {
+    fetch('{% url "batches_completed_before_target_data" %}')
+        .then(response => response.json())
+        .then(data => {
+            var ctx = document.getElementById('batchesBeforeTargetChart').getContext('2d');
+            var beforeTargetChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: data.labels,
+                    datasets: [{
+                        label: 'Batches Completed Before Target',
+                        data: data.completed_before_target_counts,
+                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+
+            // Access batch numbers and display them
+            var batchNumbersDiv = document.getElementById('batchNumbersBeforeTarget');
+            batchNumbersDiv.innerHTML = 'Batch Numbers: ' + data.batch_numbers.join(', ');
+        });
+});
+</script>
+{% endblock %}
