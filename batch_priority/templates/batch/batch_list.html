@@ -14,6 +14,9 @@ Packaging
                 <div class="grid-item rounded-3 shdw border border-light-subtle">
                     <div class="d-flex flex-column align-items-start gap-2">
                         <div class="d-flex flex-column gap-2 w-100">
+                            <div class="tag d-inline-flex align-items-center px-2 py-1 bg-blu rounded-2">
+                                <p class="m-0 fs-6 fw-bold m-auto">#{{ forloop.counter }}</p>
+                            </div>
                             <div class="tag d-none d-inline-flex align-items-center px-2 py-1 bg-cherry rounded-2 w-100 {% if targetdate.batch.on_hold %} on text-danger {% endif %}">
                                 <p class="m-0 fs-6 fw-bold m-auto">ON HOLD</p>
                             </div>
@@ -42,7 +45,7 @@ Packaging
                         </div>
                         <div class="d-flex flex-row align-items-center gap-2">
                             <p class="fw-semibold m-0">BOM Received:</p>
-                            <p class="m-0">{% if targetdate.batch.bom_received == True %} Yes {% else %} No {% endif %}</p>
+                            <p class="m-0 px-2 {% if targetdate.batch.bom_received == True %} bg-green {% else %} bg-cherry {% endif %} text-secondary rounded-pill">{% if targetdate.batch.bom_received == True %} Yes {% else %} No {% endif %}</p>
                         </div>
                         {% if targetdate.batch.notes %}
                         <div>
