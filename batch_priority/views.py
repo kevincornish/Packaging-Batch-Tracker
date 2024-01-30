@@ -265,7 +265,7 @@ def batch_history(request, batch_id):
                 new_product_code = change.new
             # Check if history_user is not None before accessing username
             history_user = new_record.last_modified_by
-            username = history_user.username if history_user else "Unknown"
+            username = history_user.username if history_user else "System"
             changes.append(
                 {
                     "field": change.field,
