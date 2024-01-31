@@ -58,9 +58,10 @@ Create a superuser
 python manage.py createsuperuser
 ```
 
-Create user groups
+Create user groups and bays/lines
 ```
 python manage.py create_user_groups
+python manage.py create_bays
 ```
 
 Generate random batches, with comments and target dates for each bay / line.
