@@ -301,6 +301,11 @@ def locations(request, batch_id):
             # Include the initial created row if it has the necessary fields
             for i in range(len(target_date_records)):
                 initial_record = target_date_records[i]
+                username = (
+                    initial_record.history_user.username
+                    if initial_record.history_user
+                    else "System"
+                )
                 changes.append(
                     {
                         "batch": batch.batch_number,
@@ -308,7 +313,7 @@ def locations(request, batch_id):
                         "bay": initial_record.bay,
                         "start_date": initial_record.target_start_date,
                         "end_date": initial_record.target_end_date,
-                        "user": initial_record.history_user.username,
+                        "user": username,
                         "timestamp": initial_record.history_date,
                     }
                 )
