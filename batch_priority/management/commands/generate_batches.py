@@ -4,7 +4,6 @@ from django.utils import timezone
 from faker import Faker
 from django.contrib.auth.models import User
 from batch_priority.models import Batch, Bay, Product, TargetDate, Comment
-from simple_history.utils import bulk_create_with_history
 
 fake = Faker()
 
@@ -17,11 +16,9 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         count = options["count"]
-        batch_instances = []
-        target_dates = []
         bays = Bay.objects.all()
+
         for _ in range(count):
-            # Generate a unique batch_number
             unique_batch_number = None
             while not unique_batch_number:
                 potential_batch_number = fake.unique.random_number()
@@ -35,6 +32,7 @@ class Command(BaseCommand):
                 is_production_check = fake.boolean()
             else:
                 is_production_check = False
+
             batch = Batch(
                 batch_number=unique_batch_number,
                 product_code=random.choice(Product.objects.all()),
@@ -46,41 +44,37 @@ class Command(BaseCommand):
                 samples_received=fake.boolean(),
                 batch_complete=is_batch_complete,
                 batch_complete_date=timezone.now() if is_batch_complete else None,
-                completed_by=random.choice(User.objects.all()),
+                completed_by=random.choice(User.objects.all()) if is_batch_complete else None,
                 production_check=is_production_check,
                 production_check_date=timezone.now() if is_production_check else None,
-                production_checked_by=random.choice(User.objects.all()),
+                production_checked_by=random.choice(User.objects.all()) if is_production_check else None,
                 assigned_to=random.choice(User.objects.all()),
                 created_by=random.choice(User.objects.all()),
                 last_modified_by=random.choice(User.objects.all()),
             )
 
+            batch.save()
+
             selected_bays = random.sample(list(bays), random.randint(1, len(bays)))
 
             # Create TargetDates related to the batch
             for bay in selected_bays:
-                target_date = TargetDate(
+                TargetDate.objects.create(
                     batch=batch,
                     bay=bay,
                     target_start_date=fake.date_this_year(),
                     target_end_date=fake.future_date(),
                 )
-                target_dates.append(target_date)
 
-            batch_instances.append(batch)
-
-        bulk_create_with_history(batch_instances, Batch)
-        bulk_create_with_history(target_dates, TargetDate)
-
-        # Create comments (between 10-20)
-        comment_count = random.randint(10, 20)
-        for _ in range(comment_count):
-            Comment.objects.create(
-                batch=batch,
-                user=random.choice(User.objects.all()),
-                timestamp=timezone.now(),
-                text=fake.text(),
-            )
+            # Create comments (between 10-20) for each batch
+            comment_count = random.randint(10, 20)
+            for _ in range(comment_count):
+                Comment.objects.create(
+                    batch=batch,
+                    user=random.choice(User.objects.all()),
+                    timestamp=timezone.now(),
+                    text=fake.text(),
+                )
 
         self.stdout.write(
             self.style.SUCCESS(f"Successfully generated {count} random batches.")
