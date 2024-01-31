@@ -134,4 +134,7 @@ a.btn {
     .bay-list li a {
         width: 100%;
     }
+    .grid-container {
+        grid-template-columns: 1fr;
+    }
 }
