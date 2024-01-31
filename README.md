@@ -57,6 +57,12 @@ Create a superuser
 python manage.py createsuperuser
 ```
 
+Create user groups
+```
+python manage.py create_user_groups
+```
+
+
 Run server
 ```
 python manage.py runserver
