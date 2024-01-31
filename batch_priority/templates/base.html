@@ -31,12 +31,14 @@
                   </a>
                   <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
                       {% if user|has_group:'Manager' %}
-                        <li><a class="dropdown-item" href="{% url 'add_batch' %}">Add Batch</a></li>
                         <li><a class="dropdown-item" href="{% url 'bay_list' %}">Bays</a></li>
                         <li><a class="dropdown-item" href="{% url 'product_list' %}">Products</a></li>
                       {% endif %}
                       {% if user|has_group:'Manager' or user|has_group:'Supervisor' %}
                       <li><a class="dropdown-item" href="{% url 'archive_list' %}">Archive</a></li>
+                      {% endif %}
+                      {% if user|has_group:'Manager' or user|has_group:'Supervisor' or user|has_group:'Team Leader' %}
+                      <li><a class="dropdown-item" href="{% url 'add_batch' %}">Add Batch</a></li>
                       {% endif %}
                       <li>
                           <hr class="dropdown-divider">
