@@ -42,6 +42,7 @@ Install Requirements
 
 ```bash
 pip install -r requirements.txt
+pip install -r requirements-dev.txt
 ```
 
 Rename ```sample.env``` to ```.env```
@@ -62,6 +63,10 @@ Create user groups
 python manage.py create_user_groups
 ```
 
+Generate random batches, with comments and target dates for each bay / line.
+```
+python manage.py generate_batches 30
+```
 
 Run server
 ```
