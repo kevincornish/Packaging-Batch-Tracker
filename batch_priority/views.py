@@ -4,6 +4,7 @@ from django.db import models
 from django.db.models import Count, Case, When, Value, IntegerField, Min, F
 from django.db.models.functions import Lower, TruncWeek, TruncDay
 from django.core.exceptions import ValidationError
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.utils.dateparse import parse_date
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.forms import AuthenticationForm
@@ -325,7 +326,23 @@ def locations(request, batch_id):
 
 
 def location(request):
-    batches = Batch.objects.all()
+    # Order batches by newest first
+    batches = Batch.objects.order_by('-created_at')
+
+    # Number of batches per page
+    batches_per_page = 10
+    paginator = Paginator(batches, batches_per_page)
+
+    page = request.GET.get('page')
+    try:
+        batches = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        batches = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g., 9999), deliver last page of results.
+        batches = paginator.page(paginator.num_pages)
+
     return render(request, "batch/batches.html", {"batches": batches})
 
 

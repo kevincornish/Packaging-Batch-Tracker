@@ -13,4 +13,34 @@ Batch Locations
             </a>
         {% endfor %}
     </div>
+    <br>
+    <nav aria-label="pagination">
+        <ul class="pagination justify-content-center">
+            {% if batches.has_previous %}
+          <li class="page-item">
+                <a class="page-link" href="?page=1">First</a>
+          </li>
+          <a class="page-link" href="?page={{ batches.previous_page_number }}">Previous</a>
+          {% else %}
+          <li class="page-item disabled">
+            <a class="page-link" href="?page=1" >First</a>
+      </li>
+      <a class="page-link disabled" href="#"  aria-disabled="true">Previous</a>
+          {% endif %}
+          <li class="page-item active" aria-current="page">
+            <a class="page-link" href="#">{{ batches.number }}</a>
+          </li>
+          {% if batches.has_next %}
+        <li  class="page-item">
+          <a class="page-link" href="?page={{ batches.next_page_number }}">Next</a>
+        </li>
+        <a class="page-link" href="?page={{ batches.paginator.num_pages }}">Last</a>
+            {% else %}
+            <li  class="page-item disabled">
+                <a class="page-link" href="#">Next</a>
+              </li>
+              <a class="page-link disabled" href="#">Last</a>
+            {% endif %}
+        </ul>
+      </nav>
 {% endblock %}
