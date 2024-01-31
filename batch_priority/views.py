@@ -112,9 +112,9 @@ def add_batch(request):
                 return render(
                     request, "batch/add_batch.html", {"form": form, "bays": bays}
                 )
-
-            batch_instance = form.save(commit=True, created_by=request.user)
-
+            batch_instance = form.save(commit=False, created_by=request.user)
+            batch_instance.user = request.user
+            batch_instance.save()
             for bay_id in selected_bays:
                 bay = get_object_or_404(Bay, id=bay_id)
                 start_date = request.POST.get(f"start_date_{bay_id}")
@@ -139,10 +139,13 @@ def add_batch(request):
                 )
             return redirect("batch_list")
         else:
-            return redirect("batch_list")
+            return render(request, "batch/add_batch.html", {"form": form, "bays": bays})
     else:
         form = BatchForm()
+    if form.errors:
         return render(request, "batch/add_batch.html", {"form": form, "bays": bays})
+
+    return render(request, "batch/add_batch.html", {"form": form, "bays": bays})
 
 
 @login_required

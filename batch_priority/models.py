@@ -71,22 +71,23 @@ class Batch(models.Model):
             if hasattr(self, "user") and self.user.is_authenticated:
                 self.created_by = self.user
 
+
         if hasattr(self, "user") and self.user.is_authenticated:
             self.last_modified_by = self.user
 
-        if self.production_check and not self.production_check_date:
-            self.production_check_date = timezone.now()
-            self.production_checked_by = self.user
-        elif not self.production_check:
-            self.production_check_date = None
-            self.production_checked_by = None
+            if self.production_check and not self.production_check_date:
+                self.production_check_date = timezone.now()
+                self.production_checked_by = self.user
+            elif not self.production_check:
+                self.production_check_date = None
+                self.production_checked_by = None
 
-        if self.batch_complete and not self.batch_complete_date:
-            self.batch_complete_date = timezone.now()
-            self.completed_by = self.user
-        elif not self.batch_complete:
-            self.batch_complete_date = None
-            self.completed_by = None
+            if self.batch_complete and not self.batch_complete_date:
+                self.batch_complete_date = timezone.now()
+                self.completed_by = self.user
+            elif not self.batch_complete:
+                self.batch_complete_date = None
+                self.completed_by = None
 
         super().save(*args, **kwargs)
 
