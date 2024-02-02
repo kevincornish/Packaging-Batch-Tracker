@@ -7,7 +7,6 @@ from django.db.models.functions import (
     TruncWeek,
     TruncDay,
     ExtractWeek,
-    TruncDate,
 )
 from django.core.exceptions import ValidationError
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -19,6 +18,7 @@ from django.contrib.auth import login, logout
 from django.views import View
 from django.http import JsonResponse
 from django.utils import timezone
+from datetime import timedelta
 from .forms import BatchForm, BayForm, CustomUserCreationForm, ProductForm, CommentForm
 from .models import Bay, Batch, Product, TargetDate
 
@@ -617,22 +617,23 @@ def team_leader_kpi(request):
         # Add batch details to the stats
         stat["week_batches"] = week_batches
 
-        # Fetch the start date of the week
-        week_start_date = (
+        # Calculate the start date of the week (first Monday)
+        first_batch_date = (
             Batch.objects.filter(
                 batch_complete=True,
                 completed_by=user_id,
                 batch_complete_date__week=stat["week"],
             )
-            .annotate(week_start=TruncDate("batch_complete_date"))
-            .values("week_start")
+            .order_by("batch_complete_date")
+            .values("batch_complete_date")
             .first()
         )
 
-        # Add start date to the stats
-        stat["week_start_date"] = (
-            week_start_date["week_start"] if week_start_date else None
-        )
+        if first_batch_date:
+            start_of_week = first_batch_date["batch_complete_date"] - timedelta(days=first_batch_date["batch_complete_date"].weekday())
+            stat["week_start_date"] = start_of_week
+        else:
+            stat["week_start_date"] = None
 
     return render(
         request,
