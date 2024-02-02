@@ -2,12 +2,18 @@ import csv
 from django.shortcuts import get_object_or_404, render, redirect
 from django.db import models
 from django.db.models import Count, Case, When, Value, IntegerField, Min, F
-from django.db.models.functions import Lower, TruncWeek, TruncDay
+from django.db.models.functions import (
+    Lower,
+    TruncWeek,
+    TruncDay,
+    ExtractWeek,
+    TruncDate,
+)
 from django.core.exceptions import ValidationError
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.utils.dateparse import parse_date
 from django.views.decorators.csrf import csrf_exempt
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, logout
 from django.views import View
@@ -209,12 +215,16 @@ def edit_batch(request, batch_id):
             bay_row = {
                 "bay": bay,
                 "selected": target_date is not None,
-                "start_date": target_date.target_start_date.strftime("%Y-%m-%d")
-                if target_date and target_date.target_start_date
-                else "",
-                "end_date": target_date.target_end_date.strftime("%Y-%m-%d")
-                if target_date and target_date.target_end_date
-                else "",
+                "start_date": (
+                    target_date.target_start_date.strftime("%Y-%m-%d")
+                    if target_date and target_date.target_start_date
+                    else ""
+                ),
+                "end_date": (
+                    target_date.target_end_date.strftime("%Y-%m-%d")
+                    if target_date and target_date.target_end_date
+                    else ""
+                ),
             }
             bay_data.append(bay_row)
 
@@ -327,13 +337,13 @@ def locations(request, batch_id):
 
 def location(request):
     # Order batches by newest first
-    batches = Batch.objects.order_by('-created_at')
+    batches = Batch.objects.order_by("-created_at")
 
     # Number of batches per page
     batches_per_page = 10
     paginator = Paginator(batches, batches_per_page)
 
-    page = request.GET.get('page')
+    page = request.GET.get("page")
     try:
         batches = paginator.page(page)
     except PageNotAnInteger:
@@ -479,7 +489,7 @@ def signup(request):
             return redirect("batch_list")
     else:
         form = CustomUserCreationForm()
-    return render(request, "user/signup.html", {"form": form})
+    return render(request, "registration/signup.html", {"form": form})
 
 
 def user_logout(request):
@@ -576,3 +586,56 @@ def batches_completed_before_target_data(request):
 
 def batches_completed(request):
     return render(request, "reports/completed.html")
+
+
+def team_leader_kpi(request):
+    team_leader_stats = (
+        Batch.objects.filter(batch_complete=True)
+        .annotate(week=ExtractWeek("batch_complete_date"))
+        .values("completed_by", "week")
+        .annotate(batches_completed=Count("id"))
+        .order_by("week")
+    )
+
+    # Fetch usernames for each user ID
+    user_ids = set(stat["completed_by"] for stat in team_leader_stats)
+    users = User.objects.filter(id__in=user_ids)
+    user_mapping = {user.id: user.username for user in users}
+
+    # Add username to the stats
+    for stat in team_leader_stats:
+        user_id = stat["completed_by"]
+        stat["username"] = user_mapping.get(user_id, "Unknown")
+
+        # Fetch batch details for the week
+        week_batches = Batch.objects.filter(
+            batch_complete=True,
+            completed_by=user_id,
+            batch_complete_date__week=stat["week"],
+        ).values("batch_number", "batch_complete_date", "id")
+
+        # Add batch details to the stats
+        stat["week_batches"] = week_batches
+
+        # Fetch the start date of the week
+        week_start_date = (
+            Batch.objects.filter(
+                batch_complete=True,
+                completed_by=user_id,
+                batch_complete_date__week=stat["week"],
+            )
+            .annotate(week_start=TruncDate("batch_complete_date"))
+            .values("week_start")
+            .first()
+        )
+
+        # Add start date to the stats
+        stat["week_start_date"] = (
+            week_start_date["week_start"] if week_start_date else None
+        )
+
+    return render(
+        request,
+        "reports/team_leader_kpi.html",
+        {"team_leader_stats": team_leader_stats},
+    )

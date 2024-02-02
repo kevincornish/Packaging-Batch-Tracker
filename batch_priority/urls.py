@@ -1,5 +1,4 @@
 from django.urls import path
-from django.contrib.auth import views as auth_views
 from . import views
 
 urlpatterns = [
@@ -35,6 +34,7 @@ urlpatterns = [
         views.batches_completed,
         name="batches_completed",
     ),
+    path("reports/team_leader_kpi/", views.team_leader_kpi, name="team_leader_kpi"),
     path("add_batch/", views.add_batch, name="add_batch"),
     path("add_bay/", views.add_bay, name="add_bay"),
     path("add_product/", views.add_product, name="add_product"),
