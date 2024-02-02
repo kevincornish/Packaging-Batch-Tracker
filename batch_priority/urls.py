@@ -44,4 +44,10 @@ urlpatterns = [
     path("import_products/", views.import_products, name="import_products"),
     path("signup/", views.signup, name="signup"),
     path("accounts/logout/", views.user_logout, name="logout"),
+    path("daily_discussion/", views.daily_discussion, name="daily_discussion"),
+    path(
+        "daily_discussion/<str:date>/",
+        views.daily_discussion,
+        name="daily_discussion",
+    ),
 ]

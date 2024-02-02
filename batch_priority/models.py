@@ -71,7 +71,6 @@ class Batch(models.Model):
             if hasattr(self, "user") and self.user.is_authenticated:
                 self.created_by = self.user
 
-
         if hasattr(self, "user") and self.user.is_authenticated:
             self.last_modified_by = self.user
 
@@ -124,3 +123,25 @@ class TargetDate(models.Model):
 
     def __str__(self):
         return f"{self.batch} - {self.bay} - {self.target_start_date} to {self.target_end_date}"
+
+
+class DailyDiscussion(models.Model):
+    date = models.DateField(unique=True)
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    timestamp = models.DateTimeField(auto_now_add=True)
+    text = models.TextField()
+
+    def __str__(self):
+        return f"Discussion for {self.date}"
+
+
+class DailyDiscussionComment(models.Model):
+    discussion = models.ForeignKey(
+        DailyDiscussion, on_delete=models.CASCADE, related_name="comments"
+    )
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    timestamp = models.DateTimeField(auto_now_add=True)
+    text = models.TextField()
+
+    def __str__(self):
+        return f"Comment by {self.user.username} on {self.timestamp}"

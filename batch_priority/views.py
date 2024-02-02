@@ -18,9 +18,23 @@ from django.contrib.auth import login, logout
 from django.views import View
 from django.http import JsonResponse
 from django.utils import timezone
-from datetime import timedelta
-from .forms import BatchForm, BayForm, CustomUserCreationForm, ProductForm, CommentForm
-from .models import Bay, Batch, Product, TargetDate
+from datetime import timedelta, datetime
+from .forms import (
+    BatchForm,
+    BayForm,
+    CustomUserCreationForm,
+    ProductForm,
+    CommentForm,
+    DailyDiscussionCommentForm,
+)
+from .models import (
+    Bay,
+    Batch,
+    Product,
+    TargetDate,
+    DailyDiscussion,
+    DailyDiscussionComment,
+)
 
 
 def batch_list(request):
@@ -630,7 +644,9 @@ def team_leader_kpi(request):
         )
 
         if first_batch_date:
-            start_of_week = first_batch_date["batch_complete_date"] - timedelta(days=first_batch_date["batch_complete_date"].weekday())
+            start_of_week = first_batch_date["batch_complete_date"] - timedelta(
+                days=first_batch_date["batch_complete_date"].weekday()
+            )
             stat["week_start_date"] = start_of_week
         else:
             stat["week_start_date"] = None
@@ -639,4 +655,41 @@ def team_leader_kpi(request):
         request,
         "reports/team_leader_kpi.html",
         {"team_leader_stats": team_leader_stats},
+    )
+
+
+def daily_discussion(request, date=None):
+    if date is None:
+        date = timezone.now().date()
+    else:
+        date = datetime.strptime(date, "%Y-%m-%d").date()
+
+    discussion, created = DailyDiscussion.objects.get_or_create(date=date)
+
+    # Fetch batches completed on the specified date
+    batches_completed_on_date = Batch.objects.filter(
+        batch_complete=True, batch_complete_date__date=date
+    )
+
+    if request.method == "POST":
+        form = DailyDiscussionCommentForm(request.POST)
+        if form.is_valid():
+            text = form.cleaned_data["text"]
+            user = request.user if request.user.is_authenticated else None
+            comment = DailyDiscussionComment.objects.create(
+                discussion=discussion, user=user, text=text
+            )
+
+            return redirect("daily_discussion", date=date)
+    else:
+        form = DailyDiscussionCommentForm()
+
+    return render(
+        request,
+        "kpi/daily_discussion.html",
+        {
+            "discussion": discussion,
+            "form": form,
+            "batches_completed_on_date": batches_completed_on_date,
+        },
     )

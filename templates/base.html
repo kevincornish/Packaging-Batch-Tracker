@@ -67,6 +67,7 @@
                 </li>
                 {% if user.is_authenticated %}
                 <li class="nav-item">
+                  <a class="nav-link" href="{% url 'daily_discussion' %}">Daily Discussion</a>
                   <a class="nav-link" href="{% url 'locations' %}">Batch Locations</a>
               </li>
               {% endif %}
