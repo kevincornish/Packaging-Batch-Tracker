@@ -482,19 +482,6 @@ def signup(request):
     return render(request, "user/signup.html", {"form": form})
 
 
-def user_login(request):
-    if request.method == "POST":
-        form = AuthenticationForm(request, data=request.POST)
-        if form.is_valid():
-            user = form.get_user()
-            login(request, user)
-            next_url = request.GET.get("next", "batch_list") or "batch_list"
-            return redirect(next_url)
-    else:
-        form = AuthenticationForm()
-    return render(request, "user/login.html", {"form": form})
-
-
 def user_logout(request):
     logout(request)
     return redirect("batch_list")

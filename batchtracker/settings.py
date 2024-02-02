@@ -18,6 +18,17 @@ if os.environ.get("ALLOWED_HOSTS") is not None:
     except Exception as e:
         print("Cant set ALLOWED_HOSTS, using default instead")
 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = env("EMAIL_HOST")
+EMAIL_PORT = 465
+EMAIL_HOST_USER = env("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD")
+EMAIL_USE_SSL = True
+DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL")
+
+
+LOGIN_REDIRECT_URL = "/"
+LOGOUT_REDIRECT_URL = "/"
 LOGIN_URL = "/login/"
 
 INSTALLED_APPS = [
@@ -47,10 +58,7 @@ ROOT_URLCONF = "batchtracker.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [
-            os.path.join(BASE_DIR, "templates/"),
-            os.path.join(BASE_DIR, "templates"),
-        ],
+        "DIRS": [BASE_DIR / "templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
