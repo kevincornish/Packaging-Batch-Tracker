@@ -1,14 +1,17 @@
 {% extends 'base.html' %}
-
+{% load custom_filters %}
 {% block title %}
 Daily Discussion for {{ discussion.date }}
 {% endblock %}
-
 {% block content %}
     <h1>Daily Discussion for {{ discussion.date }}</h1>
     <p>{{ discussion.text }}</p>
-
-    <h2>Batches Completed on {{ discussion.date }}</h2>
+    <p>
+    <a href="{% url 'daily_discussion' date=-1|addDays|date:'Y-m-d' %}">Yesterdays Discussion</a> |
+    <a href="{% url 'daily_discussion' date=0|addDays|date:'Y-m-d' %}">Todays Discussion</a> | 
+    <a href="{% url 'daily_discussion' date=+1|addDays|date:'Y-m-d' %}">Tomorrows Discussion</a>
+    </p>
+    <h2>Batches Completed</h2>
         {% for batch in batches_completed_on_date %}
             <p><a class="fw-semibold text-decoration-none" href="{% url 'batch_detail' batch.id %}">{{ batch.batch_number }}</a> ({{ batch.product_code }} - {{ batch.product_code.product }} - {{ batch.product_code.presentation }})- {{ batch.batch_complete_date }}</p>
         {% endfor %}

@@ -1,6 +1,7 @@
 # Changelog
 
 ## [Feb 3, 2024]
+- add: add links to daily_discussion - yesterday / today and tomorrows discussions
 - add: changelog view
 
 ## [Feb 2, 2024]
