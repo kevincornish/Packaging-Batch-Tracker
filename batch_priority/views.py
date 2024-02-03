@@ -1,4 +1,6 @@
 import csv
+import os
+import markdown
 from django.shortcuts import get_object_or_404, render, redirect
 from django.db import models
 from django.db.models import Count, Case, When, Value, IntegerField, Min, F
@@ -693,3 +695,17 @@ def daily_discussion(request, date=None):
             "batches_completed_on_date": batches_completed_on_date,
         },
     )
+
+
+def changelog(request):
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    changelog_file_path = os.path.join(base_dir, "..", "CHANGELOG.md")
+
+    try:
+        with open(changelog_file_path, "r") as changelog_file:
+            changelog_content = changelog_file.read()
+            html = markdown.markdown(changelog_content)
+    except FileNotFoundError:
+        changelog_content = "Changelog not found."
+
+    return render(request, "changelog.html", {"changelog_content": html})

@@ -50,4 +50,5 @@ urlpatterns = [
         views.daily_discussion,
         name="daily_discussion",
     ),
+    path("changelog/", views.changelog, name="changelog"),
 ]

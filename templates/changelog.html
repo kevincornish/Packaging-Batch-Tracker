@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Changelog
+{% endblock %}
+
+{% block content %}
+  <div class="markdown">
+    {{ changelog_content|safe }}
+  </div>
+{% endblock %}
