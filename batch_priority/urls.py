@@ -50,5 +50,10 @@ urlpatterns = [
         views.daily_discussion,
         name="daily_discussion",
     ),
+    path(
+        "edit_discussion_comment/<int:comment_id>/",
+        views.edit_discussion_comment,
+        name="edit_discussion_comment",
+    ),
     path("changelog/", views.changelog, name="changelog"),
 ]

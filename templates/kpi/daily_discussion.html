@@ -1,52 +1,52 @@
 {% extends 'base.html' %}
 {% load custom_filters %}
 {% block title %}
-Daily Discussion for {{ discussion.date }}
+  Daily Discussion for {{ discussion.date }}
 {% endblock %}
 {% block content %}
-    <h1>Daily Discussion for {{ discussion.date }}</h1>
-    <p>{{ discussion.text }}</p>
-    <p>
-    <a href="{% url 'daily_discussion' date=-1|addDays|date:'Y-m-d' %}">Yesterdays Discussion</a> |
-    <a href="{% url 'daily_discussion' date=0|addDays|date:'Y-m-d' %}">Todays Discussion</a> | 
-    <a href="{% url 'daily_discussion' date=+1|addDays|date:'Y-m-d' %}">Tomorrows Discussion</a>
-    </p>
-    <h2>Batches Completed</h2>
-        {% for batch in batches_completed_on_date %}
-            <p><a class="fw-semibold text-decoration-none" href="{% url 'batch_detail' batch.id %}">{{ batch.batch_number }}</a> ({{ batch.product_code }} - {{ batch.product_code.product }} - {{ batch.product_code.presentation }})- {{ batch.batch_complete_date }}</p>
-        {% endfor %}
-    <div class="pt-3 mt-4 border-top">
-        {% if user.is_authenticated %}
-        <h2 class="mt-3">Comments</h2>
-        <div class="d-flex flex-column mb-4">
-            <form class="d-flex flex-column gap-3" method="post" action="{% url 'daily_discussion' date=discussion.date %}">
-                {% csrf_token %}
-                <div class="form-group">
-                    <textarea class="form-control" id="comment_text" name="text" rows="4"></textarea>
-                  </div>
-                  <input class="btn btn-primary" type="submit" value="Add Comment">
-            </form>
-        {% endif %}
-        </div>
-        {% if discussion.comments.all.exists %}
-        <ul class="list-unstyled">
-          {% for comment in discussion.comments.all %}
+  <p>
+    <a href="{% url 'daily_discussion' date=-1|addDays|date:'Y-m-d' %}">Yesterday's Discussion</a> |
+    <a href="{% url 'daily_discussion' date=0|addDays|date:'Y-m-d' %}">Today's Discussion</a> |
+    <a href="{% url 'daily_discussion' date=+1|addDays|date:'Y-m-d' %}">Tomorrow's Discussion</a>
+  </p>
+  <h2>Batches Completed</h2>
+  {% for batch in batches_completed_on_date %}
+    <p><a class="fw-semibold text-decoration-none" href="{% url 'batch_detail' batch.id %}">{{ batch.batch_number }}</a>
+      ({{ batch.product_code }} - {{ batch.product_code.product }} - {{ batch.product_code.presentation }})-
+      {{ batch.batch_complete_date }}</p>
+  {% endfor %}
+  <div class="pt-3 mt-4 border-top">
+    {% if user.is_authenticated %}
+      <h2 class="mt-3">Comments</h2>
+      <div class="d-flex flex-column mb-4">
+        <form class="d-flex flex-column gap-3" method="post" action="{% url 'daily_discussion' date=discussion.date %}">
+          {% csrf_token %}
+          <div class="form-group">
+            <textarea class="form-control" id="comment_text" name="text" rows="4"></textarea>
+          </div>
+          <input class="btn btn-primary" type="submit" value="Add Comment">
+        </form>
+      </div>
+    {% endif %}
+    {% if discussion.comments.all.exists %}
+      <ul class="list-unstyled">
+        {% for comment in discussion.comments.all %}
           <li class="mb-2 d-flex flex-column border rounded-3 shdw">
             <div class="d-flex flex-row align-items-center justify-content-between p-2 border-bottom bg-darky-lighter">
-              <strong class="me-2 text-capitalize">
-                {{ comment.user.username }}
-              </strong>
+              <strong class="me-2 text-capitalize">{{ comment.user.username }}</strong>
               <small class="text-muted">{{ comment.timestamp }}</small>
+              {% if user.is_authenticated and comment.user == user %}
+                <a href="{% url 'edit_discussion_comment' comment.id %}" class="btn btn-sm btn-secondary">Edit</a>
+              {% endif %}
             </div>
             <div class="p-2">
               <p class="mb-0">{{ comment.text }}</p>
             </div>
           </li>
-          {% endfor %}
-        </ul>
-        {% else %}
-        <p>No comments available.</p>
-        {% endif %}
-      </div>
-
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>No comments available.</p>
+    {% endif %}
+  </div>
 {% endblock %}

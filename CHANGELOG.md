@@ -1,6 +1,7 @@
 # Changelog
 
 ## [Feb 3, 2024]
+- add: ability to edit comments on daily_discussion
 - add: add links to daily_discussion - yesterday / today and tomorrows discussions
 - add: changelog view
 

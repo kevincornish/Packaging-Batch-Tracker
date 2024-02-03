@@ -697,6 +697,27 @@ def daily_discussion(request, date=None):
     )
 
 
+def edit_discussion_comment(request, comment_id):
+    # Fetch the comment by its ID
+    comment = get_object_or_404(DailyDiscussionComment, id=comment_id)
+
+    # Check if the current user is the owner of the comment
+    if request.user != comment.user:
+        return redirect("daily_discussion")
+
+    if request.method == "POST":
+        form = DailyDiscussionCommentForm(request.POST, instance=comment)
+        if form.is_valid():
+            form.save()
+            return redirect("daily_discussion", date=comment.discussion.date)
+    else:
+        form = DailyDiscussionCommentForm(instance=comment)
+
+    return render(
+        request, "kpi/edit_discussion_comment.html", {"form": form, "comment": comment}
+    )
+
+
 def changelog(request):
     base_dir = os.path.dirname(os.path.abspath(__file__))
     changelog_file_path = os.path.join(base_dir, "..", "CHANGELOG.md")

@@ -142,6 +142,7 @@ class DailyDiscussionComment(models.Model):
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
     timestamp = models.DateTimeField(auto_now_add=True)
     text = models.TextField()
+    history = HistoricalRecords()
 
     def __str__(self):
         return f"Comment by {self.user.username} on {self.timestamp}"
