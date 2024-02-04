@@ -10,6 +10,9 @@ from .models import (
 )
 from simple_history.admin import SimpleHistoryAdmin
 
+admin.site.site_header = "Packaging Priorities Admin"
+admin.site.site_title = "Packaging Priorities Admin"
+
 admin.site.register(Batch, SimpleHistoryAdmin)
 admin.site.register(Product)
 admin.site.register(TargetDate, SimpleHistoryAdmin)
