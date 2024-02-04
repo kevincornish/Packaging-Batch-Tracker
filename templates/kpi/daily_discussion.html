@@ -1,15 +1,16 @@
 {% extends 'base.html' %}
 {% load custom_filters %}
 {% block title %}
-  Daily Discussion for {{ discussion.date }}
+  Daily Discussion - {{ discussion.date }}
 {% endblock %}
 {% block content %}
-  <p>
+  <p class="p-4 text-center">
+    Other discussions: <input type="text" id="datepicker" placeholder="Select a date">
     <a href="{% url 'daily_discussion' date=-1|addDays|date:'Y-m-d' %}">Yesterday's Discussion</a> |
     <a href="{% url 'daily_discussion' date=0|addDays|date:'Y-m-d' %}">Today's Discussion</a> |
     <a href="{% url 'daily_discussion' date=+1|addDays|date:'Y-m-d' %}">Tomorrow's Discussion</a>
   </p>
-  <h2>Batches Completed</h2>
+  <h2>Batches Completed | {{ discussion.date }}</h2>
   {% for batch in batches_completed_on_date %}
     <p><a class="fw-semibold text-decoration-none" href="{% url 'batch_detail' batch.id %}">{{ batch.batch_number }}</a>
       ({{ batch.product_code }} - {{ batch.product_code.product }} - {{ batch.product_code.presentation }})-
@@ -49,4 +50,19 @@
       <p>No comments available.</p>
     {% endif %}
   </div>
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+  <script>
+    // Initialize flatpickr with date format and options
+    flatpickr("#datepicker", {
+      dateFormat: "Y-m-d",
+      onChange: function (selectedDates, dateStr, instance) {
+        // Redirect to the selected date using Django URL pattern
+        window.location.href = `{% url 'daily_discussion' date=0 %}`.replace("0", dateStr);
+      },
+    });
+  </script>
+  
 {% endblock %}
