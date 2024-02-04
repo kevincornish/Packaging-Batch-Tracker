@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.urls import reverse
 from django.contrib.auth.models import User
-from .models import Batch, Bay, Product, TargetDate
+from batch_priority.models import Batch, Bay, Product, TargetDate
 
 
 class BatchViewsTestCase(TestCase):
