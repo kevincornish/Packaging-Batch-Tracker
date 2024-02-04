@@ -71,3 +71,21 @@ class BatchViewsTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Batch History")
         self.assertContains(response, f"{self.batch.batch_number}")
+
+    def test_add_comment_and_view(self):
+        self.client.login(username="testuser", password="testpassword")
+        comment_text = "Test comment text"
+        response = self.client.post(
+            reverse("batch_detail", args=[self.batch.id]), {"text": comment_text}
+        )
+
+        response = self.client.get(reverse("batch_detail", args=[self.batch.id]))
+        self.assertEqual(response.status_code, 200)
+
+        self.assertContains(response, comment_text)
+
+    def test_no_comment_box_for_anonymous_user(self):
+        self.client.logout()
+        response = self.client.get(reverse("batch_detail", args=[self.batch.id]))
+        self.assertEqual(response.status_code, 200)
+        self.assertNotContains(response, "Add a Comment")
