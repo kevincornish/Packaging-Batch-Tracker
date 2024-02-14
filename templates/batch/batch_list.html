@@ -21,12 +21,10 @@ Packaging
                                 <p class="m-0 fs-6 fw-bold m-auto">ON HOLD</p>
                             </div>
                             <div class="d-flex flex-row align-items-center gap-2">
-                                {% if user.is_authenticated %}
                                 <div class="d-flex flex-row gap-1 px-2 py-1 rounded-2 mb-2 flex-fill {% if targetdate.batch.manufacture_date > today_date %}bg-blu{% else %}bg-darky-light{% endif %}">
                                     <p class="fw-semibold m-0">Batch Number:</p>
-                                    <a href="{% url 'batch_detail' targetdate.batch.id %}">{{ targetdate.batch.batch_number }}</a>
+                                    {% if user.is_authenticated %}<a href="{% url 'batch_detail' targetdate.batch.id %}">{{ targetdate.batch.batch_number }}</a>{% else %}{{ targetdate.batch.batch_number }}{% endif %}
                                 </div>
-                                {% endif %}
                                 <div class="d-flex flex-row gap-1 px-2 py-1 rounded-2 mb-2 flex-fill {% if targetdate.batch.manufacture_date > today_date %}bg-blu{% else %}bg-darky-light{% endif %}">
                                     <p class="m-0 m-auto text-black {% if targetdate.batch.manufacture_date > today_date %} text-azul {% endif %}"><span class="fw-semibold">D.O.M:</span> {{ targetdate.batch.manufacture_date }}</p>
                                 </div>
