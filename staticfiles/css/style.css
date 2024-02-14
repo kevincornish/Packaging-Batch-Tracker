@@ -138,3 +138,50 @@ a.btn {
         grid-template-columns: 1fr;
     }
 }
+
+.calendar {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.days {
+    display: flex;
+    justify-content: space-evenly;
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+}
+
+.weeks {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    padding: 10px;
+}
+
+.week {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+}
+
+.day {
+    padding: 5px;
+    font-weight: bold;
+}
+
+.day-batches {
+    margin-top: 10px;
+}
+
+.batch {
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 5px;
+    margin-bottom: 5px;
+    width: 200px;
+}

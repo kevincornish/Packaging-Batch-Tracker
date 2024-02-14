@@ -1,5 +1,9 @@
 # Changelog
 
+## [Feb 14, 2024]
+- fix: batch number not rendering if user is logged out
+- add: add schedule to see batches planned for manufacture in a given timeframe
+
 ## [Feb 3, 2024]
 - add: ability to edit comments on daily_discussion
 - add: add links to daily_discussion - yesterday / today and tomorrows discussions

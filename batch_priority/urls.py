@@ -3,6 +3,8 @@ from . import views
 
 urlpatterns = [
     path("", views.batch_list, name="batch_list"),
+    path("schedule", views.schedule, name="schedule"),
+    path("schedule/<int:week_offset>/", views.schedule, name="schedule_with_offset"),
     path("production_checks/", views.production_check_list, name="production_checks"),
     path("samples/", views.samples_list, name="samples_list"),
     path("warehouse/", views.warehouse_list, name="warehouse_list"),

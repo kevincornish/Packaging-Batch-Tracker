@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Schedule
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Schedule - Week Commencing: {{ week_commencing }}</h1>
+    <div class="date-selector">
+        <form action="{% url 'schedule' %}" method="GET">
+            <label for="selected_date">Select Date:</label>
+            <input type="date" id="selected_date" name="week" min="{{ min_date }}" max="{{ max_date }}" value="{{ selected_week }}">
+            <button type="submit">Go</button>
+        </form>
+    </div>
+
+    <div class="calendar">
+        <div class="weeks">
+            {% for date in calendar_days %}
+            <div class="week">
+                <div class="day">{{ date }}</div>
+                    <div class="day-batches">
+                        {% for batch_date, day_batches in calendar %}
+                            {% if date == batch_date %}
+                                {% for batch in day_batches %}
+                                    <div class="batch">
+                                        <div class="tag d-inline-flex m-1 px-2 py-2 bg-darky rounded-2 w-100">
+                                            <p class="m-0 px-2 w-100 text-center">{% if user.is_authenticated %}<a href="{% url 'batch_detail' batch.id %}">{{ batch.batch_number }}</a>{% else %}{{ batch.batch_number }}{% endif %}</p>
+                                        </div>
+                                        <div class="tag d-none d-inline-flex align-items-center px-2 py-1 bg-cherry rounded-2 w-100 {% if batch.on_hold %} on text-danger {% endif %}">
+                                            <p class="m-0 fs-6 fw-bold m-auto">ON HOLD</p>
+                                        </div>
+                                        <div class="tag d-none d-inline-flex align-items-center m-1 px-2 py-1 bg-success rounded-2 w-100 {% if batch.batch_complete == True %} on text-white {% endif %}">
+                                            <p class="m-0 fs-6 fw-bold m-auto">BATCH COMPLETE</p>
+                                        </div>
+                                        <p class="fw-semibold m-0">Product Code:</p>
+                                        <p>{{ batch.product_code }}</p>
+                                        <p><span class="fw-semibold m-0">Product: </span>{{ batch.product_code.product }}</p>
+                                        <p class="fw-semibold m-0">Presentation:</p>
+                                        <p>{{ batch.product_code.presentation }}</p>
+                                        <div class="d-flex flex-row align-items-center gap-2">
+                                            <p class="fw-semibold m-0">BOM Received:</p>
+                                            <p class="m-0 px-2 {% if batch.bom_received == True %} bg-green {% else %} bg-cherry {% endif %} text-secondary rounded-pill">{% if batch.bom_received == True %} Yes {% else %} No {% endif %}</p>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const selectedDateInput = document.getElementById('selected_date');
+        
+        selectedDateInput.addEventListener('change', function() {
+            const selectedDate = new Date(selectedDateInput.value);
+            const dayOfWeek = selectedDate.getDay(); // 0 (Sunday) to 6 (Saturday)
+            
+            // Check if the selected date is not a Monday (dayOfWeek !== 1)
+            if (dayOfWeek !== 1) {
+                // Find the nearest Monday before the selected date
+                const diff = selectedDate.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1);
+                const nearestMonday = new Date(selectedDate.setDate(diff));
+
+                // Update the value of the input field to the nearest Monday
+                selectedDateInput.valueAsDate = nearestMonday;
+            }
+        });
+    });
+</script>
+{% endblock %}

@@ -1,6 +1,7 @@
 import csv
 import os
 import markdown
+from collections import defaultdict
 from django.shortcuts import get_object_or_404, render, redirect
 from django.db import models
 from django.db.models import Count, Case, When, Value, IntegerField, Min, F
@@ -37,6 +38,7 @@ from .models import (
     DailyDiscussion,
     DailyDiscussionComment,
 )
+from .utils import get_week_range
 
 
 def batch_list(request):
@@ -72,6 +74,46 @@ def batch_list(request):
 
     return render(
         request, "batch/batch_list.html", {"bays": bays, "today_date": today_date}
+    )
+
+
+def schedule(request):
+    selected_week = request.GET.get("week")
+    if selected_week:
+        selected_date = datetime.strptime(selected_week, "%Y-%m-%d")
+    else:
+        # If no week is selected, default to the current week
+        selected_date = datetime.now()
+
+    # Get the start and end dates of the selected week
+    start_of_week, end_of_week = get_week_range(selected_date)
+    week_commencing = start_of_week.strftime("%d-%m-%Y")
+
+    # Filter batches with a manufacture date within the selected week
+    batches = Batch.objects.filter(manufacture_date__range=[start_of_week, end_of_week])
+
+    # Group batches by manufacture date
+    calendar = defaultdict(list)
+    for batch in batches:
+        calendar[batch.manufacture_date.strftime("%d-%m-%Y")].append(batch)
+
+    # Convert the dictionary to a list of tuples
+    calendar = sorted(calendar.items())
+
+    # Generate calendar days for the template
+    calendar_days = [
+        (start_of_week + timedelta(days=i)).strftime("%d-%m-%Y") for i in range(7)
+    ]
+
+    return render(
+        request,
+        "schedule/schedule.html",
+        {
+            "calendar": calendar,
+            "selected_week": selected_date.strftime("%Y-%m-%d"),
+            "week_commencing": week_commencing,
+            "calendar_days": calendar_days,
+        },
     )
 
 

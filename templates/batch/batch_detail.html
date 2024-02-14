@@ -32,6 +32,10 @@ Batch - {{ batch.batch_number }}
       <p class="m-0 fw-semibold">Presentation:</p>
       <p class="m-0 p-2 bg-darky-light rounded-2">{{ batch.product_code.presentation }}</p>
     </div>
+    <div class="d-flex flex-column">
+      <p class="m-0 fw-semibold">D.O.M:</p>
+      <p class="m-0 p-2 bg-darky-light rounded-2">{{ batch.manufacture_date }}</p>
+    </div>
     {% if batch.on_hold %}
     <div class="d-flex flex-column">
       <p class="m-0 fw-semibold">On Hold:</p>
