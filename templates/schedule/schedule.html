@@ -7,11 +7,11 @@
 {% block content %}
 <div class="container">
     <h1>Schedule - Week Commencing: {{ week_commencing }}</h1>
-    <div class="date-selector">
+    <div class="date-selector mb-3">
         <form action="{% url 'schedule' %}" method="GET">
             <label for="selected_date">Select Date:</label>
             <input type="date" id="selected_date" name="week" min="{{ min_date }}" max="{{ max_date }}" value="{{ selected_week }}">
-            <button type="submit">Go</button>
+            <button class="btn btn-primary btn-sm" type="submit">Go</button>
         </form>
     </div>
 
