@@ -77,6 +77,17 @@ def batch_list(request):
     )
 
 
+def batch_search(request):
+    query = request.GET.get("q")
+    if query:
+        results = Batch.objects.filter(batch_number__icontains=query)
+    else:
+        results = None
+    return render(
+        request, "batch/batch_search.html", {"results": results, "query": query}
+    )
+
+
 def schedule(request):
     selected_week = request.GET.get("week")
     if selected_week:

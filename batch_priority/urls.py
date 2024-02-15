@@ -3,6 +3,7 @@ from . import views
 
 urlpatterns = [
     path("", views.batch_list, name="batch_list"),
+    path("search/", views.batch_search, name="batch_search"),
     path("schedule", views.schedule, name="schedule"),
     path("schedule/<int:week_offset>/", views.schedule, name="schedule_with_offset"),
     path("production_checks/", views.production_check_list, name="production_checks"),

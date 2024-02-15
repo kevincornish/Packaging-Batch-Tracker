@@ -1,5 +1,8 @@
 # Changelog
 
+## [Feb 15, 2024]
+- add: search batches
+
 ## [Feb 14, 2024]
 - fix: batch number not rendering if user is logged out
 - add: add schedule to see batches planned for manufacture in a given timeframe

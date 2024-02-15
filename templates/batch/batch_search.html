@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Search Results - {{ query }}
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Search Results</h1>
+    <p>Showing results for: "{{ query }}"</p>
+    {% if results %}
+        <ul>
+            {% for batch in results %}
+                <li><a href="{% url 'batch_detail' batch.id %}">{{ batch.batch_number }}</a></li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No results found.</p>
+    {% endif %}
+</div>
+{% endblock %}
