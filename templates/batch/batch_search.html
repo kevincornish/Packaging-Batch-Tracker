@@ -9,11 +9,13 @@
     <h1>Search Results</h1>
     <p>Showing results for: "{{ query }}"</p>
     {% if results %}
-        <ul>
+    <div class="d-flex align-items-center justify-content-start gap-3 flex-wrap">
             {% for batch in results %}
-                <li><a href="{% url 'batch_detail' batch.id %}">{{ batch.batch_number }}</a></li>
+                        <a class="py-2 px-3 bg-darky rounded-3 text-decoration-none shdw" href="{% url 'batch_detail' batch.id %}">
+                            <p class="m-0 text-center fw-semibold">{{ batch.batch_number }}</p>
+                        </a>
             {% endfor %}
-        </ul>
+        </div>
     {% else %}
         <p>No results found.</p>
     {% endif %}
