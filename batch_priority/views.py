@@ -181,13 +181,7 @@ def add_batch(request):
     if request.method == "POST":
         form = BatchForm(request.POST)
         if form.is_valid():
-            # Check if at least one bay is selected
             selected_bays = request.POST.getlist("selected_bays")
-            if not selected_bays:
-                form.add_error(None, ValidationError("Please select at least one bay."))
-                return render(
-                    request, "batch/add_batch.html", {"form": form, "bays": bays}
-                )
             batch_instance = form.save(commit=False, created_by=request.user)
             batch_instance.user = request.user
             batch_instance.save()

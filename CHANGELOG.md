@@ -1,6 +1,7 @@
 # Changelog
 
 ## [Feb 15, 2024]
+- fix: remove bay requirement when adding batches
 - add: search batches
 
 ## [Feb 14, 2024]
