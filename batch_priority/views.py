@@ -14,14 +14,15 @@ from django.db.models.functions import (
 from django.core.exceptions import ValidationError
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.utils.dateparse import parse_date
+from django.views import View
 from django.views.decorators.csrf import csrf_exempt
+from django.views.generic import TemplateView
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, logout
-from django.views import View
 from django.http import JsonResponse
 from django.utils import timezone
-from datetime import timedelta, datetime
+from datetime import datetime, timedelta, date
 from .forms import (
     BatchForm,
     BayForm,
@@ -777,3 +778,54 @@ def changelog(request):
         changelog_content = "Changelog not found."
 
     return render(request, "changelog.html", {"changelog_content": html})
+
+
+class WIPQueueView(TemplateView):
+    template_name = "schedule/wip_queue.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        batches = Batch.objects.filter(batch_complete=False).order_by('manufacture_date')
+        wip_queue = []
+        for batch in batches:
+            working_days_since_manufacture = self.calculate_working_days(
+                batch.manufacture_date
+            )
+            if working_days_since_manufacture is None:
+                working_days_since_manufacture = "Production Scheduled"
+            elif working_days_since_manufacture == 0:
+                working_days_since_manufacture = "Today"
+            elif working_days_since_manufacture == 1:
+                working_days_since_manufacture = "Yesterday"
+            else:
+                working_days_since_manufacture = (
+                    f"{working_days_since_manufacture} days"
+                )
+            wip_queue.append(
+                {
+                    "batch_id": batch.id,
+                    "batch_number": batch.batch_number,
+                    "product_code": batch.product_code,
+                    "product": batch.product_code.product,
+                    "manufacture_date": batch.manufacture_date,
+                    "working_days_since_manufacture": working_days_since_manufacture,
+                    "on_hold": "Yes" if batch.on_hold else "No",
+                }
+            )
+        context["wip_queue"] = wip_queue
+        return context
+
+    def calculate_working_days(self, manufacture_date):
+        if not manufacture_date:
+            return None
+        today = date.today()
+        if manufacture_date <= today:
+            delta = today - manufacture_date
+            num_working_days = 0
+            for i in range(delta.days):
+                current_date = manufacture_date + timedelta(days=i)
+                if current_date.weekday() < 5:  # Monday to Friday (0 to 4)
+                    num_working_days += 1
+            return num_working_days
+        else:
+            return None

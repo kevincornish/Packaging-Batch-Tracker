@@ -1,6 +1,7 @@
 # Changelog
 
 ## [Feb 15, 2024]
+- add: schedule view for W.I.P queue
 - fix: remove bay requirement when adding batches
 - add: search batches
 
