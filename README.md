@@ -64,8 +64,9 @@ python manage.py create_user_groups
 python manage.py create_bays
 ```
 
-Generate random batches, with comments and target dates for each bay / line.
+Generate random products and then random batches (set number in args), comments and target dates for each bay / line will also be set.
 ```
+python manage.py generate_products
 python manage.py generate_batches 30
 ```
 
