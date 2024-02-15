@@ -44,10 +44,14 @@ class Command(BaseCommand):
                 samples_received=fake.boolean(),
                 batch_complete=is_batch_complete,
                 batch_complete_date=timezone.now() if is_batch_complete else None,
-                completed_by=random.choice(User.objects.all()) if is_batch_complete else None,
+                completed_by=(
+                    random.choice(User.objects.all()) if is_batch_complete else None
+                ),
                 production_check=is_production_check,
                 production_check_date=timezone.now() if is_production_check else None,
-                production_checked_by=random.choice(User.objects.all()) if is_production_check else None,
+                production_checked_by=(
+                    random.choice(User.objects.all()) if is_production_check else None
+                ),
                 assigned_to=random.choice(User.objects.all()),
                 created_by=random.choice(User.objects.all()),
                 last_modified_by=random.choice(User.objects.all()),
