@@ -852,6 +852,7 @@ class WIPQueueView(TemplateView):
                     "product": batch.product_code.product,
                     "manufacture_date": batch.manufacture_date,
                     "working_days_since_manufacture": working_days_since_manufacture,
+                    "complete_date_target": batch.complete_date_target,
                     "on_hold": "Yes" if batch.on_hold else "No",
                 }
             )

@@ -13,6 +13,7 @@
                     <th>Product</th>
                     <th>Manufacture Date</th>
                     <th>Working Days Since Manufacture</th>
+                    <th>Complete Date Target</th>
                 </tr>
             </thead>
             <tbody>
@@ -23,6 +24,7 @@
                     <td>{{ batch.product }}</td>
                     <td>{{ batch.manufacture_date }}</td>
                     <td>{{ batch.working_days_since_manufacture }}</td>
+                    <td>{{ batch.complete_date_target }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
