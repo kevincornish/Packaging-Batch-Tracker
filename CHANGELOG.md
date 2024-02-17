@@ -1,5 +1,8 @@
 # Changelog
 
+## [Feb 17, 2024]
+- add: kpi view for batches completed per week by users
+
 ## [Feb 15, 2024]
 - add: schedule view for W.I.P queue
 - fix: remove bay requirement when adding batches
