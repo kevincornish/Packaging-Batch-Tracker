@@ -1,7 +1,8 @@
+from collections import defaultdict
+from datetime import datetime, timedelta, date
 import csv
 import os
 import markdown
-from collections import defaultdict
 from django.shortcuts import get_object_or_404, render, redirect
 from django.db import models
 from django.db.models import Count, Case, When, Value, IntegerField, Min, F
@@ -14,6 +15,7 @@ from django.db.models.functions import (
 from django.core.exceptions import ValidationError
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.utils.dateparse import parse_date
+from django.utils import timezone
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
@@ -21,8 +23,6 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, logout
 from django.http import JsonResponse
-from django.utils import timezone
-from datetime import datetime, timedelta, date
 from .forms import (
     BatchForm,
     BayForm,
@@ -39,7 +39,7 @@ from .models import (
     DailyDiscussion,
     DailyDiscussionComment,
 )
-from .utils import get_week_range
+from .utils import get_week_range, get_start_date_of_week
 
 
 def batch_list(request):
@@ -653,6 +653,7 @@ def batches_completed(request):
 
 
 def team_leader_kpi(request):
+    # Fetch all completed batches with week information and count per user
     team_leader_stats = (
         Batch.objects.filter(batch_complete=True)
         .annotate(week=ExtractWeek("batch_complete_date"))
@@ -661,50 +662,48 @@ def team_leader_kpi(request):
         .order_by("week")
     )
 
+    # Group stats by week
+    stats_by_week = defaultdict(list)
+    for stat in team_leader_stats:
+        stats_by_week[stat["week"]].append(stat)
+
+    stats_by_week = dict(sorted(stats_by_week.items(), reverse=True))
+
     # Fetch usernames for each user ID
     user_ids = set(stat["completed_by"] for stat in team_leader_stats)
     users = User.objects.filter(id__in=user_ids)
     user_mapping = {user.id: user.username for user in users}
 
-    # Add username to the stats
-    for stat in team_leader_stats:
-        user_id = stat["completed_by"]
-        stat["username"] = user_mapping.get(user_id, "Unknown")
+    # Organize stats by week and add username and batch details
+    team_leader_stats_grouped = []
+    for week, stats in stats_by_week.items():
+        week_start_date = get_start_date_of_week(
+            2024, week
+        )  # Assuming 2024 as the year
+        week_data = {"week_start_date": week_start_date, "stats": []}
+        for stat in stats:
+            user_id = stat["completed_by"]
+            username = user_mapping.get(user_id, "Unknown")
+            stat["username"] = username
 
-        # Fetch batch details for the week
-        week_batches = Batch.objects.filter(
-            batch_complete=True,
-            completed_by=user_id,
-            batch_complete_date__week=stat["week"],
-        ).values("batch_number", "batch_complete_date", "id")
-
-        # Add batch details to the stats
-        stat["week_batches"] = week_batches
-
-        # Calculate the start date of the week (first Monday)
-        first_batch_date = (
-            Batch.objects.filter(
+            # Fetch batch details for the user in the week
+            week_batches = Batch.objects.filter(
                 batch_complete=True,
                 completed_by=user_id,
-                batch_complete_date__week=stat["week"],
-            )
-            .order_by("batch_complete_date")
-            .values("batch_complete_date")
-            .first()
-        )
+                batch_complete_date__week=week,
+            ).values("batch_number", "batch_complete_date", "id")
 
-        if first_batch_date:
-            start_of_week = first_batch_date["batch_complete_date"] - timedelta(
-                days=first_batch_date["batch_complete_date"].weekday()
-            )
-            stat["week_start_date"] = start_of_week
-        else:
-            stat["week_start_date"] = None
+            # Add batch details to the stat
+            stat["week_batches"] = week_batches
+
+            week_data["stats"].append(stat)
+
+        team_leader_stats_grouped.append(week_data)
 
     return render(
         request,
         "reports/team_leader_kpi.html",
-        {"team_leader_stats": team_leader_stats},
+        {"team_leader_stats_grouped": team_leader_stats_grouped},
     )
 
 
@@ -785,7 +784,9 @@ class WIPQueueView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        batches = Batch.objects.filter(batch_complete=False).order_by('manufacture_date')
+        batches = Batch.objects.filter(batch_complete=False).order_by(
+            "manufacture_date"
+        )
         wip_queue = []
         for batch in batches:
             working_days_since_manufacture = self.calculate_working_days(

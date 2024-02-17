@@ -8,33 +8,35 @@ Team Leader KPI
     <h1>Team Leader KPI</h1>
     <div>
         <div class="grid-container">
-            {% for stat in team_leader_stats %}
+        {% for week_data in team_leader_stats_grouped %}
             <div class="grid-item rounded-3 shdw border border-light-subtle">
                 <div class="d-flex flex-column align-items-start gap-3">
-                        <div class="d-flex flex-column align-items-start gap-2">
-                            <div class="d-flex flex-row align-items-center justify-content-start gap-1">
-                                <p class="m-0 fw-semibold">Team Leader:</p>
-                                <p class="m-0">{{ stat.username }}</p>
-                              </div>
-                              <div class="d-flex flex-row align-items-center justify-content-start gap-1">
-                                    <p class="m-0 fw-semibold">Week:</p>
-                                    <p class="m-0 fw-medium">{{ stat.week_start_date|date:"d-m-Y" }}</p>
-                                </div>
-                                <div class="d-flex flex-row align-items-center justify-content-start gap-1">
-                                    <p class="m-0 fw-semibold">Batches Completed:</p>
-                                    <div class="d-flex flex-column align-items-start gap-1 bg-darky-lighter p-2 rounded-3">
-                                        <p class="m-0 fw-medium">{{ stat.batches_completed }}</p>
-                                    </div>
-                                </div>
-                            {% for batch in stat.week_batches %}
-                            <div class=" align-items-center gap-1 bg-darky-light px-2 rounded-2">
-                                <p class="m-0"><span class="m-0 fw-semibold">Batch Number:</span> <a href="{% url 'batch_detail' batch.id %}">{{ batch.batch_number }}</a><br><span class="m-0 fw-semibold">Completed Date:</span> {{ batch.batch_complete_date }}<br></p>
-                            </div>
-                            {% endfor %}
+                    <div class="d-flex flex-row align-items-center justify-content-start gap-1">
+                        <p class="m-0 fw-semibold">Week Start Date:</p>
+                        <p class="m-0 fw-medium">{{ week_data.week_start_date }}</p>
+                    </div>
+                    {% for stat in week_data.stats %}
+                    <div class="d-flex flex-column align-items-start gap-2">
+                        <div class="d-flex flex-row align-items-center justify-content-start gap-1">
+                            <p class="m-0 fw-semibold">Team Leader:</p>
+                            <p class="m-0">{{ stat.username }}</p>
                         </div>
+                        <div class="d-flex flex-row align-items-center justify-content-start gap-1">
+                            <p class="m-0 fw-semibold">Batches Completed:</p>
+                            <div class="d-flex flex-column align-items-start gap-1 bg-darky-lighter p-2 rounded-3">
+                                <p class="m-0 fw-medium">{{ stat.batches_completed }}</p>
+                            </div>
+                        </div>
+                        {% for batch in stat.week_batches %}
+                        <div class=" align-items-center gap-1 bg-darky-light px-2 rounded-2">
+                            <p class="m-0"><span class="m-0 fw-semibold">Batch Number:</span> <a href="{% url 'batch_detail' batch.id %}">{{ batch.batch_number }}</a><br><span class="m-0 fw-semibold">Completed Date:</span> {{ batch.batch_complete_date }}<br></p>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endfor %}
                 </div>
             </div>
-            {% endfor %}
-        </div>
+        {% endfor %}
+    </div>
     </div>
 {% endblock %}
