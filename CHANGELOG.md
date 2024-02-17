@@ -1,6 +1,7 @@
 # Changelog
 
 ## [Feb 17, 2024]
+- tidy: ability to hide / add bays when adding batch
 - add: kpi view for batches completed per week by users
 
 ## [Feb 15, 2024]
