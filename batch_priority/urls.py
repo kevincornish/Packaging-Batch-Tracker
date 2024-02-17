@@ -14,7 +14,7 @@ urlpatterns = [
     path("locations/", views.location, name="locations"),
     path("locations/<int:batch_id>/", views.locations, name="location"),
     path("products/", views.product_list, name="product_list"),
-    path('wip-queue/', views.WIPQueueView.as_view(), name='wip_queue'),
+    path("wip-queue/", views.WIPQueueView.as_view(), name="wip_queue"),
     path("batch_history/<int:batch_id>/", views.batch_history, name="batch_history"),
     path("batch/<int:batch_id>/", views.batch_detail, name="batch_detail"),
     path("reports/completed_on/", views.CompletedOnView.as_view(), name="completed_on"),
@@ -22,6 +22,11 @@ urlpatterns = [
         "batches_per_week_data/",
         views.batches_per_week_data,
         name="batches_per_week_data",
+    ),
+    path(
+        "batches_per_user_per_week_data/",
+        views.batches_per_user_per_week_data,
+        name="batches_per_user_per_week_data",
     ),
     path(
         "batches_per_day_data/",

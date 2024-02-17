@@ -648,6 +648,48 @@ def batches_completed_before_target_data(request):
     )
 
 
+def batches_per_user_per_week_data(request):
+    # Fetch data for completed batches by user per week
+    data = (
+        Batch.objects.filter(batch_complete=True, batch_complete_date__isnull=False)
+        .annotate(week=TruncWeek("batch_complete_date"))
+        .values("completed_by", "week")
+        .annotate(batch_count=Count("id"))
+        .order_by("completed_by", "week")
+    )
+
+    # get data for the chart
+    user_week_data = {}
+    all_weeks = set()  # get all unique weeks
+    for entry in data:
+        user_id = entry["completed_by"]
+        week = entry["week"].strftime("%d-%m-%Y")
+        batch_count = entry["batch_count"]
+        all_weeks.add(week)
+        if user_id not in user_week_data:
+            user_week_data[user_id] = {"labels": [], "data": []}
+        user_week_data[user_id]["labels"].append(week)
+        user_week_data[user_id]["data"].append(batch_count)
+
+    # hacky way to add zeros to users who haven't completed batches
+    for user_id, data in user_week_data.items():
+        missing_weeks = all_weeks - set(data["labels"])
+        for week in missing_weeks:
+            data["labels"].append(week)
+            data["data"].append(0)
+
+        # sort labels and data based on week
+        data["labels"], data["data"] = zip(*sorted(zip(data["labels"], data["data"])))
+
+    # grab usernames
+    user_mapping = {user.id: user.username for user in User.objects.all()}
+    for user_id, data in user_week_data.items():
+        username = user_mapping.get(user_id, "Unknown")
+        data["username"] = username
+
+    return JsonResponse({"user_week_data": user_week_data})
+
+
 def batches_completed(request):
     return render(request, "reports/completed.html")
 

@@ -9,20 +9,20 @@ Batches Completed Reports
     <div style="width: 50%; float: left;">
         <h1>Batches completed per week</h1>
         <canvas id="batchesPerWeekChart"></canvas>
-        <div id="batchNumbersPerWeek"></div>
     </div>
     <div style="width: 50%; float: left;">
         <h1>Batches completed per day</h1>
         <canvas id="batchesPerDayChart"></canvas>
-        <div id="batchNumbersPerDay"></div>
     </div>
 </div>
 <div>
     <h1>Batches completed before target</h1>
     <canvas id="batchesBeforeTargetChart"></canvas>
-    <div id="batchNumbersBeforeTarget"></div>
 </div>
-
+<div>
+    <h1>Batches completed by each user per week</h1>
+    <canvas id="batchesPerUserPerWeekChart"></canvas>
+</div>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
@@ -50,10 +50,6 @@ Batches Completed Reports
                         }
                     }
                 });
-
-                // Access batch numbers and display them
-                var batchNumbersDiv = document.getElementById('batchNumbersPerDay');
-                batchNumbersDiv.innerHTML = 'Batch Numbers: ' + data.batch_numbers.join(', ');
             });
     });
     document.addEventListener('DOMContentLoaded', function () {
@@ -81,10 +77,6 @@ Batches Completed Reports
                         }
                     }
                 });
-
-                // Access batch numbers and display them
-                var batchNumbersDiv = document.getElementById('batchNumbersPerWeek');
-                batchNumbersDiv.innerHTML = 'Batch Numbers: ' + data.batch_numbers.join(', ');
             });
     });
     document.addEventListener('DOMContentLoaded', function () {
@@ -112,11 +104,39 @@ Batches Completed Reports
                     }
                 }
             });
-
-            // Access batch numbers and display them
-            var batchNumbersDiv = document.getElementById('batchNumbersBeforeTarget');
-            batchNumbersDiv.innerHTML = 'Batch Numbers: ' + data.batch_numbers.join(', ');
         });
 });
+    document.addEventListener('DOMContentLoaded', function () {
+        fetch('{% url "batches_per_user_per_week_data" %}')
+            .then(response => response.json())
+            .then(data => {
+                var datasets = [];
+                for (var userId in data.user_week_data) {
+                    datasets.push({
+                        label: data.user_week_data[userId].username,
+                        data: data.user_week_data[userId].data,
+                        backgroundColor: 'rgba(' + Math.floor(Math.random() * 256) + ',' + Math.floor(Math.random() * 256) + ',' + Math.floor(Math.random() * 256) + ', 0.2)',
+                        borderColor: 'rgba(' + Math.floor(Math.random() * 256) + ',' + Math.floor(Math.random() * 256) + ',' + Math.floor(Math.random() * 256) + ', 1)',
+                        borderWidth: 1
+                    });
+                }
+                var ctx = document.getElementById('batchesPerUserPerWeekChart').getContext('2d');
+                var weeklyUserChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: data.user_week_data[Object.keys(data.user_week_data)[0]].labels,
+                        datasets: datasets
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            });
+    });
 </script>
+
 {% endblock %}
