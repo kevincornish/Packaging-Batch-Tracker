@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% load custom_filters %}
 {% block title %}
 Production Checks
 {% endblock %}
@@ -69,13 +69,11 @@ Production Checks
                 </div>
                 {% endif %}
               </div>
-              {% if user.is_authenticated %}
-                  <a class="text-decoration-none" href="{% url 'edit_batch' batch.id %}">
-                      <div class="bttn d-flex align-items-center justify-content-center p-2 rounded-2 bg-darky text-white mt-3">
-                          <p class="m-0 fw-semibold text-secondary">Edit Batch</p>
-                      </div>
-                  </a>
-              {% endif %}
+                  {% if user|has_group:'Manager' or user|has_group:'Supervisor' or user|has_group:'Team Leader' %}
+                  <div class="d-flex align-items-center justify-content-center">
+                  <button hx-get="{% url 'edit_batch_htmx' batch.id %}" hx-target="#modal" hx-trigger="click" data-bs-toggle="modal" data-bs-target="#modal" class="btn btn-primary btn-sm ">Edit Batch</button>  
+                  </div>
+                  {% endif %}
           </div>
             {% endfor %}
         </div>
