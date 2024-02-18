@@ -1,7 +1,6 @@
 from collections import defaultdict
 from datetime import datetime, timedelta, date
 import csv
-import json
 import os
 import markdown
 from django.shortcuts import get_object_or_404, render, redirect
@@ -26,6 +25,7 @@ from django.contrib.auth import login, logout
 from django.http import HttpResponse, JsonResponse
 from .forms import (
     BatchForm,
+    BatchPartialEditForm,
     BayForm,
     CustomUserCreationForm,
     ProductForm,
@@ -79,7 +79,7 @@ def batch_list(request):
         request, "batch/batch_list.html", {"bays": bays, "today_date": today_date}
     )
 
-
+@login_required
 def edit_target_dates(request, bay_id, batch_id):
     bay = get_object_or_404(Bay, pk=bay_id)
     batch = get_object_or_404(Batch, pk=batch_id)
@@ -121,7 +121,29 @@ def edit_target_dates(request, bay_id, batch_id):
         },
     )
 
+@login_required
+def edit_batch_htmx(request, batch_id):
+    batch = get_object_or_404(Batch, pk=batch_id)
+    form = BatchPartialEditForm(instance=batch)
+    return render(request, "batch/edit_batch_htmx.html", {"form": form, "batch": batch})
 
+@login_required
+def update_batch_htmx(request, batch_id):
+    batch = get_object_or_404(Batch, id=batch_id)
+    if request.method == "POST":
+        form = BatchPartialEditForm(request.POST, instance=batch)
+        if form.is_valid():
+            instance = form.save(commit=False)
+            instance.user = request.user
+            instance.save()
+            return HttpResponse(
+                status=204, headers={"HX-Trigger": '{"showMessage": "Batch updated."}'}
+            )
+    return HttpResponse(
+        status=400, headers={"HX-Trigger": '{"showMessage": "Failed to update batch."}'}
+    )
+
+@login_required
 def update_target_dates(request, bay_id, batch_id):
     bay = get_object_or_404(Bay, pk=bay_id)
     batch = get_object_or_404(Batch, pk=batch_id)
@@ -132,20 +154,10 @@ def update_target_dates(request, bay_id, batch_id):
         if form.is_valid():
             form.save()
             return HttpResponse(
-                status=204,
-                headers={
-                    "HX-Trigger": json.dumps(
-                        {"showMessage": f"{batch.batch_number} updated."}
-                    )
-                },
+                status=204, headers={"HX-Trigger": '{"showMessage": "Batch updated."}'}
             )
     return HttpResponse(
-        status=204,
-        headers={
-            "HX-Trigger": json.dumps(
-                {"showMessage": f"{batch.batch_number} failed to update."}
-            )
-        },
+        status=400, headers={"HX-Trigger": '{"showMessage": "Failed to update batch."}'}
     )
 
 
@@ -490,7 +502,7 @@ def location(request):
 
     return render(request, "batch/batches.html", {"batches": batches})
 
-
+@login_required
 def bay_list(request):
     bays = Bay.objects.all()
     return render(request, "bay/bay_list.html", {"bays": bays})
@@ -764,7 +776,7 @@ def batches_per_user_per_week_data(request):
 def batches_completed(request):
     return render(request, "reports/completed.html")
 
-
+@login_required
 def team_leader_kpi(request):
     # Fetch all completed batches with week information and count per user
     team_leader_stats = (
@@ -819,7 +831,7 @@ def team_leader_kpi(request):
         {"team_leader_stats_grouped": team_leader_stats_grouped},
     )
 
-
+@login_required
 def daily_discussion(request, date=None):
     if date is None:
         date = timezone.now().date()
@@ -856,7 +868,7 @@ def daily_discussion(request, date=None):
         },
     )
 
-
+@login_required
 def edit_discussion_comment(request, comment_id):
     # Fetch the comment by its ID
     comment = get_object_or_404(DailyDiscussionComment, id=comment_id)

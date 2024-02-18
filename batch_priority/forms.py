@@ -96,6 +96,17 @@ class BatchForm(forms.ModelForm):
         return instance
 
 
+class BatchPartialEditForm(forms.ModelForm):
+    class Meta:
+        model = Batch
+        fields = [
+            "on_hold",
+            "bom_received",
+            "samples_received",
+            "batch_complete",
+        ]
+
+
 class BayForm(forms.ModelForm):
     class Meta:
         model = Bay

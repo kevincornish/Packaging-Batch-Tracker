@@ -1,0 +1,34 @@
+<div class="modal-dialog modal-lg modal-dialog-centered" id="dialog" hx-target="this" role="document">
+    <div class="modal-content">
+        <form class="modal-content" id="editBatchForm" hx-post="{% url 'update_batch_htmx' batch.id %}" hx-headers='{"X-CSRFToken":"{{ csrf_token }}"}'>
+            <div class="modal-header">
+                <h5 class="modal-title">{{ batch.batch_number }}</h5>
+            </div>
+            <div class="modal-body">
+                <div class="d-flex flex-column gap-3">
+                    <div class="form-check">
+                        <label class="fw-semibold" for="id_on_hold">On Hold</label>
+                        <input class="form-check-input mt-0" type="checkbox" name="on_hold" id="id_on_hold" {% if batch.on_hold %}checked{% endif %}>
+                    </div>
+                    <div class="form-check">
+                        <label class="fw-semibold" for="id_bom_received">BOM Received</label>
+                        <input class="form-check-input mt-0" type="checkbox" name="bom_received" id="id_bom_received" {% if batch.bom_received %}checked{% endif %}>
+                    </div>
+                    <div class="form-check">
+                        <label class="fw-semibold" for="id_samples_received">Samples Received</label>
+                        <input class="form-check-input mt-0" type="checkbox" name="samples_received" id="id_samples_received" {% if batch.samples_received %}checked{% endif %}>
+                    </div>
+                    <div class="form-check">
+                        <label class="fw-semibold" for="{{ batch_complete.id_for_label }}">Batch Complete</label>
+                        <input class="form-check-input mt-0" type="checkbox" name="{{ batch_complete.name }}" id="{{ batch_complete.id_for_label }}">
+                    </div>
+                </div>
+            </div>
+            <input type="hidden" name="batch_id" id="batchIdInput" value="{{ batch.id }}">
+            <div class="modal-footer d-flex flex-column align-items-center justify-content-start gap-1">
+                <input class="btn btn-primary" type="submit" value="Save">
+                <input class="btn btn-secondary" data-bs-dismiss="modal" value="Cancel">
+            </div>
+        </form>
+    </div>
+</div>

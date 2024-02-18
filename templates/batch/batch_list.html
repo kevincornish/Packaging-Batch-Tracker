@@ -63,7 +63,10 @@ Packaging
                             <p class="m-0">{{ targetdate.batch.complete_date_target }}</p>
                         </div>
                         {% if user|has_group:'Manager' or user|has_group:'Supervisor' or user|has_group:'Team Leader' %}
-                        <button hx-get="/edit_target_dates/{{ bay.id }}/{{ targetdate.batch.id }}/" hx-target="#modal" hx-trigger="click" data-bs-toggle="modal" data-bs-target="#modal" class="btn btn-primary btn-sm">Edit Target</button>                    
+                        <div class="d-flex flex-row align-items-center gap-2">
+                        <button hx-get="{% url 'edit_target_dates' bay.id targetdate.batch.id %}" hx-target="#modal" hx-trigger="click" data-bs-toggle="modal" data-bs-target="#modal" class="btn btn-primary btn-sm">Edit Target</button>                                      
+                        <button hx-get="{% url 'edit_batch_htmx' targetdate.batch.id %}" hx-target="#modal" hx-trigger="click" data-bs-toggle="modal" data-bs-target="#modal" class="btn btn-primary btn-sm">Edit Batch</button>  
+                    </div>
                         {% endif %}
                     </div>
                 </div>

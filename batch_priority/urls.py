@@ -18,6 +18,14 @@ urlpatterns = [
     path("batch_history/<int:batch_id>/", views.batch_history, name="batch_history"),
     path("batch/<int:batch_id>/", views.batch_detail, name="batch_detail"),
     path(
+        "edit_batch_htmx/<int:batch_id>/", views.edit_batch_htmx, name="edit_batch_htmx"
+    ),
+    path(
+        "update_batch_htmx/<int:batch_id>/",
+        views.update_batch_htmx,
+        name="update_batch_htmx",
+    ),
+    path(
         "edit_target_dates/<int:bay_id>/<int:batch_id>/",
         views.edit_target_dates,
         name="edit_target_dates",

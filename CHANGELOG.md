@@ -1,6 +1,7 @@
 # Changelog
 
 ## [Feb 17, 2024]
+- add: ability to edit batch using a modal view
 - add: ability to edit target dates using a modal view
 
 ## [Feb 17, 2024]
