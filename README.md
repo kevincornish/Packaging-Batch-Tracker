@@ -2,19 +2,48 @@
 
 ## Overview
 
-The Packaging Batch Tracker is a Django-based web application designed to streamline and manage the production batches of a manufacturing process. The system allows users to create, edit, and track batches through various production stages.
+The Packaging Batch Tracker was created to manage batches in a manufacturing environment using the Django framework.
 
-* Batch Creation: Users can create new batches, specifying details such as batch number, product code, complete date target, etc.
+## Features
 
-* Bay Assignment: Batches can be assigned to specific production bays, with target start and end dates for each bay.
+### Batch Management
+- View list of batches organised by bays.
+- Edit target dates for batches in bays.
+- Search batches by batch number.
+- View schedule of upcoming batches based on manufacture dates.
+- View lists of batches with bill of materials in the warehouse, awaiting samples, and pending production checks.
+- View archive of fully completed batches.
+- Add new batches with multiple target dates.
+- Edit batch details including associated bays and target dates.
+- View history / who made modifications to each batch.
+- View location / bay change history of each batch.
 
-* Batch History Tracking: The application uses the Django Auditlog library to track and display the history of batch modifications, including changes to fields, dates, and who by.
+### Bay Management
+- View list of bays.
+- Add new bays.
+- Edit existing bays.
 
-* On-Hold: An "On-Hold" checkbox is available for batches, allowing users to indicate if a batch is currently on hold. Batches on hold are visually distinguished, changing the row colour to red and hiding from warehouse and labs pages.
+### Product Management
+- View list of products.
+- Add new products.
+- Import products from a CSV file.
+- Edit existing products.
 
-* Production Check List: There is a production check list view that displays batches requiring final sign offs.
+### User Management
+- Sign up only using set email address in .env
 
-* Batch Completion Tracking: When a batch is marked as complete, the system records the completion date and the user who completed it.
+### Reporting
+- View batches completed on a specific date range.
+- View batches completed per week, per day, and before their given target dates.
+- View batches completed by users per week.
+- View KPIs for team leaders.
+
+### Daily Discussion
+- View and participate in daily discussions based on batches completed on the day.
+
+### WIP Queue
+- View a queue of batches currently in progress.
+- Calculate working days since manufacture date.
 
 ## Installation
 
