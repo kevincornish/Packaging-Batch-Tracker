@@ -37,7 +37,7 @@ class CommentForm(forms.ModelForm):
 class TargetDateForm(forms.ModelForm):
     class Meta:
         model = TargetDate
-        fields = ["bay", "target_start_date", "target_end_date"]
+        fields = ["bay", "target_start_date", "target_end_date", "is_active"]
         widgets = {
             "target_start_date": DateInput(attrs={"type": "date"}),
             "target_end_date": DateInput(attrs={"type": "date"}),

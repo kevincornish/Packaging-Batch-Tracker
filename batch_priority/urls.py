@@ -17,6 +17,16 @@ urlpatterns = [
     path("wip-queue/", views.WIPQueueView.as_view(), name="wip_queue"),
     path("batch_history/<int:batch_id>/", views.batch_history, name="batch_history"),
     path("batch/<int:batch_id>/", views.batch_detail, name="batch_detail"),
+    path(
+        "edit_target_dates/<int:bay_id>/<int:batch_id>/",
+        views.edit_target_dates,
+        name="edit_target_dates",
+    ),
+    path(
+        "update_target_dates/<int:bay_id>/<int:batch_id>/",
+        views.update_target_dates,
+        name="update_target_dates",
+    ),
     path("reports/completed_on/", views.CompletedOnView.as_view(), name="completed_on"),
     path(
         "batches_per_week_data/",

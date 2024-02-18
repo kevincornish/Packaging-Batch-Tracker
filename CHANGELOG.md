@@ -1,6 +1,9 @@
 # Changelog
 
 ## [Feb 17, 2024]
+- add: ability to edit target dates using a modal view
+
+## [Feb 17, 2024]
 - tidy: ability to hide / add bays when adding batch
 - add: kpi view for batches completed per week by users
 

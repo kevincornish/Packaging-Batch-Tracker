@@ -1,6 +1,7 @@
 from collections import defaultdict
 from datetime import datetime, timedelta, date
 import csv
+import json
 import os
 import markdown
 from django.shortcuts import get_object_or_404, render, redirect
@@ -22,7 +23,7 @@ from django.views.generic import TemplateView
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, logout
-from django.http import JsonResponse
+from django.http import HttpResponse, JsonResponse
 from .forms import (
     BatchForm,
     BayForm,
@@ -30,6 +31,7 @@ from .forms import (
     ProductForm,
     CommentForm,
     DailyDiscussionCommentForm,
+    TargetDateForm,
 )
 from .models import (
     Bay,
@@ -75,6 +77,75 @@ def batch_list(request):
 
     return render(
         request, "batch/batch_list.html", {"bays": bays, "today_date": today_date}
+    )
+
+
+def edit_target_dates(request, bay_id, batch_id):
+    bay = get_object_or_404(Bay, pk=bay_id)
+    batch = get_object_or_404(Batch, pk=batch_id)
+
+    # Fetch the target date associated with the batch and bay
+    target_date = TargetDate.objects.filter(batch=batch, bay=bay).first()
+
+    # Check if a target date exists
+    if target_date:
+        bay_start_date = (
+            target_date.target_start_date.strftime("%Y-%m-%d")
+            if target_date and target_date.target_start_date
+            else ""
+        )
+        bay_end_date = (
+            target_date.target_end_date.strftime("%Y-%m-%d")
+            if target_date and target_date.target_end_date
+            else ""
+        )
+        bay_is_active = target_date.is_active
+    else:
+        bay_start_date = None
+        bay_end_date = None
+        bay_is_active = False
+
+    form = TargetDateForm(instance=batch)
+
+    return render(
+        request,
+        "batch/edit_target_dates.html",
+        {
+            "form": form,
+            "bay": bay,
+            "batch_id": batch_id,
+            "batch": batch,
+            "bay_is_active": bay_is_active,
+            "bay_start_date": bay_start_date,
+            "bay_end_date": bay_end_date,
+        },
+    )
+
+
+def update_target_dates(request, bay_id, batch_id):
+    bay = get_object_or_404(Bay, pk=bay_id)
+    batch = get_object_or_404(Batch, pk=batch_id)
+    target_date, created = TargetDate.objects.get_or_create(batch=batch, bay=bay)
+
+    if request.method == "POST":
+        form = TargetDateForm(request.POST, instance=target_date)
+        if form.is_valid():
+            form.save()
+            return HttpResponse(
+                status=204,
+                headers={
+                    "HX-Trigger": json.dumps(
+                        {"showMessage": f"{batch.batch_number} updated."}
+                    )
+                },
+            )
+    return HttpResponse(
+        status=204,
+        headers={
+            "HX-Trigger": json.dumps(
+                {"showMessage": f"{batch.batch_number} failed to update."}
+            )
+        },
     )
 
 

@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% load custom_filters %}
 {% block title %}
 Packaging
 {% endblock %}
@@ -62,6 +62,9 @@ Packaging
                             <p class="fw-semibold m-0">Complete Date Target:</p>
                             <p class="m-0">{{ targetdate.batch.complete_date_target }}</p>
                         </div>
+                        {% if user|has_group:'Manager' or user|has_group:'Supervisor' or user|has_group:'Team Leader' %}
+                        <button hx-get="/edit_target_dates/{{ bay.id }}/{{ targetdate.batch.id }}/" hx-target="#modal" hx-trigger="click" data-bs-toggle="modal" data-bs-target="#modal" class="btn btn-primary btn-sm">Edit Target</button>                    
+                        {% endif %}
                     </div>
                 </div>
             {% endfor %}
