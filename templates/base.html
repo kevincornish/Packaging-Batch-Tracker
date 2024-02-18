@@ -14,7 +14,7 @@
 <body>
       <nav class="navbar bg-light">
         <div class="container-fluid">
-          <a class="navbar-brand" href="{% url 'batch_list' %}"><img src="{% static 'img/logo.png' %}" height="50"> | Packaging Priorities</a>
+          <a class="navbar-brand" href="{% url 'batch_list' %}"><img src="{% static 'img/logo.png' %}" height="50"></a>
         <form class="d-flex mx-auto" action="{% url 'batch_search' %}" method="GET">
           <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="q" {% if query %}value="{{ query }}"{% endif %}>
           <button class="btn btn-outline-primary" type="submit">Search</button>
