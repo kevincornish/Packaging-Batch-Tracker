@@ -19,8 +19,8 @@
                         <input class="form-check-input mt-0" type="checkbox" name="samples_received" id="id_samples_received" {% if batch.samples_received %}checked{% endif %}>
                     </div>
                     <div class="form-check">
-                        <label class="fw-semibold" for="{{ batch_complete.id_for_label }}">Batch Complete</label>
-                        <input class="form-check-input mt-0" type="checkbox" name="{{ batch_complete.name }}" id="{{ batch_complete.id_for_label }}">
+                        <label class="fw-semibold" for="id_batch_complete">Batch Complete</label>
+                        <input class="form-check-input mt-0" type="checkbox" name="batch_complete" id="id_batch_complete" {% if batch.batch_complete %}checked{% endif %}>
                     </div>
                 </div>
             </div>
