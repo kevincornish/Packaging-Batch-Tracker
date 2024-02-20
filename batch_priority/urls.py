@@ -15,6 +15,7 @@ urlpatterns = [
     path("locations/<int:batch_id>/", views.locations, name="location"),
     path("products/", views.product_list, name="product_list"),
     path("wip-queue/", views.WIPQueueView.as_view(), name="wip_queue"),
+    path("on_hold/", views.on_hold_list, name="on_hold_list"),
     path("batch_history/<int:batch_id>/", views.batch_history, name="batch_history"),
     path("batch/<int:batch_id>/", views.batch_detail, name="batch_detail"),
     path(

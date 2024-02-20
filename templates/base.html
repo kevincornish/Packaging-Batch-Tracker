@@ -57,12 +57,16 @@
                 <li class="nav-item">
                   <a class="nav-link active" aria-current="page" href="{% url 'batch_list' %}">Home</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'batch_list' %}">Packaging</a>
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Packaging
+                  </a>
+                  <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="{% url 'batch_list' %}">Packaging</a></li>
+                    <li><a class="dropdown-item" href="{% url 'production_checks' %}">Production Checks</a></li>
+                    <li><a class="dropdown-item" href="{% url 'on_hold_list' %}">Batches on hold</a></li>
+                  </ul>
                 </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="{% url 'production_checks' %}">Production Checks</a>
-              </li>
                 <li class="nav-item">
                   <a class="nav-link" href="{% url 'samples_list' %}">Sterility</a>
               </li>

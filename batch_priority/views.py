@@ -79,6 +79,44 @@ def batch_list(request):
         request, "batch/batch_list.html", {"bays": bays, "today_date": today_date}
     )
 
+
+def on_hold_list(request):
+    vials_on_hold = Batch.objects.filter(
+        on_hold=True, batch_complete=False, product_code__product_code__startswith="X"
+    )
+    ampoules_on_hold = Batch.objects.filter(
+        on_hold=True, batch_complete=False, product_code__product_code__startswith="Y"
+    )
+    syringes_on_hold = Batch.objects.filter(
+        on_hold=True, batch_complete=False, product_code__product_code__startswith="T"
+    )
+    others_on_hold = (
+        Batch.objects.filter(on_hold=True, batch_complete=False)
+        .exclude(product_code__product_code__startswith="Y")
+        .exclude(product_code__product_code__startswith="X")
+        .exclude(product_code__product_code__startswith="T")
+    )
+
+    total_count = (
+        vials_on_hold.count()
+        + ampoules_on_hold.count()
+        + syringes_on_hold.count()
+        + others_on_hold.count()
+    )
+
+    return render(
+        request,
+        "batch/on_hold_list.html",
+        {
+            "vials_on_hold": vials_on_hold,
+            "ampoules_on_hold": ampoules_on_hold,
+            "syringes_on_hold": syringes_on_hold,
+            "others_on_hold": others_on_hold,
+            "total_count": total_count,
+        },
+    )
+
+
 @login_required
 def edit_target_dates(request, bay_id, batch_id):
     bay = get_object_or_404(Bay, pk=bay_id)
@@ -121,11 +159,13 @@ def edit_target_dates(request, bay_id, batch_id):
         },
     )
 
+
 @login_required
 def edit_batch_htmx(request, batch_id):
     batch = get_object_or_404(Batch, pk=batch_id)
     form = BatchPartialEditForm(instance=batch)
     return render(request, "batch/edit_batch_htmx.html", {"form": form, "batch": batch})
+
 
 @login_required
 def update_batch_htmx(request, batch_id):
@@ -142,6 +182,7 @@ def update_batch_htmx(request, batch_id):
     return HttpResponse(
         status=400, headers={"HX-Trigger": '{"showMessage": "Failed to update batch."}'}
     )
+
 
 @login_required
 def update_target_dates(request, bay_id, batch_id):
@@ -502,6 +543,7 @@ def location(request):
 
     return render(request, "batch/batches.html", {"batches": batches})
 
+
 @login_required
 def bay_list(request):
     bays = Bay.objects.all()
@@ -776,6 +818,7 @@ def batches_per_user_per_week_data(request):
 def batches_completed(request):
     return render(request, "reports/completed.html")
 
+
 @login_required
 def team_leader_kpi(request):
     # Fetch all completed batches with week information and count per user
@@ -831,6 +874,7 @@ def team_leader_kpi(request):
         {"team_leader_stats_grouped": team_leader_stats_grouped},
     )
 
+
 @login_required
 def daily_discussion(request, date=None):
     if date is None:
@@ -867,6 +911,7 @@ def daily_discussion(request, date=None):
             "batches_completed_on_date": batches_completed_on_date,
         },
     )
+
 
 @login_required
 def edit_discussion_comment(request, comment_id):
