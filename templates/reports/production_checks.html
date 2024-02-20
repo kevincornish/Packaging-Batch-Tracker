@@ -69,11 +69,6 @@ Production Checks
                 </div>
                 {% endif %}
               </div>
-                  {% if user|has_group:'Manager' or user|has_group:'Supervisor' or user|has_group:'Team Leader' %}
-                  <div class="d-flex align-items-center justify-content-center">
-                  <button hx-get="{% url 'edit_batch_htmx' batch.id %}" hx-target="#modal" hx-trigger="click" data-bs-toggle="modal" data-bs-target="#modal" class="btn btn-primary btn-sm ">Edit Batch</button>  
-                  </div>
-                  {% endif %}
           </div>
             {% endfor %}
         </div>
