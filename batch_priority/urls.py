@@ -84,4 +84,5 @@ urlpatterns = [
         name="edit_discussion_comment",
     ),
     path("changelog/", views.changelog, name="changelog"),
+    path("tray_calculator/", views.tray_calculator, name="tray_calculator"),
 ]

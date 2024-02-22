@@ -4,13 +4,24 @@ from django.contrib.auth.models import User
 from simple_history.models import HistoricalRecords
 
 
+class Tray(models.Model):
+    tray_type = models.CharField(max_length=255, unique=True)
+    tray_size = models.CharField(max_length=255, null=True)
+    containers_per_tray = models.IntegerField()
+
+    def __str__(self):
+        return self.tray_type
+
+
 class Product(models.Model):
     product_code = models.CharField(max_length=255, unique=True)
     product = models.CharField(max_length=255)
     presentation = models.CharField(max_length=255)
+    tray = models.ForeignKey(Tray, on_delete=models.SET_NULL, null=True)
+    expected_yield = models.IntegerField(null=True)
 
     def __str__(self):
-        return f"{self.product_code.strip()}"
+        return self.product_code.strip()
 
 
 class Batch(models.Model):

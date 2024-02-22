@@ -1,6 +1,7 @@
 from collections import defaultdict
 from datetime import datetime, timedelta, date
 import csv
+import math
 import os
 import markdown
 from django.shortcuts import get_object_or_404, render, redirect
@@ -32,6 +33,7 @@ from .forms import (
     CommentForm,
     DailyDiscussionCommentForm,
     TargetDateForm,
+    TrayCalculatorForm,
 )
 from .models import (
     Bay,
@@ -41,7 +43,7 @@ from .models import (
     DailyDiscussion,
     DailyDiscussionComment,
 )
-from .utils import get_week_range, get_start_date_of_week
+from .utils import get_week_range, get_start_date_of_week, get_tray
 
 
 def batch_list(request):
@@ -1001,3 +1003,38 @@ class WIPQueueView(TemplateView):
             return num_working_days
         else:
             return None
+
+
+def tray_calculator(request):
+    containers_per_tray = 0
+    trays_required = 0
+    per_trolley = 0
+    tray_size = ""
+
+    if request.method == "POST":
+        form = TrayCalculatorForm(request.POST)
+        if form.is_valid():
+            yield_amount = form.cleaned_data["yield_amount"]
+            presentation = form.cleaned_data["presentation"]
+            tray = get_tray(presentation)
+            if tray:
+                containers_per_tray = tray.containers_per_tray
+                trays_required = yield_amount / containers_per_tray
+                per_trolley = trays_required / 3
+                trays_required = math.ceil(trays_required)
+                per_trolley = math.ceil(per_trolley)
+                tray_size = tray.tray_size
+    else:
+        form = TrayCalculatorForm()
+
+    return render(
+        request,
+        "schedule/tray_calc.html",
+        {
+            "form": form,
+            "containers_per_tray": containers_per_tray,
+            "trays_required": trays_required,
+            "per_trolley": per_trolley,
+            "tray_size": tray_size,
+        },
+    )

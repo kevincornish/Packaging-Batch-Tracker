@@ -7,6 +7,7 @@ from .models import (
     Comment,
     DailyDiscussion,
     DailyDiscussionComment,
+    Tray,
 )
 from simple_history.admin import SimpleHistoryAdmin
 
@@ -20,3 +21,4 @@ admin.site.register(Bay)
 admin.site.register(Comment)
 admin.site.register(DailyDiscussion)
 admin.site.register(DailyDiscussionComment, SimpleHistoryAdmin)
+admin.site.register(Tray)

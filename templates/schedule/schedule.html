@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% load custom_filters %}
 {% block title %}
     Schedule
 {% endblock %}
@@ -39,10 +39,22 @@
                                         <p><span class="fw-semibold m-0">Product: </span>{{ batch.product_code.product }}</p>
                                         <p class="fw-semibold m-0">Presentation:</p>
                                         <p>{{ batch.product_code.presentation }}</p>
+                                        {% if batch.product_code.expected_yield %}
+                                        <p class="fw-semibold m-0">Expected Yield:</p>
+                                        <p>{{ batch.product_code.expected_yield }}</p>
+                                        {% endif %}
                                         <div class="d-flex flex-row align-items-center gap-2">
                                             <p class="fw-semibold m-0">BOM Received:</p>
                                             <p class="m-0 px-2 {% if batch.bom_received == True %} bg-green {% else %} bg-cherry {% endif %} text-secondary rounded-pill">{% if batch.bom_received == True %} Yes {% else %} No {% endif %}</p>
                                         </div>
+                                        {% if batch.product_code.tray %}
+                                        <p class="fw-semibold m-0">Tray:</p>
+                                        <p>{{ batch.product_code.tray.tray_size }}</p>
+                                        <p class="fw-semibold m-0">Trays required:</p>
+                                        <p>{{ batch.product_code.expected_yield|divide_and_ceil:batch.product_code.tray.containers_per_tray }}</p>
+                                        <p class="fw-semibold m-0">Trays per trolley:</p>
+                                        <p>{{ batch.product_code.expected_yield|divide_and_ceil:batch.product_code.tray.containers_per_tray|divide_and_ceil:3 }}</p>
+                                        {% endif %}
                                     </div>
                                 {% endfor %}
                             {% endif %}

@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+from .models import Tray
 
 
 def get_week_range(date):
@@ -18,3 +19,10 @@ def get_start_date_of_week(year, week):
     while start_date_of_week.weekday() != 0:  # 0 = Monday
         start_date_of_week -= timedelta(days=1)
     return start_date_of_week.date()
+
+
+def get_tray(presentation):
+    try:
+        return Tray.objects.get(tray_type=presentation)
+    except Tray.DoesNotExist:
+        return None

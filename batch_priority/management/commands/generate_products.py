@@ -1,6 +1,7 @@
 from django.core.management.base import BaseCommand
-from batch_priority.models import Product
+from batch_priority.models import Product, Tray
 from faker import Faker
+import random
 
 
 class Command(BaseCommand):
@@ -31,3 +32,17 @@ class Command(BaseCommand):
                 self.stdout.write(
                     self.style.ERROR(f'Product "{product_obj}" already exists.')
                 )
+
+            # Assign a tray to the product
+            trays = Tray.objects.all()
+            if trays.exists():
+                random_tray = random.choice(trays)
+                product_obj.tray = random_tray
+                product_obj.save()
+                self.stdout.write(
+                    self.style.SUCCESS(
+                        f'Random tray "{random_tray}" assigned to product "{product_obj}".'
+                    )
+                )
+            else:
+                self.stdout.write(self.style.ERROR("No trays available to assign."))

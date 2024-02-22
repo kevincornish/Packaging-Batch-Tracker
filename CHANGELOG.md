@@ -1,8 +1,10 @@
 # Changelog
 
+## [Feb 22, 2024]
+- add: expected yield added to product, tray model added for tray calculator view + see how many trays are required on schedule view
+
 ## [Feb 20, 2024]
 - add: view for batches on hold, including count per presentation and total
-
 
 ## [Feb 17, 2024]
 - add: ability to edit batch using a modal view

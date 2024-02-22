@@ -5,7 +5,15 @@ from django.contrib.auth.forms import UserCreationForm
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 from batchtracker import settings
-from .models import Batch, TargetDate, Bay, Product, Comment, DailyDiscussionComment
+from .models import (
+    Batch,
+    TargetDate,
+    Bay,
+    Product,
+    Comment,
+    DailyDiscussionComment,
+    Tray,
+)
 
 
 class CustomUserCreationForm(UserCreationForm):
@@ -116,10 +124,36 @@ class BayForm(forms.ModelForm):
 class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
-        fields = ["product_code", "product", "presentation"]
+        fields = ["product_code", "product", "presentation", "expected_yield", "tray"]
+        widgets = {
+            "product_code": forms.TextInput(attrs={"class": "form-control"}),
+            "product": forms.TextInput(attrs={"class": "form-control"}),
+            "presentation": forms.TextInput(attrs={"class": "form-control"}),
+            "expected_yield": forms.TextInput(attrs={"class": "form-control"}),
+            "tray": forms.Select(attrs={"class": "form-select"}),
+        }
 
 
 class DailyDiscussionCommentForm(forms.ModelForm):
     class Meta:
         model = DailyDiscussionComment
         fields = ["text"]
+
+
+class TrayCalculatorForm(forms.Form):
+    presentation = forms.ChoiceField(
+        choices=[],
+        widget=forms.Select(attrs={"class": "form-select"}),
+        label="Presentation",
+    )
+    yield_amount = forms.DecimalField(
+        label="Yield", widget=forms.NumberInput(attrs={"class": "form-control"})
+    )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["presentation"].choices = self.get_tray_choices()
+
+    def get_tray_choices(self):
+        tray_choices = Tray.objects.all().values_list("tray_type", "tray_type")
+        return tray_choices
