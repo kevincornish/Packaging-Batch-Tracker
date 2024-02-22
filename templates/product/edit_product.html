@@ -6,11 +6,15 @@ Edit Product
 
 {% block content %}
     <h1>Edit Product</h1>
-    <form method="post" action="{% url 'edit_product' product.id %}">
+    <div class="container py-4">
+    <form method="post" class="d-flex flex-column gap-3" action="{% url 'edit_product' product.id %}">
         {% csrf_token %}
+        <div class="d-flex flex-column gap-1">
         {{ form.as_p }}
+    </div>
         <input class="btn btn-primary" type="submit" value="Edit Product">
     </form>
     <br>
     <a href="{% url 'product_list' %}">Back to Product List</a>
+</div>
 {% endblock %}
