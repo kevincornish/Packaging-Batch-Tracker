@@ -10,17 +10,26 @@ Add Product
     <form method="post" action="{% url 'add_product' %}">
         {% csrf_token %}
         <div class="mb-3">
-            <label for="{{ form.product_code.id_for_label }}" class="your-custom-label-class">{{ form.product_code.label }}</label>
+            <label for="{{ form.product_code.id_for_label }}">{{ form.product_code.label }}</label>
             <input type="text" name="{{ form.product_code.name }}" id="{{ form.product_code.id_for_label }}" class="form-control border" value="{{ form.product_code.value|default_if_none:'' }}">
         </div>
         <div class="mb-3">
-            <label for="{{ form.product.id_for_label }}" class="your-custom-label-class">{{ form.product.label }}</label>
+            <label for="{{ form.product.id_for_label }}">{{ form.product.label }}</label>
             <input type="text" name="{{ form.product.name }}" id="{{ form.product.id_for_label }}" class="form-control border" value="{{ form.product.value|default_if_none:'' }}">
         </div>
         <div class="mb-3">
-            <label for="{{ form.presentation.id_for_label }}" class="your-custom-label-class">{{ form.presentation.label }}</label>
+            <label for="{{ form.presentation.id_for_label }}">{{ form.presentation.label }}</label>
             <input type="text" name="{{ form.presentation.name }}" id="{{ form.presentation.id_for_label }}" class="form-control border" value="{{ form.presentation.value|default_if_none:'' }}">
         </div>
+        <div class="mb-3">
+            <label for="{{ form.tray.id_for_label }}">{{ form.tray.label }}</label>
+            {{ form.tray }}
+        </div>
+        <div class="mb-3">
+            <label for="{{ form.expected_yield.id_for_label }}">{{ form.expected_yield.label }}</label>
+            <input type="number" name="{{ form.expected_yield.name }}" id="{{ form.expected_yield.id_for_label }}" class="form-control border" value="{{ form.expected_yield.value|default_if_none:'' }}">
+        </div>
+        
         <div class="d-flex flex-row align-items-center gap-2">
             <input class="btn btn-primary" type="submit" value="Add Product">
             <a class="btn bg-darky border" href="{% url 'product_list' %}">Back to Product List</a>
