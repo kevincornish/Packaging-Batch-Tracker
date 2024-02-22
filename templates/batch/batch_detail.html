@@ -64,10 +64,6 @@ Batch - {{ batch.batch_number }}
       <p class="m-0 fw-semibold">Batch Complete:</p>
       <p class="m-0 p-2 bg-darky-light rounded-2">{% if batch.batch_complete %} Yes {% else %} No {% endif %}</p>
     </div>
-    <div class="d-flex flex-column">
-      <p class="m-0 fw-semibold">Complete Target Date:</p>
-      <p class="m-0 p-2 bg-darky-light rounded-2">{{ batch.complete_date_target }}</p>
-    </div>
     {% if batch.batch_complete %}
     <div class="d-flex flex-column">
       <p class="m-0 fw-semibold">Batch Complete Date:</p>
