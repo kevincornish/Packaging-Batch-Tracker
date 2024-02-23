@@ -29,7 +29,7 @@ DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL")
 
 LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/"
-LOGIN_URL = "/login/"
+LOGIN_URL = "/accounts/login/"
 
 INSTALLED_APPS = [
     "django.contrib.admin",

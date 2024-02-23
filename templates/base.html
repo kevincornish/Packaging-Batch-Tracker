@@ -51,9 +51,10 @@
                       <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
                   </ul>
               </div>
-              <hr>
               {% endif %}
+              <hr>
               <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+                {% if user.is_authenticated %}
                 <li class="nav-item">
                   <a class="nav-link active" aria-current="page" href="{% url 'batch_list' %}">Home</a>
                 </li>
@@ -83,12 +84,10 @@
                   <li><a class="dropdown-item" href="{% url 'wip_queue' %}">W.I.P Queue</a></li>
                 </ul>
               </li>
-                {% if user.is_authenticated %}
                 <li class="nav-item">
                   <a class="nav-link" href="{% url 'daily_discussion' %}">Daily Discussion</a>
                   <a class="nav-link" href="{% url 'locations' %}">Batch Locations</a>
               </li>
-              {% endif %}
                 <li class="nav-item dropdown">
                   <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     Reports
@@ -101,6 +100,9 @@
                   {% endif %}
                   </ul>
                 </li>
+                <hr>
+                <a class="nav-link" href="{% url 'changelog' %}">Changelog</a>
+                {% endif %}
                 {% if not user.is_authenticated %}
                 <li class="nav-item">
                   <a class="nav-link" href="{% url 'login' %}">Login</a>
@@ -108,8 +110,6 @@
                 </li>
                 {% endif %}
               </ul>
-              <hr>
-              <a class="nav-link" href="{% url 'changelog' %}">Changelog</a>
             </div>
           </div>
         </div>

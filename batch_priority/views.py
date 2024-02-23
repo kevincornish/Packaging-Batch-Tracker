@@ -20,6 +20,7 @@ from django.utils import timezone
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, logout
@@ -45,7 +46,7 @@ from .models import (
 )
 from .utils import get_week_range, get_start_date_of_week, get_tray
 
-
+@login_required
 def batch_list(request):
     bays = (
         Bay.objects.annotate(
@@ -81,7 +82,7 @@ def batch_list(request):
         request, "batch/batch_list.html", {"bays": bays, "today_date": today_date}
     )
 
-
+@login_required
 def on_hold_list(request):
     vials_on_hold = Batch.objects.filter(
         on_hold=True, batch_complete=False, product_code__product_code__startswith="X"
@@ -203,7 +204,7 @@ def update_target_dates(request, bay_id, batch_id):
         status=400, headers={"HX-Trigger": '{"showMessage": "Failed to update batch."}'}
     )
 
-
+@login_required
 def batch_search(request):
     query = request.GET.get("q")
     if query:
@@ -214,7 +215,7 @@ def batch_search(request):
         request, "batch/batch_search.html", {"results": results, "query": query}
     )
 
-
+@login_required
 def schedule(request):
     selected_week = request.GET.get("week")
     if selected_week:
@@ -254,7 +255,7 @@ def schedule(request):
         },
     )
 
-
+@login_required
 def warehouse_list(request):
     batches = (
         Batch.objects.filter(bom_received=False, batch_complete=False, on_hold=False)
@@ -270,14 +271,14 @@ def warehouse_list(request):
         {"batches": batches, "earliest_date": earliest_date},
     )
 
-
+@login_required
 def samples_list(request):
     batches = Batch.objects.filter(
         samples_received=False, batch_complete=False
     ).order_by("complete_date_target")
     return render(request, "reports/samples_list.html", {"batches": batches})
 
-
+@login_required
 def production_check_list(request):
     batches = Batch.objects.filter(
         batch_complete=True, production_check=False
@@ -293,7 +294,7 @@ def production_check_list(request):
         {"batches": batches, "today_date": today_date},
     )
 
-
+@login_required
 def archive_list(request):
     batches = Batch.objects.filter(batch_complete=True, production_check=True).order_by(
         "production_check_date"
@@ -424,7 +425,7 @@ def edit_batch(request, batch_id):
             {"form": form, "batch": batch, "bays": bay_data},
         )
 
-
+@login_required
 def batch_detail(request, batch_id):
     batch = get_object_or_404(Batch, id=batch_id)
     comments = batch.comments.all()
@@ -688,7 +689,7 @@ def user_logout(request):
     return redirect("batch_list")
 
 
-class CompletedOnView(View):
+class CompletedOnView(LoginRequiredMixin, View):
     template_name = "batch/completed_on.html"
 
     def get(self, request, *args, **kwargs):
@@ -704,7 +705,7 @@ class CompletedOnView(View):
 
         return render(request, self.template_name, {"batches": batches})
 
-
+@login_required
 def batches_per_week_data(request):
     data = (
         Batch.objects.filter(batch_complete=True, batch_complete_date__isnull=False)
@@ -719,7 +720,7 @@ def batches_per_week_data(request):
 
     return JsonResponse({"labels": labels, "data": batch_counts})
 
-
+@login_required
 def batches_per_day_data(request):
     data = (
         Batch.objects.filter(batch_complete=True, batch_complete_date__isnull=False)
@@ -734,7 +735,7 @@ def batches_per_day_data(request):
 
     return JsonResponse({"labels": labels, "data": batch_counts})
 
-
+@login_required
 def batches_completed_before_target_data(request):
     data = (
         Batch.objects.filter(batch_complete=True, batch_complete_date__isnull=False)
@@ -774,7 +775,7 @@ def batches_completed_before_target_data(request):
         }
     )
 
-
+@login_required
 def batches_per_user_per_week_data(request):
     # Fetch data for completed batches by user per week
     data = (
@@ -816,7 +817,7 @@ def batches_per_user_per_week_data(request):
 
     return JsonResponse({"user_week_data": user_week_data})
 
-
+@login_required
 def batches_completed(request):
     return render(request, "reports/completed.html")
 
@@ -936,7 +937,7 @@ def edit_discussion_comment(request, comment_id):
         request, "kpi/edit_discussion_comment.html", {"form": form, "comment": comment}
     )
 
-
+@login_required
 def changelog(request):
     base_dir = os.path.dirname(os.path.abspath(__file__))
     changelog_file_path = os.path.join(base_dir, "..", "CHANGELOG.md")
@@ -951,7 +952,7 @@ def changelog(request):
     return render(request, "changelog.html", {"changelog_content": html})
 
 
-class WIPQueueView(TemplateView):
+class WIPQueueView(LoginRequiredMixin, TemplateView):
     template_name = "schedule/wip_queue.html"
 
     def get_context_data(self, **kwargs):
@@ -1004,7 +1005,7 @@ class WIPQueueView(TemplateView):
         else:
             return None
 
-
+@login_required
 def tray_calculator(request):
     containers_per_tray = 0
     trays_required = 0
